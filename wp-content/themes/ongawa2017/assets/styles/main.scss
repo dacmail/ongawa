@@ -5,6 +5,7 @@
 @import "../../bower_components/bootstrap/scss/bootstrap.scss";
 // endbower
 
+@import "../../bower_components/owl.carousel/src/scss/owl.carousel.scss";
 @import "common/global";
 @import "components/buttons";
 @import "components/comments";
@@ -12,6 +13,8 @@
 @import "components/grid";
 @import "components/wp-classes";
 @import "layouts/header";
+@import "layouts/slideshow";
+@import "layouts/knownus";
 @import "layouts/sidebar";
 @import "layouts/footer";
 @import "layouts/pages";

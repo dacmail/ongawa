@@ -1,0 +1,61 @@
+.knownus {
+  text-align: center;
+  margin: 0px auto 80px auto;
+  border-bottom: solid 1px $gray;
+  padding-bottom: 40px;
+  &__title {
+    text-align: center;
+    font-size: 64px;
+    font-weight: 300;
+    line-height: 1.0;
+    margin: 0px 0px 40px 0px;
+  }
+  &__content {
+    margin-bottom: 90px;
+    p {
+      font-size: 18px;
+      font-weight: 300;
+      line-height: 1.33;
+      margin-bottom: 60px;
+      position: relative;
+      &:after {
+        content: "";
+        width: 64px;
+        border-bottom: 2px solid $gray;
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        margin-left: -32px;
+      }
+      &:last-of-type {
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+  &__link {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.0;
+    color: $primary;
+    &:hover {
+      text-decoration: none;
+      color: $black;
+    }
+    &-title {
+      font-size: 18px;
+      line-height: 1.0;
+      color: $black;
+      text-transform: uppercase;
+      margin: 27px 0px 20px 0px;
+    }
+  }
+  svg {
+    &:hover {
+      path {
+        fill: $primary;
+      }
+    }
+  }
+}

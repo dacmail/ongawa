@@ -1,0 +1,12 @@
+.btn-primary {
+  padding: 20px 50px;
+  color: $white;
+  border-radius: 32px;
+  background-color: $primary;
+  border: 0px;
+  text-transform: uppercase;
+  &:hover {
+    background-color: $black;
+    color: $white;
+  }
+}

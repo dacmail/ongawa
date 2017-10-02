@@ -1,0 +1,41 @@
+.header {
+  margin: 36px 0px;
+  padding: 10px 0px;
+  background-color: $white;
+  .custom-logo-link {
+    img {
+      max-width: 237px;
+      height: auto;
+    }
+  }
+  .navbar {
+    padding: 0px;
+    .menu-item {
+      margin-left: 40px;
+      a {
+        display: block;
+        line-height: 64px;
+        font-size: 18px;
+        font-weight: 500;
+        color: $black;
+        &:hover {
+          color: $primary;
+          text-decoration: none;
+        }
+      }
+      &.button {
+        a {
+          padding: 0px 50px;
+          color: $white;
+          border-radius: 32px;
+          background-color: $primary;
+          &:hover {
+            color: $white;
+            background-color: $black;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+}

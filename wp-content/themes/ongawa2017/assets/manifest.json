@@ -19,9 +19,12 @@
     },
     "jquery.js": {
       "bower": ["jquery"]
+    },
+    "owl.carousel.js": {
+      "bower": ["owl.carousel"]
     }
   },
   "config": {
-    "devUrl": "http://example.dev"
+    "devUrl": "http://ongawa.dev"
   }
 }
