@@ -5,8 +5,18 @@
   background-color: $primary;
   border: 0px;
   text-transform: uppercase;
+  transition: background-color 0.3s ease-in;
   &:hover {
     background-color: $black;
     color: $white;
+  }
+}
+.btn-alt {
+  @extend .btn-primary;
+  background-color: $white;
+  color: $primary;
+  &:hover {
+    color: $white;
+    background-color: $primary;
   }
 }

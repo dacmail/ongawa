@@ -38,8 +38,48 @@
             <a href="<?php the_sub_field('knownus_link'); ?>" class="knownus__link"><?php esc_html_e('+info', 'ungrynerd'); ?></a>
           </div>
         <?php endwhile; ?>
-
       </div>
     <?php endif; ?>
   </section>
+
+  <?php $banner_img = get_field('banner_image'); ?>
+  <?php if ($banner_img): ?>
+    <section class="banner">
+      <a href="<?php the_field('banner_link'); ?>"><img src="<?php echo $banner_img; ?>" alt="Banner"></a>
+    </section>
+  <?php endif ?>
+
+  <?php if (have_rows('now')) : ?>
+  <section class="now">
+    <h2 class="section-title"><?php esc_html_e('Actualidad', 'ungrynerd'); ?></h2>
+    <div class="now__wrap">
+      <?php while (have_rows('now')): the_row(); ?>
+        <artcile class="now__item">
+          <?php $image = get_sub_field('now_image'); ?>
+          <a href="<?php the_sub_field('now_link'); ?>"><?php echo wp_get_attachment_image($image["ID"], 'full', false, array('class' => 'now__item__image')); ?></a>
+          <div class="now__item__wrap">
+            <p class="now__item__pretitle"><?php the_sub_field('now_pretitle'); ?></p>
+            <h2 class="now__item__title"><a href="<?php the_sub_field('now_link'); ?>"><?php the_sub_field('now_title'); ?></a></h2>
+            <a class="now__item__link" href="<?php the_sub_field('now_link'); ?>"><?= Extras\ungrynerd_svg('icon-arrow'); ?></a>
+          </div>
+        </artcile>
+      <?php endwhile; ?>
+    </div>
+  </section>
+<?php endif; ?>
 </div>
+
+<?php if (get_field('cta_title')): ?>
+  <section class="cta">
+    <div class="container">
+      <div class="cta__wrap">
+        <h2 class="cta__title"><?php the_field('cta_title'); ?></h2>
+        <div class="cta__text"><?php the_field('cta_text'); ?></div>
+      </div>
+      <?php $cta_link = get_field('cta_link'); ?>
+      <?php if ($cta_link) : ?>
+        <a href="<?php echo $cta_link['url']; ?>" target="<?php echo $cta_link['target']; ?>" class="btn btn-alt"><?php echo $cta_link['title']; ?></a>
+      <?php endif; ?>
+    </div>
+  </section>
+<?php endif ?>

@@ -27,7 +27,8 @@ function setup() {
   // Register wp_nav_menu() menus
   // http://codex.wordpress.org/Function_Reference/register_nav_menus
   register_nav_menus([
-    'primary_navigation' => __('Menu principal', 'ungrynerd')
+    'primary_navigation' => __('Menu principal', 'ungrynerd'),
+    'footer_navigation' => __('Menu footer', 'ungrynerd')
   ]);
 
   // Enable post thumbnails

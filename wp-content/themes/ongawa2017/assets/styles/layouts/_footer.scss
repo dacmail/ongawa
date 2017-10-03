@@ -1,0 +1,101 @@
+.footer {
+  &__wrap {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 60px;
+    &--top {
+      align-items: flex-start;
+    }
+  }
+  .custom-logo-link {
+    img {
+      max-width: 200px;
+      height: auto;
+    }
+  }
+  &__social {
+    &__link {
+      display: inline-block;
+      padding: 5px;
+      &:hover {
+        svg path {
+          fill: $black;
+        }
+      }
+    }
+  }
+  &__newsletter {
+    flex: 0 0 33%;
+    width: 33%;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.5;
+    h3 {
+      font-size: 16px;
+      font-weight: 500;
+      text-transform: uppercase;
+      margin: 0px 0px 20px 0px;
+    }
+    form {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      align-items: center;
+      input[type=email] {
+        background-color: $light;
+        border-radius: 30px;
+        height: 50px;
+        line-height: 50px;
+        border: 0px;
+        padding-right: 40px;
+        padding-left: 20px;
+        color: $gray;
+      }
+      input[type=submit] {
+        @extend .btn-primary;
+        padding: 13px 20px;
+        margin-left: -40px;
+        text-transform: lowercase;
+      }
+    }
+  }
+  &__nav {
+    flex: 0 0 66%;
+    width: 66%;
+    &__wrapper {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      list-style: none;
+      > .menu-item {
+        text-transform: uppercase;
+        text-align: right;
+        margin-bottom: 10px;
+        a {
+          font-size: 16px;
+          font-weight: 500;
+          color: $black;
+        }
+        .sub-menu {
+          list-style: none;
+          margin: 10px 0px;
+          padding: 0px;
+          text-transform: none;
+          .menu-item {
+            margin-bottom: 5px;
+            a {
+              font-weight: 300;
+            }
+          }
+
+        }
+      }
+    }
+  }
+  &__by {
+    color: $black;
+  }
+}
