@@ -18,3 +18,11 @@ img {
     color: $black;
   }
 }
+.admin-bar {
+  .page-wrapper .page__menu {
+    top: 118px;
+  }
+  .sticky-top {
+    top: 32px;
+  }
+}
