@@ -9,6 +9,9 @@
     font-weight: 300;
     line-height: 1.0;
     margin: 0px 0px 40px 0px;
+    @include media-breakpoint-down(md) {
+      font-size: 40px;
+    }
   }
   &__content {
     margin-bottom: 90px;

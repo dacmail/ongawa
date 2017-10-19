@@ -1,7 +1,7 @@
 <?php use Roots\Sage\Extras; ?>
 <section class="knownus">
   <div class="row">
-    <div class="col-md-8 ml-auto mr-auto">
+    <div class="col-lg-8 ml-auto mr-auto">
       <h2 class="knownus__title"><?php the_field('knownus_title') ?></h2>
       <div class="knownus__content">
         <?php the_field('knownus_content') ?>

@@ -9,17 +9,24 @@
     &--top {
       align-items: flex-start;
     }
+    @include media-breakpoint-down(sm) {
+      flex-flow: column;
+    }
   }
   .custom-logo-link {
     img {
       max-width: 200px;
       height: auto;
     }
+    @include media-breakpoint-down(sm) {
+      margin-bottom: 15px;
+    }
   }
   &__social {
     &__link {
       display: inline-block;
       padding: 5px;
+
       &:hover {
         svg path {
           fill: $black;
@@ -33,6 +40,11 @@
     font-size: 16px;
     font-weight: 300;
     line-height: 1.5;
+    @include media-breakpoint-down(sm) {
+      flex: 0 0 100%;
+      width: 100%;
+      text-align: center;
+    }
     h3 {
       font-size: 16px;
       font-weight: 500;
@@ -44,6 +56,10 @@
       justify-content: flex-start;
       flex-wrap: wrap;
       align-items: center;
+      @include media-breakpoint-down(sm) {
+        flex-flow: column;
+        text-align: center;
+      }
       input[type=email] {
         background-color: $light;
         border-radius: 30px;
@@ -59,12 +75,19 @@
         padding: 13px 20px;
         margin-left: -40px;
         text-transform: lowercase;
+        @include media-breakpoint-down(sm) {
+          margin-left: 0px;
+          margin-top: 10px;
+        }
       }
     }
   }
   &__nav {
     flex: 0 0 66%;
     width: 66%;
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
     &__wrapper {
       display: flex;
       justify-content: space-between;
@@ -98,5 +121,8 @@
   }
   &__by {
     color: $black;
+    @include media-breakpoint-down(sm) {
+      margin-top: 15px;
+    }
   }
 }

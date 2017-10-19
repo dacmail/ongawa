@@ -2,16 +2,30 @@
   margin: 36px 0px;
   padding: 10px 0px;
   background-color: $white;
+  @include media-breakpoint-down(md) {
+    margin: 0px;
+  }
   .custom-logo-link {
     img {
       max-width: 237px;
       height: auto;
+      @include media-breakpoint-down(xs) {
+        max-width: 170px;
+      }
     }
   }
   .navbar {
     padding: 0px;
+    .navbar-toggler-icon {
+      width: auto;
+      height: auto;
+      font-size: 45px;
+    }
     .menu-item {
       margin-left: 40px;
+      @include media-breakpoint-down(md) {
+        margin-left: 0px;
+      }
       a {
         display: block;
         line-height: 64px;
@@ -34,6 +48,9 @@
         }
       }
       &.button {
+        @include media-breakpoint-down(md) {
+          margin-top: 15px;
+        }
         a {
           padding: 0px 50px;
           color: $white;

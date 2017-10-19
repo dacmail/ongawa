@@ -9,13 +9,23 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    @include media-breakpoint-down(md) {
+      flex-flow: column;
+    }
   }
   &__wrap {
     padding-right: 100px;
+    @include media-breakpoint-down(md) {
+      padding: 0px;
+      margin-bottom: 30px;
+    }
   }
   &__title {
     font-size: 48px;
     font-weight: 500;
+    @include media-breakpoint-down(md) {
+      font-size: 30px;
+    }
   }
   &__text {
     font-size: 18px;

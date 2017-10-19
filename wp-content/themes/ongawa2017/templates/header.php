@@ -1,7 +1,7 @@
 <header class="header sticky-top">
 <nav class="menu nav-primary">
   <div class="container">
-    <div class="navbar navbar-expand-md justify-content-between">
+    <div class="navbar navbar-expand-lg justify-content-between">
       <?php if (has_custom_logo()): ?>
         <?php the_custom_logo(); ?>
       <?php else: ?>
