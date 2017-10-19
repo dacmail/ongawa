@@ -1,4 +1,5 @@
 <?php use Roots\Sage\Extras; ?>
+<?php get_template_part('templates/block-cta'); ?>
 <footer class="footer">
   <div class="container">
     <div class="footer__wrap">

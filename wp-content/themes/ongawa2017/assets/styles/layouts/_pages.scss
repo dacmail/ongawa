@@ -1,0 +1,91 @@
+.page-wrapper {
+  .page {
+    &__header {
+      width: 100%;
+      height: auto;
+      max-height: 300px;
+      object-fit: cover;
+      margin-bottom: 80px;
+    }
+    &__menu {
+      display: inline-flex;
+      border: 1px solid $gray;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      position: sticky;
+      margin-bottom: -100px;
+      top: 184px;
+      z-index: 999;
+      background-color: $white;
+      &__item {
+        background-color: $white;
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 1.12;
+        text-align: center;
+        color: $black;
+        text-transform: uppercase;
+        padding: 20px;
+        border-right: 1px solid $gray;
+        &:last-of-type {
+          border-right: 0px;
+        }
+        &:hover {
+          background-color: $primary;
+          color: $white;
+          text-decoration: none;
+        }
+      }
+    }
+    &__content {
+      margin: 0px auto;
+      max-width: 750px;
+      &__header {
+        position: relative;
+        margin-bottom: 50px;
+        img {
+          margin: 0px -20%;
+          width: 140%;
+          max-width: 140%;
+          height: auto;
+        }
+        &__title {
+          background-color: $white;
+          font-size: 40px;
+          font-weight: 500;
+          line-height: 1.0;
+          display: inline-block;
+        }
+        img + .page__content__header__title {
+          position: absolute;
+          padding: 30px 40px;
+          bottom: -30px;
+        }
+      }
+      &__block {
+        margin-bottom: 50px;
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 1.5;
+        h2 {
+          font-size: 24px;
+          font-weight: 500;
+          line-height: 1.0;
+        }
+        blockquote {
+          font-size: 24px;
+          font-weight: 500;
+          font-style: italic;
+          line-height: 1.0;
+          color: $primary;
+          padding: 37px 0px 20px 0px;
+          border-top: 2px solid $primary;
+          border-bottom: 2px solid $primary;
+        }
+      }
+      &__buttons {
+        margin-bottom: 50px;
+      }
+    }
+  }
+}
