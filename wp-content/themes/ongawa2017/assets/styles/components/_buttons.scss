@@ -35,3 +35,29 @@
     color: $white;
   }
 }
+
+
+.navigation {
+  margin-top: 100px;
+  .nav-previous, .nav-next {
+    display: inline-block;
+  }
+  .nav-links {
+    a {
+      display: inline-block;
+      background-color: $white;
+      border: solid 1px $primary;
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.0;
+      color: $primary;
+      padding: 11px 16px;
+      border-radius: 20px;
+      margin-right: 20px;
+      &:hover {
+        background-color: $primary;
+        color: $white;
+      }
+    }
+  }
+}

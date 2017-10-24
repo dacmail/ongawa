@@ -44,3 +44,7 @@ function ungrynerd_svg($svg) {
   $output .= ob_get_clean();
   return $output;
 }
+
+add_action( 'widgets_init', function(){
+  register_widget( 'UN_Newsletter_Widget' );
+});

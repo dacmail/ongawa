@@ -1,0 +1,90 @@
+.sidebar {
+  &__widget {
+    padding: 0px 20px;
+    margin-bottom: 40px;
+    font-size: 16px;
+    line-height: 1.2;
+    &__title {
+      font-size: 32px;
+      font-weight: 300;
+      line-height: 0.75;
+      margin-bottom: 30px;
+    }
+    a {
+      color: $primary;
+    }
+    ul {
+      list-style: none;
+      padding: 0px;
+      li {
+        margin-bottom: 15px;
+      }
+    }
+    &.widget_categories {
+      .sidebar__widget__title {
+        background: url('../images/icon-folder.svg') right center no-repeat;
+      }
+      ul {
+        li {
+          background: url('../images/icon-hamburger.svg') 0px 4px no-repeat;
+          padding: 0px 0px 20px 30px;
+          border-bottom: 2px solid $gray;
+          margin-bottom: 20px;
+          a {
+            color: $black;
+          }
+        }
+      }
+    }
+    &.newsletter_widget {
+      background-color: rgba($gray, 0.3);
+      padding: 40px 30px;
+      border-radius: 20px;
+      .sidebar__widget__title {
+        background: url('../images/icon-newsletter.svg') right center no-repeat;
+      }
+      p {
+        font-weight: 300;
+        line-height: 1.5;
+      }
+      input[type=email] {
+        background: url('../images/icon-at.svg') 20px center no-repeat $white;
+        border-radius: 30px;
+        height: 50px;
+        line-height: 50px;
+        border: 0px;
+        padding-right: 20px;
+        padding-left: 50px;
+        color: $gray;
+        margin-bottom: 20px;
+      }
+      input[type=submit] {
+        @extend .btn-primary;
+        padding: 13px 20px;
+        text-transform: lowercase;
+      }
+    }
+    &.widget_custom_html, &.widget_search {
+      padding: 0px;
+    }
+  }
+  .search-form {
+    label {
+      width: 100%;
+      display: block;
+    }
+    .search-field {
+      display: block;
+      width: 100%;
+      border-radius: 30px;
+      border: solid 1px $gray;
+      padding: 17px 20px 17px 50px;
+      font-size: 16px;
+      line-height: 1;
+      background: url('../images/icon-search.svg') 20px center no-repeat $white;
+    }
+    .search-submit {
+      display: none;
+    }
+  }
+}
