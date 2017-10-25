@@ -2,12 +2,29 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 200px;
+  @include media-breakpoint-down(md) {
+    flex-flow: column;
+    align-items: center;
+  }
   .blog-list {
-    @extend .col-sm-8;
+    @extend .col-lg-8;
     padding: 0px;
   }
   .sidebar {
-    @extend .col-sm-3;
+    @extend .col-lg-3;
+    padding: 0px;
+    @include media-breakpoint-down(md) {
+      flex: 0 0 50%;
+      max-width: 50%;
+      margin-top: 50px;
+    }
+    @include media-breakpoint-down(sm) {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+  .single-post & .post {
+    @extend .col-lg-8;
     padding: 0px;
   }
 }
@@ -45,6 +62,10 @@
       font-weight: 500;
       line-height: 1.0;
       margin: 0px;
+      @include media-breakpoint-down(sm) {
+        font-size: 24px;
+        padding: 20px;
+      }
       a {
         color: $white
       }
@@ -53,6 +74,9 @@
   &__post {
     display: flex;
     margin-bottom: 40px;
+    @include media-breakpoint-down(sm) {
+      flex-flow: column;
+    }
     &__wrap {
       flex: 1 1 auto;
     }
@@ -71,6 +95,7 @@
         @extend .btn-simple;
         display: inline-block;
         font-weight: 300;
+        margin-bottom: 3px;
       }
     }
     &__excerpt {
@@ -85,6 +110,154 @@
       height: auto;
       flex: 0 0 260px;
       margin-left: 60px;
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
+    }
+  }
+}
+.single-post {
+  .post {
+    &__meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      align-items: center;
+      @include media-breakpoint-down(sm) {
+        flex-flow: column;
+      }
+      &__categories {
+        @include media-breakpoint-down(sm) {
+          margin-bottom: 15px;
+        }
+        a {
+          @extend .btn-simple;
+          display: inline-block;
+          font-weight: 300;
+          @include media-breakpoint-down(sm) {
+            padding: 10px;
+          }
+        }
+      }
+      &__share {
+        margin-right: -10px;
+        a {
+          padding: 5px 10px;
+          &:hover svg path {
+            fill: $black;
+          }
+        }
+        &__whatsapp {
+          display: none;
+          @include media-breakpoint-down(sm) {
+            display: inline;
+          }
+        }
+      }
+      &__by {
+        margin: 0px;
+        background: url('../images/icon-user.svg') left center no-repeat;
+        padding-left: 30px;
+        a {
+          font-weight: 500;
+          line-height: 1.33;
+          color: $black;
+        }
+      }
+      &__date {
+        line-height: 1.5;
+        text-align: right;
+      }
+      &--author {
+        margin-bottom: 40px;
+      }
+      &--footer {
+        padding-bottom: 14px;
+        border-bottom: 2px solid $primary;
+        margin-top: 100px;
+        @include media-breakpoint-down(sm) {
+          margin-top: 40px;
+        }
+        .post__meta {
+          &__tags {
+            @include media-breakpoint-down(sm) {
+              text-align: center;
+              margin-bottom: 15px;
+            }
+            a {
+              display: inline-block;
+              background-color: $white;
+              border: solid 1px $primary;
+              font-size: 16px;
+              font-weight: 300;
+              line-height: 1.0;
+              color: $primary;
+              padding: 11px 16px;
+              border-radius: 20px;
+              margin-right: 10px;
+              @include media-breakpoint-down(sm) {
+                padding: 8px;
+                margin-bottom: 3px;
+                margin-right: 0px;
+              }
+              &:hover {
+                background-color: $primary;
+                color: $white;
+              }
+            }
+          }
+        }
+      }
+    }
+    &__thumb {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin-bottom: 40px;
+    }
+    &__title {
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.0;
+      margin: 0px 0px 40px 0px;
+      @include media-breakpoint-down(sm) {
+        font-size: 30px;
+      }
+    }
+    &__content {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.5;
+      p {
+        margin-bottom: 30px;
+      }
+      blockquote {
+        font-size: 24px;
+        font-weight: 500;
+        font-style: italic;
+        line-height: 1.0;
+        color: $primary;
+        padding: 37px 0px 20px 0px;
+        border-top: 2px solid $primary;
+        border-bottom: 2px solid $primary;
+        position: relative;
+        &:before, &:after {
+          content: "";
+          width: 30px;
+          height: 18px;
+          position: absolute;
+          top: -2px;
+          left: 0px;
+          background: $white url('../images/quote.svg') no-repeat;
+        }
+        &:after {
+          top: auto;
+          left: auto;
+          bottom: -2px;
+          right: 0px;
+          transform: rotate(180deg);
+        }
+      }
     }
   }
 }
