@@ -2,6 +2,8 @@
 
 <?php while (have_posts()) : the_post(); ?>
   <article <?php post_class(); ?>>
+    <?php the_post_thumbnail('slide', array('class' => 'post__thumb')) ?>
+    <h1 class="post__title"><?php the_title(); ?></h1>
     <div class="post__meta">
       <div class="post__meta__categories"><?php the_category(' ', ' '); ?></div>
       <div class="post__meta__share">
@@ -10,8 +12,6 @@
         <a target="_blank" href="https://api.whatsapp.com/send?text=<?= get_the_title() . ' ' . urlencode(get_permalink()); ?>" class="post__meta__share__whatsapp"><?= Extras\ungrynerd_svg('icon-whatsapp'); ?></a>
       </div>
     </div>
-    <?php the_post_thumbnail('slide', array('class' => 'post__thumb')) ?>
-    <h1 class="post__title"><?php the_title(); ?></h1>
     <div class="post__meta post__meta--author">
       <p class="post__meta__by"><a href="<?= get_author_posts_url(get_the_author_meta('ID')); ?>" rel="author"><?= get_the_author(); ?></a></p>
       <time class="post__meta__date"><?php the_time(get_option('date_format')); ?></time>

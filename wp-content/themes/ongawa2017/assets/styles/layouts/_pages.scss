@@ -134,18 +134,20 @@
         &--image {
           display: flex;
           margin: 0px -15px 50px -15px;
+          flex-wrap: wrap;
+          justify-content: space-between;
           .btn-image {
             position: relative;
             padding: 0px;
             border: 0px;
-            width: 290px;
-            height: 290px;
             display: block;
-            margin: 15px;
             white-space: unset;
+            flex: 0 0 49%;
+            margin-bottom: 15px;
             img {
-              width: 290px;
-              height: 290px;
+              width: 100%;
+              height: auto;
+              min-height: 290px;
               object-fit: cover;
             }
             &-text {
