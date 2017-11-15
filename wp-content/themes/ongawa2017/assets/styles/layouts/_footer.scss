@@ -56,6 +56,7 @@
       justify-content: flex-start;
       flex-wrap: wrap;
       align-items: center;
+      position: relative;
       @include media-breakpoint-down(sm) {
         flex-flow: column;
         text-align: center;
@@ -69,15 +70,22 @@
         padding-right: 40px;
         padding-left: 20px;
         color: $gray;
+        width: 80%;
       }
       input[type=submit] {
         @extend .btn-primary;
         padding: 13px 20px;
         margin-left: -40px;
         text-transform: lowercase;
+        position: absolute;
+        right: 20%;
+        top: 0px;
         @include media-breakpoint-down(sm) {
           margin-left: 0px;
           margin-top: 10px;
+          position: relative;
+          right: auto;
+          top: auto;
         }
       }
     }

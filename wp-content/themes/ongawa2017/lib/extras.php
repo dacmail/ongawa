@@ -48,3 +48,14 @@ function ungrynerd_svg($svg) {
 add_action( 'widgets_init', function(){
   register_widget( 'UN_Newsletter_Widget' );
 });
+
+
+function ungrynerd_shortcode_button($atts, $content = '') {
+  extract(shortcode_atts(array(
+    'href' => '',
+    'target' => '',
+  ), $atts ) );
+  return '<a class="btn btn-simple" href="' . esc_attr($href) . '" target="' . esc_attr($target) . '">' . esc_html($content) . '</a>';
+}
+
+add_shortcode('boton', __NAMESPACE__ . '\\ungrynerd_shortcode_button');
