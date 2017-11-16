@@ -21,6 +21,15 @@
   }
 }
 
+.btn-fill {
+  @extend .btn-alt;
+  border: 1px solid $primary;
+  background-color: transparent;
+  &:hover {
+    border-color: $primary;
+  }
+}
+
 .btn-simple {
   background-color: $white;
   border: solid 1px $primary;

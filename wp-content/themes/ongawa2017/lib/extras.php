@@ -93,7 +93,7 @@ function ugnrynerd_doc_post_type()  {
     'rewrite' => array( 'slug' => 'publicaciones' ),
     'taxonomies' => array('un_cat'),
     'has_archive' => true,
-    'supports' => array('title')
+    'supports' => array('title', 'editor', 'thumbnail')
   );
   register_post_type('un_doc',$args);
 }
