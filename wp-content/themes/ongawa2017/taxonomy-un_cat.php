@@ -2,7 +2,7 @@
   <h1 class="section-title main"><?php esc_html_e('Publicaciones', 'ungrynerd'); ?></h1>
   <nav class="pubs__filter">
     <ul>
-      <li class="current-cat"><a href="<?php echo get_post_type_archive_link('un_doc') ?>"><?php esc_html_e('Todas', 'ungrynerd'); ?></a></li>
+      <li><a href="<?php echo get_post_type_archive_link('un_doc') ?>"><?php esc_html_e('Todas', 'ungrynerd'); ?></a></li>
       <?php wp_list_categories(array(
                               'taxonomy' => 'un_cat',
                               'title_li' => '')); ?>

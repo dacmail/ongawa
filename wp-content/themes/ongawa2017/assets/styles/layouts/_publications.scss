@@ -3,6 +3,29 @@
   margin: 0px -15px 200px -15px;
   justify-content: flex-start;
   align-items: flex-start;
+  &__filter {
+    ul {
+      display: flex;
+      justify-content: flex-start;
+      margin: 0px 0px 60px 0px;
+      padding: 0px;
+      li {
+        list-style: none;
+        margin-right: 10px;
+        a {
+          @extend .btn-simple;
+          padding: 10px 15px;
+          line-height: 1;
+        }
+        &.current-cat {
+          a {
+            background-color: $primary;
+            color: $white;
+          }
+        }
+      }
+    }
+  }
   &__pub {
     flex: 0 0 25%;
     margin: 15px;

@@ -6,7 +6,7 @@
     <h1 class="post__title"><?php the_title(); ?></h1>
     <div class="post__meta">
       <div class="post__meta__categories"><?php the_category(' ', ' '); ?></div>
-      <div class="post__meta__share">
+      <div class="post__meta__share share-buttons">
         <?php get_template_part('templates/share') ?>
       </div>
     </div>

@@ -143,15 +143,6 @@
         margin-right: -10px;
         a {
           padding: 5px 10px;
-          &:hover svg path {
-            fill: $black;
-          }
-        }
-        &__whatsapp {
-          display: none;
-          @include media-breakpoint-down(sm) {
-            display: inline;
-          }
         }
       }
       &__by {

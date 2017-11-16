@@ -18,6 +18,10 @@ a {
   line-height: 1.0;
   color: $black;
   margin: 0px 0px 30px 0px;
+  &.main {
+    font-size: 40px;
+    margin-bottom: 60px;
+  }
   a {
     color: $black;
   }
@@ -28,5 +32,20 @@ a {
   }
   .sticky-top {
     top: 32px;
+  }
+}
+
+
+.share-buttons {
+  a {
+    &:hover svg path {
+      fill: $black;
+    }
+  }
+  &__whatsapp {
+    display: none;
+    @include media-breakpoint-down(sm) {
+      display: inline;
+    }
   }
 }
