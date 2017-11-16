@@ -59,3 +59,55 @@ function ungrynerd_shortcode_button($atts, $content = '') {
 }
 
 add_shortcode('boton', __NAMESPACE__ . '\\ungrynerd_shortcode_button');
+
+
+
+/* DOCUMENTS POST TYPE */
+add_action('init',  __NAMESPACE__ . '\ugnrynerd_doc_post_type');
+function ugnrynerd_doc_post_type()  {
+  $labels = array(
+    'name' => __('Publicaciones', 'ungrynerd'),
+    'singular_name' => __('Publicación', 'ungrynerd'),
+    'add_new' => __('Añadir Publicación', 'ungrynerd'),
+    'add_new_item' => __('Añadir Publicación', 'ungrynerd'),
+    'edit_item' => __('Editar Publicación', 'ungrynerd'),
+    'new_item' => __('Nuevo Publicación', 'ungrynerd'),
+    'view_item' => __('Ver Publicaciones', 'ungrynerd'),
+    'search_items' => __('Buscar Publicaciones', 'ungrynerd'),
+    'not_found' =>  __('No se han encontrado Publicaciones ', 'ungrynerd'),
+    'not_found_in_trash' => __('No hay Publicaciones en la papelera', 'ungrynerd'),
+    'parent_item_colon' => ''
+  );
+
+  $args = array(
+    'labels' => $labels,
+    'public' => true,
+    'publicly_queryable' => true,
+    'show_ui' => true,
+    'query_var' => true,
+    'capability_type' => 'post',
+    'show_in_nav_menus' => false,
+    'hierarchical' => false,
+    'exclude_from_search' => false,
+    'menu_position' => 5,
+    'rewrite' => array( 'slug' => 'publicaciones' ),
+    'taxonomies' => array('un_cat'),
+    'has_archive' => true,
+    'supports' => array('title')
+  );
+  register_post_type('un_doc',$args);
+}
+
+function ungrynerd_doc_taxonomies() {
+    register_taxonomy("un_cat",
+    array("un_doc"),
+    array(
+        "hierarchical" => true,
+        "label" => esc_html__( "Categorización", 'ungrynerd'),
+        "singular_label" => esc_html__( "Categoría", 'ungrynerd'),
+        "rewrite" => array( 'slug' => 'archivado', 'hierarchical' => true),
+        'show_in_nav_menus' => false,
+        )
+    );
+}
+add_action( 'init', __NAMESPACE__ . '\ungrynerd_doc_taxonomies', 0);
