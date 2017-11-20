@@ -8,6 +8,7 @@
       <?php endif ?>
       <div class="country__container">
         <div class="country__content">
+          <h1 class="section-title country__content__title"><?php the_title(); ?></h1>
           <?php the_content(); ?>
         </div>
         <aside class="country__aside">

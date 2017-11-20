@@ -5,20 +5,40 @@
     margin: 0px auto;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
   }
   &__content {
     padding-top: 40px;
     flex: 0 0 45%;
     @extend .post-elements;
+    @include media-breakpoint-down(md) {
+      flex: 0 0 100%;
+      max-width: 100%;
+      margin-bottom: 50px;
+    }
+    &__title {
+      display: none;
+      @include media-breakpoint-down(md) {
+        display: block;
+      }
+    }
   }
   &__header {
     height: 300px;
     object-fit: cover;
     width: 100%;
+    @include media-breakpoint-down(md) {
+      height: 150px;
+    }
   }
   &__aside {
     flex: 0 0 40%;
     margin-top: -80px;
+    @include media-breakpoint-down(md) {
+      flex: 0 0 100%;
+      max-width: 100%;
+      margin-top: 0px;
+    }
     &__header {
       background-color: $primary;
       padding: 40px 30px;
@@ -32,9 +52,13 @@
       line-height: 0.6;
       color: $white;
       margin-bottom: 40px;
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
     }
     &__map {
       iframe {
+        width: 100%;
         max-width: 100%;
         border: 0px;
       }
