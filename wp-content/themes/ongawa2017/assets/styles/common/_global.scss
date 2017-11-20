@@ -49,3 +49,50 @@ a {
     }
   }
 }
+
+
+.post-elements {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5;
+  p {
+    margin-bottom: 30px;
+  }
+  h2 {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.0;
+    margin: 0px 0px 20px 0px;
+  }
+  blockquote {
+    font-size: 24px;
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.0;
+    color: $primary;
+    padding: 37px 0px 20px 0px;
+    border-top: 2px solid $primary;
+    border-bottom: 2px solid $primary;
+    position: relative;
+    &:before, &:after {
+      content: "";
+      width: 30px;
+      height: 18px;
+      position: absolute;
+      top: -2px;
+      left: 0px;
+      background: $white url('../images/quote.svg') no-repeat;
+    }
+    &:after {
+      top: auto;
+      left: auto;
+      bottom: -2px;
+      right: 0px;
+      transform: rotate(180deg);
+    }
+  }
+  ul {
+    margin-top: 0px;
+    list-style: square;
+  }
+}
