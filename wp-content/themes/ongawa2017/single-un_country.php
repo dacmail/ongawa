@@ -10,6 +10,9 @@
         <div class="country__content">
           <h1 class="section-title country__content__title"><?php the_title(); ?></h1>
           <?php the_content(); ?>
+          <div class="svg-icon-one svg-icon-one-dims"></div>
+          <div class="svg-icon-two svg-icon-two-dims"></div>
+          <div class="svg-icon-three svg-icon-three-dims"></div>
         </div>
         <aside class="country__aside">
           <div class="country__aside__header">

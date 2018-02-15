@@ -17,7 +17,7 @@ function body_class($classes) {
 
   // Add class if sidebar is active
   if (Setup\display_sidebar()) {
-    $classes[] = 'sidebar-primary';
+    $classes[] = 'sidebar-`imary';
   }
 
   return $classes;
@@ -148,3 +148,45 @@ function ugnrynerd_country_post_type()  {
   );
   register_post_type('un_country',$args);
 }
+
+
+function get_term_sticky_posts() {
+	if (!is_category()) return false;
+
+	$stickies = get_option( 'sticky_posts' );
+
+	if (!$stickies) return false;
+
+	$current_object = get_queried_object_id();
+
+	$args = [
+			'nopaging' => true,
+			'post__in' => $stickies,
+			'cat' => $current_object,
+			'ignore_sticky_posts' => 1,
+			'fields' => 'ids'
+	];
+	$q = get_posts( $args );
+	
+	return $q;
+}
+
+add_action( 'pre_get_posts', function ($q) {
+  if (!is_admin() && $q->is_main_query() && $q->is_category()) {
+    if ( function_exists(__NAMESPACE__ . '\get_term_sticky_posts' ) ) {
+			$stickies = get_term_sticky_posts();
+
+			if ( $stickies ) {
+				$q->set('post__not_in', $stickies);
+
+				if (!$q->is_paged()) {
+					add_filter( 'the_posts', function ( $posts ) use ( $stickies ) {   
+						$term_stickies = get_posts( ['post__in' => $stickies, 'nopaging' => true]);
+						$posts = array_merge( $term_stickies, $posts );
+						return $posts;
+					}, 10, 1 );
+				}
+			}
+    }
+	}
+});

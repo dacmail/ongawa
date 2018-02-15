@@ -11,9 +11,10 @@
         </a>
       <?php endif ?>
       <div class="footer__social">
-        <a href="#" target="_blank" class="footer__social__link"><?= Extras\ungrynerd_svg('icon-twitter'); ?></a>
-        <a href="#" target="_blank" class="footer__social__link"><?= Extras\ungrynerd_svg('icon-facebook'); ?></a>
-        <a href="#" target="_blank" class="footer__social__link"><?= Extras\ungrynerd_svg('icon-youtube'); ?></a>
+        <a href="https://twitter.com/ongawa4d" target="_blank" class="footer__social__link"><?= Extras\ungrynerd_svg('icon-twitter'); ?></a>
+        <a href="https://www.facebook.com/ongawa4d" target="_blank" class="footer__social__link"><?= Extras\ungrynerd_svg('icon-facebook'); ?></a>
+        <a href="https://www.youtube.com/user/isfapd" target="_blank" class="footer__social__link"><?= Extras\ungrynerd_svg('icon-youtube'); ?></a>
+        <a href="https://www.instagram.com/ongawa4d/" target="_blank" class="footer__social__link"><?= Extras\ungrynerd_svg('icon-instagram'); ?></a>
       </div>
     </div>
     <div class="footer__wrap footer__wrap--top">

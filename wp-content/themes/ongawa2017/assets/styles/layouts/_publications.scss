@@ -3,19 +3,26 @@
   margin: 0px -15px 200px -15px;
   justify-content: flex-start;
   align-items: flex-start;
+  flex-wrap: wrap;
   &__filter {
     ul {
       display: flex;
       justify-content: flex-start;
       margin: 0px 0px 60px 0px;
       padding: 0px;
+      @include media-breakpoint-down(sm) {
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+      }
       li {
         list-style: none;
         margin-right: 10px;
+        margin-bottom: 10px;
         a {
           @extend .btn-simple;
           padding: 10px 15px;
           line-height: 1;
+          display: block;
         }
         &.current-cat {
           a {
@@ -28,11 +35,14 @@
   }
   &__pub {
     flex: 0 0 25%;
-    margin: 15px;
+    padding: 15px;
     display: flex;
     flex-flow: column;
     justify-content: flex-start;
     align-items: center;
+    @include media-breakpoint-down(sm) {
+      flex: 0 0 100%;
+    }
     &__wrapper {
       position: relative;
       margin-bottom: 20px;
@@ -102,6 +112,10 @@
       }
     }
   }
+  .posts-navigation {
+    flex: 0 0 100%;
+    margin-top: 30px;
+  }
 }
 
 
@@ -109,8 +123,15 @@
   max-width: 750px;
   margin: 150px auto 200px auto;
   display: flex;
+  @include media-breakpoint-down(sm) {
+    margin-top: 50px;
+    flex-wrap: wrap;
+  }
   &__back {
     text-align: center;
+    @include media-breakpoint-down(sm) {
+      margin-top: 20px;
+    }
     a {
       line-height: 1;
       padding: 10px 40px;
@@ -133,9 +154,17 @@
     flex-flow: column;
     justify-content: flex-start;
     align-items: center;
+    @include media-breakpoint-down(sm) {
+      flex: 0 0 100%;
+      margin-right: 0px;
+      margin-bottom: 30px;
+    }
   }
   &__data {
     flex: 0 0 60%;
+    @include media-breakpoint-down(sm) {
+      flex: 0 0 100%;
+    }
     font-size: 16px;
     font-weight: 300;
     line-height: 1.5;

@@ -13,3 +13,215 @@
   @extend .btn;
   @extend .btn-secondary;
 }
+
+
+//GRAVITY FORMS
+.gform_wrapper {
+  position: relative;
+  padding: 40px 0px 150px 0px;
+  background-color: $light;
+  .gf_page_steps {
+    @extend .container;
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-bottom: 40px;
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
+    .gf_step_number {
+      display: inline-block;
+      background-color: $white;
+      border: solid 1px $primary;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      text-align: center;
+      line-height: 48px;
+      font-size: 18px;
+      font-weight: 300;
+      color: $primary;
+    }
+    .gf_step_label {
+      display: none;
+    }
+    .gf_step_active {
+      .gf_step_label {
+        display: inline-block;
+        position: absolute;
+        left: 15px;
+        font-size: 24px;
+        font-weight: 300;
+        line-height: 1.67;
+        text-transform: uppercase;
+        color: $primary;
+      }
+      .gf_step_number {
+        color: $white;
+        background-color: $primary;
+      }
+    }
+  }
+  .gform_body {
+    background-color: $light;
+    @include media-breakpoint-down(sm) {
+      padding-bottom: 50px;
+    }
+  }
+  .validation_error {
+    @extend .container;
+    margin-bottom: 30px;
+  }
+  .gform_fields {
+    @extend .container;
+    padding: 0px;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    .gfield {
+      margin-bottom: 15px;
+      @include media-breakpoint-down(sm) {
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
+    .ginput_counter, .instruction, .validation_message {
+      font-size: 13px;
+      color: $primary;
+    }
+
+    input[type=text], input[type=email] {
+      height: 60px;
+      background-color: $white;
+      border: 0px;
+      width: 100%;
+      font-size: 18px;
+      font-weight: 500;
+      padding: 0px 30px;
+    }
+    .gfield_label {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.0;
+      text-align: left;
+      color: $black;
+    }
+    .ginput_container_select {
+      width: 100%;
+      height: 60px;
+      background-color: $white;
+      border: 0px;
+      position: relative;
+      select {
+        padding: 15px 20px;
+        width: 110%;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+        background-image: none;
+        -webkit-appearance: none;
+        color: $black;
+        font-size: 18px;
+        font-weight: 500;
+        @include media-breakpoint-down(md) {
+          max-width: 100%;
+          width: 100%;
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+      &:after {
+        background: url('../images/icon-dropdown.svg') no-repeat;
+        content: "";
+        width: 16px;
+        height: 9px;
+        position: absolute;
+        right: 30px;
+        top: 50%;
+        margin-top: -4.5px;
+      }
+    }
+
+    .gfield_checkbox {
+      list-style: none;
+      padding: 0px;
+      margin: 0px;
+      label {
+        display: inline;
+      }
+    }
+    #field_1_34 {
+      width: 100%;
+      flex: 0 0 100%;
+      padding: 0px;
+      .quantity_options {
+        display: flex;
+        flex-wrap: wrap;
+        a {
+          flex: 0 0 23%;
+          margin: 1%;
+          font-size: 40px;
+          font-weight: bold;
+          line-height: 1.0;
+          padding: 100px 45px;
+          text-align: center;
+          color: $black;
+          text-transform: uppercase;
+          background-color: $white;
+          @include media-breakpoint-down(md) {
+            font-size: 18px;
+            padding: 50px 30px;
+          }
+          @include media-breakpoint-down(sm) {
+            flex: 0 0 48%;
+            margin: 1%;
+            padding: 30px 10px;
+          }
+          &.other {
+            font-size: 24px;
+            @include media-breakpoint-down(md) {
+              font-size: 16px;
+            }
+          }
+          &.active {
+            background-color: $primary;
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+  .gform_page_footer, .gform_footer {
+    @extend .container;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    input[type=button], input[type=submit] {
+      border-radius: 20px;
+      border: solid 1px $primary;
+      background: $white;
+      font-size: 16px;
+      line-height: 1.0;
+      text-align: center;
+      color: $primary;
+      padding: 11px 25px;
+      cursor: pointer;
+      margin-left: 15px;
+      @include media-breakpoint-down(md) {
+        margin-bottom: 15px;
+      }
+      @include media-breakpoint-down(xs) {
+        flex: 0 0 100%;
+        width: 100%;
+      }
+    }
+    .gform_ajax_spinner {
+      position: absolute;
+      left: 50%;
+      bottom: 150px;
+    }
+  }
+}

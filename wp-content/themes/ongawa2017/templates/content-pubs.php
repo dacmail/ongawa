@@ -7,7 +7,7 @@
       <a class="pubs__pub__view btn-fill" href="<?php the_permalink(); ?>"><?php esc_html_e('Ver', 'ungrynerd'); ?></a>
     </div>
   </div>
-  <a download class="pubs__pub__download btn-fill" href="<?php echo wp_get_attachment_url(get_field('doc_file')); ?>"><?php esc_html_e('Descargar', 'ungrynerd'); ?></a>
+  <a download class="pubs__pub__download btn-fill" href="<?php echo esc_url(get_field('doc_file')); ?>"><?php esc_html_e('Descargar', 'ungrynerd'); ?></a>
   <div class="pubs__pub__share share-buttons">
     <?php get_template_part('templates/share') ?>
   </div>

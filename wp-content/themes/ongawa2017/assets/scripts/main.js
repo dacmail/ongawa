@@ -38,9 +38,28 @@
       }
     },
     // About us page, note the change from about-us to about_us.
-    'about_us': {
+    'haztesocio': {
       init: function() {
-        // JavaScript to be fired on the about us page
+        $('.quantity_options a').on('click', function(e) {
+          $('#input_1_33').val($(this).data('value'));
+          if ($(this).data('value')==0 || $(this).data('value')=="0") {
+            $('#input_1_33').val('').focus();
+          }
+          $('.quantity_options a').removeClass('active');
+          $(this).addClass('active');
+          e.preventDefault();
+        });
+        $(document).ajaxComplete(function() {
+          $('.quantity_options a').on('click', function(e) {
+            $('#input_1_33').val($(this).data('value'));
+            if ($(this).data('value')==0 || $(this).data('value')=="0") {
+              $('#input_1_33').val('').focus();
+            }
+            $('.quantity_options a').removeClass('active');
+            $(this).addClass('active');
+            e.preventDefault();
+          });
+        });
       }
     }
   };

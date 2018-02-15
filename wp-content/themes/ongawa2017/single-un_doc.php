@@ -6,7 +6,7 @@
     <article <?php post_class('pub'); ?>>
       <div class="pub__meta">
         <?php the_post_thumbnail('big', array('class' => 'pub__thumb')) ?>
-        <a download class="pub__download btn-fill" href="<?php echo wp_get_attachment_url(get_field('doc_file')); ?>"><?php esc_html_e('Descargar', 'ungrynerd'); ?></a>
+        <a download class="pub__download btn-fill" href="<?php echo esc_url(get_field('doc_file')); ?>"><?php esc_html_e('Descargar', 'ungrynerd'); ?></a>
         <div class="pub__share share-buttons">
           <?php get_template_part('templates/share') ?>
         </div>
