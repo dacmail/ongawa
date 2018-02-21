@@ -40,6 +40,31 @@
           border-bottom: 2px solid $primary;
         }
       }
+      &.lang-item {
+        a {
+          font-size: 14px;
+          font-weight: 300;
+          position: relative;
+          &:after {
+              content: '';
+              position: absolute;
+              height: 16px;
+              right: -5px;
+              top: 50%;
+              margin-top: -8px;
+              border-right: 1px solid $primary;
+          }
+          &:before {
+              content: '';
+              position: absolute;
+              height: 16px;
+              left: -5px;
+              top: 50%;
+              margin-top: -8px;
+              border-left: 1px solid $primary;
+          }
+        }
+      }
       &.current-menu-item {
         a {
           color: $primary;
