@@ -11,6 +11,19 @@ a {
   color: $primary;
 }
 
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: $gray;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: $gray;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: $gray;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: $gray;
+}
+
 .section-title {
   font-size: 24px;
   font-weight: 700;
@@ -71,8 +84,8 @@ a {
     line-height: 1.0;
     color: $primary;
     padding: 37px 0px 20px 0px;
-    border-top: 2px solid $primary;
-    border-bottom: 2px solid $primary;
+    border-top: 1px solid $primary;
+    border-bottom: 1px solid $primary;
     position: relative;
     &:before, &:after {
       content: "";
@@ -94,5 +107,10 @@ a {
   ul {
     margin-top: 0px;
     list-style: square;
+  }
+  a {
+    &:hover {
+      color: $black;
+    }
   }
 }

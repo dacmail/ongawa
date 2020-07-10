@@ -21,9 +21,9 @@
       <div class="footer__newsletter">
         <h3>Informate</h3>
         <p>Recibe información sobre lo que hacemos en nuestras diferentes áreas temáticas:</p>
-        <form>
-          <input type="email" name="">
-          <input type="submit" name="" value="<?php esc_html_e('Suscríbete', 'ungrynerd'); ?>">
+        <form action="https://ongawa.us2.list-manage.com/subscribe/post?u=83debf66e351d8f0e766b642a&amp;id=391ce2ed39" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+          <input placeholder="@ correo electrónico" type="email" name="EMAIL">
+          <input type="submit" name="subscribe" value="<?php esc_html_e('Suscríbete', 'ungrynerd'); ?>">
         </form>
       </div>
       <?php

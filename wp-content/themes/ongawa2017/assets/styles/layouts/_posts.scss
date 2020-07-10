@@ -39,12 +39,12 @@
       left: 0px;
       a {
         display: inline-block;
-        font-size: 18px;
+        font-size: 16px;
         line-height: 1.0;
         font-weight: 300;
         color: $white;
-        padding: 16px 18px;
-        background-color: rgba($primary, 0.6);
+        padding: 12px 18px;
+        background-color: rgba($primary, 0.9);
       }
     }
     &__thumb {
@@ -93,6 +93,7 @@
       margin-bottom: 20px;
       a {
         @extend .btn-simple;
+        padding: 12px 20px;
         display: inline-block;
         font-weight: 300;
         margin-bottom: 3px;
@@ -132,6 +133,7 @@
         }
         a {
           @extend .btn-simple;
+          padding: 12px 20px;
           display: inline-block;
           font-weight: 300;
           @include media-breakpoint-down(sm) {
@@ -163,8 +165,8 @@
         margin-bottom: 40px;
       }
       &--footer {
-        padding-bottom: 14px;
-        border-bottom: 2px solid $primary;
+        padding-bottom: 24px;
+        border-bottom: 1px solid $primary;
         margin-top: 100px;
         @include media-breakpoint-down(sm) {
           margin-top: 40px;

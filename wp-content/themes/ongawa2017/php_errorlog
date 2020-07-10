@@ -1,0 +1,4 @@
+[08-Sep-2019 07:27:42 CST6CDT] PHP Fatal error:  Uncaught Error: Call to undefined function have_posts() in /home/ongawa31/public_html/wp-content/themes/ongawa2017/index.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/ongawa31/public_html/wp-content/themes/ongawa2017/index.php on line 3

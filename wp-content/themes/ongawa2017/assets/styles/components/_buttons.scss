@@ -9,6 +9,7 @@
   &:hover {
     background-color: $black;
     color: $white;
+    text-decoration: none;
   }
 }
 .btn-alt {
@@ -18,6 +19,7 @@
   &:hover {
     color: $white;
     background-color: $primary;
+    text-decoration: none;
   }
 }
 
@@ -27,6 +29,7 @@
   background-color: transparent;
   &:hover {
     border-color: $primary;
+    text-decoration: none;
   }
 }
 
@@ -42,6 +45,7 @@
   &:hover {
     background-color: $primary;
     color: $white;
+    text-decoration: none;
   }
 }
 
@@ -69,6 +73,7 @@
       &:hover {
         background-color: $primary;
         color: $white;
+        text-decoration: none;
       }
     }
   }

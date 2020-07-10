@@ -1,0 +1,4 @@
+[03-Dec-2019 10:18:14 CST6CDT] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_directory() in /home/ongawa31/public_html/wp-content/themes/twentynineteen/functions.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/ongawa31/public_html/wp-content/themes/twentynineteen/functions.php on line 16

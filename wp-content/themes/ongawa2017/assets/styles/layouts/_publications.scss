@@ -20,7 +20,8 @@
         margin-bottom: 10px;
         a {
           @extend .btn-simple;
-          padding: 10px 15px;
+          padding: 10px 10px;
+          font-weight: 300;
           line-height: 1;
           display: block;
         }
@@ -105,7 +106,7 @@
     }
     &__share {
       text-align: center;
-      border-top: 2px solid $primary;
+      border-top: 1px solid $primary;
       padding-top: 10px;
       a {
         margin: 0px 3px;
@@ -181,7 +182,7 @@
   }
   &__share {
     text-align: center;
-    border-top: 2px solid $primary;
+    border-top: 1px solid $primary;
     padding-top: 10px;
     a {
       margin: 0px 3px;
@@ -205,5 +206,8 @@
     font-weight: 500;
     line-height: 1.0;
     margin-bottom: 10px;
+  }
+  &__author {
+    margin-bottom: 20px;
   }
 }

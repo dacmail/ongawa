@@ -3,6 +3,10 @@
   margin: 0px auto 80px auto;
   border-bottom: solid 1px $gray;
   padding-bottom: 40px;
+  .col-sm-4:nth-child(2) {
+    border-left: 1px solid $gray;
+    border-right: 1px solid $gray;
+  }
   &__title {
     text-align: center;
     font-size: 64px;
@@ -24,7 +28,7 @@
       &:after {
         content: "";
         width: 64px;
-        border-bottom: 2px solid $gray;
+        border-bottom: 1px solid $gray;
         position: absolute;
         bottom: -30px;
         left: 50%;
