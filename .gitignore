@@ -11,15 +11,9 @@ wp-content/cache/
 wp-content/upgrade/
 wp-content/uploads
 wp-content/wp-cache-config.php
-wp-content/*.sql
-assets/*
 wp-content/w3tc-config/
 wp-content/db.php
 wp-content/object-cache.php
-
-readme.html
-license.txt
-
 
 ### OSX ###
 .DS_Store
@@ -44,10 +38,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-#Others
+
 bower_components
 node_modules
 npm-debug.log
-sftp-config.json
-Movefile
-old/
+wp-content/*.sql
+movefile.yml

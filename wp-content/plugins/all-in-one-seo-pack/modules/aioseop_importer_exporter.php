@@ -1,4 +1,10 @@
 <?php
+/**
+ * AIOSEOP Import & Export
+ *
+ * @package All_in_One_SEO_Pack
+ * @since ?
+ */
 
 if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 
@@ -13,114 +19,106 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 		 * All_in_One_SEO_Pack_Importer_Exporter constructor.
 		 */
 		function __construct() {
-			$this->name   = __( 'Importer & Exporter', 'all-in-one-seo-pack' );    // Human-readable name of the module
-			$this->prefix = 'aiosp_importer_exporter_'; // option prefix
-			$this->file   = __FILE__;
+			$this->name     = __( 'Importer & Exporter', 'all-in-one-seo-pack' ); // Human-readable name of the module.
+			$this->prefix   = 'aiosp_importer_exporter_';                         // option prefix.
+			$this->file     = __FILE__;
+			$this->warnings = array();
+
 			parent::__construct();
-			$help_text             = Array(
-				'import_submit'     => __(
-					"Select a valid All in One SEO Pack ini file and click 'Import' to import options from a previous state or install of All in One SEO Pack.<br /><a href='https://semperplugins.com/documentation/importer-exporter-module/' target='_blank'>Click here for documentation on this setting</a>",
-					'all-in-one-seo-pack'
-				),
-				'export_choices'    => __(
-					"You may choose to export settings from active modules, and content from post data.<br /><a href='https://semperplugins.com/documentation/importer-exporter-module/' target='_blank'>Click here for documentation on this setting</a>",
-					'all-in-one-seo-pack'
-				),
-				'export_post_types' => __(
-					"Select which Post Types you want to export your All in One SEO Pack meta data for.<br /><a href='https://semperplugins.com/documentation/importer-exporter-module/' target='_blank'>Click here for documentation on this setting</a>",
-					'all-in-one-seo-pack'
-				),
-			);
-			$this->warnings        = Array();
+
 			$this->default_options = array(
-				'import_submit'      => Array(
+				'import_submit'      => array(
 					'name'    => __( 'Import', 'all-in-one-seo-pack' ),
 					'default' => '',
 					'type'    => 'file',
+					'class'   => 'aioseop_file_upload',
 					'save'    => false,
 				),
-				'export_choices'     => Array(
+				'export_choices'     => array(
 					'name'            => __( 'Export Settings', 'all-in-one-seo-pack' ),
 					'type'            => 'multicheckbox',
-					'initial_options' => Array(
+					'initial_options' => array(
 						1 => __( 'General Settings', 'all-in-one-seo-pack' ),
- +						2 => __( 'Post Data', 'all-in-one-seo-pack' ),
+						2 => __( 'Post Data', 'all-in-one-seo-pack' ),
 					),
 				),
-				'export_post_types'  => Array(
-					'name'            => __( 'Export Post Types:', 'all-in-one-seo-pack' ),
-					'default'         => Array(
+				'export_post_types'  => array(
+					'name'            => __( 'Export Post Types', 'all-in-one-seo-pack' ),
+					'default'         => array(
 						'post' => 'post',
 						'page' => 'page',
 					),
 					'type'            => 'multicheckbox',
 					'initial_options' => $this->get_post_type_titles(
-						Array( '_builtin' => false )
+						array( '_builtin' => false )
 					),
 				),
-				'import_export_help' => Array(
+				'import_export_help' => array(
 					'type'    => 'html',
 					'label'   => 'none',
 					'default' => __(
-						             'Note: If General Settings is checked, the
+						'Note: If General Settings is checked, the
 								General Settings, the Feature Manager settings,
 								and the following currently active modules will
 								have their settings data exported:',
-						             'all-in-one-seo-pack'
-					             ) . '<br />',
+						'all-in-one-seo-pack'
+					) . '<br />',
 				),
 			);
-			if ( ! empty( $help_text ) ) {
-				foreach ( $help_text as $k => $v ) {
-					$this->default_options[ $k ]['help_text'] = $v;
-				}
-			}
-			$this->layout = Array(
-				'default' => Array(
+
+			$this->layout = array(
+				'default' => array(
 					'name'      => $this->name,
 					'help_link' => 'https://semperplugins.com/documentation/importer-exporter-module/',
 					'options'   => array_keys( $this->default_options ),
 				),
 			);
 
-			// load initial options / set defaults
-			add_action( 'admin_init', Array( $this, 'debug_post_types' ), 5 );
+			// load initial options / set defaults.
+			add_action( 'admin_init', array( $this, 'debug_post_types' ), 5 );
 		}
 
-
+		/**
+		 * Settings Page Initialize
+		 *
+		 * @since ?
+		 */
 		function settings_page_init() {
 			add_filter(
 				$this->prefix . 'submit_options',
-				Array( $this, 'filter_submit' )
+				array( $this, 'filter_submit' )
 			);
 		}
 
 
 		/**
-		 * @param $submit
+		 * Filter Submit
 		 *
+		 * @since ?
+		 *
+		 * @param $submit
 		 * @return array
 		 */
 		function filter_submit( $submit ) {
-			$submit['Submit']['value'] = __(
-				                             'Import',
-				                             'all-in-one-seo-pack'
-			                             )
-			                             . ' &raquo;';
+			$submit['Submit']['value'] = __( 'Import', 'all-in-one-seo-pack' ) . ' &raquo;';
 
-			return Array(
-				       'export_submit' => Array(
-					       'type'  => 'submit',
-					       'class' => 'button-primary',
-					       'value' => __( 'Export', 'all-in-one-seo-pack' ) . ' &raquo;',
-				       ),
-			       ) + $submit;
+			return array(
+				'export_submit' => array(
+					'type'  => 'submit',
+					'class' => 'button-primary',
+					'value' => __( 'Export', 'all-in-one-seo-pack' ) . ' &raquo;',
+				),
+			) + $submit;
 		}
 
-
+		/**
+		 * Debug Post Types
+		 *
+		 * @since ?
+		 */
 		function debug_post_types() {
-			$post_types                                                    = $this->get_post_type_titles();
-			$rempost                                                       = array(
+			$post_types = $this->get_post_type_titles();
+			$rempost    = array(
 				'customize_changeset' => 1,
 				'custom_css'          => 1,
 				'revision'            => 1,
@@ -146,61 +144,68 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 					$this->default_options['import_export_help']['default'] .= "\n</ul>\n";
 				} else {
 					$this->default_options['import_export_help']['default'] .= '<br />'
-					                                                           . __(
-						                                                           'There are no other modules currently loaded!',
-						                                                           'all-in-one-seo-pack'
-					                                                           );
+																			. __(
+																				'There are no other modules currently loaded!',
+																				'all-in-one-seo-pack'
+																			);
 				}
 			}
 			$this->default_options['import_export_help']['default'] .= '<br />'
-			                                                           . __(
-				                                                           'You may change this by activating or deactivating
+																	. __(
+																		'You may change this by activating or deactivating
 						modules in the Feature Manager.',
-				                                                           'all-in-one-seo-pack'
-			                                                           );
+																		'all-in-one-seo-pack'
+																	);
 			$this->update_options();
 			if ( ! empty( $_REQUEST['export_submit'] ) ) {
 				$this->do_importer_exporter();
 			} else {
 				add_action(
 					$this->prefix . 'settings_update',
-					Array( $this, 'do_importer_exporter' )
+					array( $this, 'do_importer_exporter' )
 				);
 			}
 		}
 
 
 		/**
-		 * @param $args
+		 * Importer/Exporter Export
 		 *
+		 * @since ?
+		 *
+		 * @param $args
 		 * @return string
 		 */
 		function importer_exporter_export( $args ) {
 
-			// Adds all settings to settings file
+			// Adds all settings to settings file.
 			$name = $this->get_option_name();
 			$buf  = '[' . $this->get_option_name() . "]\n";
 			if ( ! empty( $this->options ) ) {
 				foreach ( $this->options as $key => $value ) {
 					$buf .= "$key = '" . str_replace(
-							"'",
-							"\'",
-							trim( serialize( $value ) )
-						) . "'\n";
+						"'",
+						"\'",
+						trim( serialize( $value ) )
+					) . "'\n";
 				}
 			}
 
 			return $buf;
 		}
 
-
+		/**
+		 * Show Import Warning
+		 *
+		 * @since ?
+		 */
 		function show_import_warnings() {
 
 			echo '<div class="error fade" style="width:52%">';
 
 			if ( is_array( $this->warnings ) ) {
 				foreach ( $this->warnings as $warning ) {
-					echo "<p>" . wp_kses( wp_unslash( $warning ), 'b, strong, i, em' ) . "</p>";
+					echo '<p>' . wp_kses( wp_unslash( $warning ), 'b, strong, i, em' ) . '</p>';
 				}
 			}
 			echo '</div>';
@@ -208,12 +213,15 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 
 
 		/**
-		 * @param $array
+		 * Parse INI Helper
 		 *
+		 * @since ?
+		 *
+		 * @param $array
 		 * @return array
 		 */
 		function parse_ini_helper( $array ) {
-			$returnArray = array();
+			$return_array = array();
 			if ( is_array( $array ) ) {
 				foreach ( $array as $key => $value ) {
 					$e = explode( ':', $key );
@@ -225,37 +233,41 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 						$x = array_reverse( $x, true );
 						foreach ( $x as $k => $v ) {
 							$c = $x[0];
-							if ( empty( $returnArray[ $c ] ) ) {
-								$returnArray[ $c ] = array();
+							if ( empty( $return_array[ $c ] ) ) {
+								$return_array[ $c ] = array();
 							}
-							if ( isset( $returnArray[ $x[1] ] ) ) {
-								$returnArray[ $c ] = array_merge(
-									$returnArray[ $c ], $returnArray[ $x[1] ]
+							if ( isset( $return_array[ $x[1] ] ) ) {
+								$return_array[ $c ] = array_merge(
+									$return_array[ $c ],
+									$return_array[ $x[1] ]
 								);
 							}
-							if ( $k === 0 ) {
-								$returnArray[ $c ] = array_merge(
-									$returnArray[ $c ], $array[ $key ]
+							if ( 0 === $k ) {
+								$return_array[ $c ] = array_merge(
+									$return_array[ $c ],
+									$array[ $key ]
 								);
 							}
 						}
 					} else {
-						$returnArray[ $key ] = $array[ $key ];
+						$return_array[ $key ] = $array[ $key ];
 					}
 				}
 			}
 
-			return $returnArray;
+			return $return_array;
 		}
 
-
 		/**
-		 * @param $array
+		 * Recursive Parse
 		 *
+		 * @since ?
+		 *
+		 * @param $array
 		 * @return array
 		 */
 		function recursive_parse( $array ) {
-			$returnArray = array();
+			$return_array = array();
 			if ( is_array( $array ) ) {
 				foreach ( $array as $key => $value ) {
 					if ( is_array( $value ) ) {
@@ -264,37 +276,41 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 					$x = explode( '.', $key );
 					if ( ! empty( $x[1] ) ) {
 						$x = array_reverse( $x, true );
-						if ( isset( $returnArray[ $key ] ) ) {
-							unset( $returnArray[ $key ] );
+						if ( isset( $return_array[ $key ] ) ) {
+							unset( $return_array[ $key ] );
 						}
-						if ( ! isset( $returnArray[ $x[0] ] ) ) {
-							$returnArray[ $x[0] ] = array();
+						if ( ! isset( $return_array[ $x[0] ] ) ) {
+							$return_array[ $x[0] ] = array();
 						}
 						$first = true;
 						foreach ( $x as $k => $v ) {
-							if ( $first === true ) {
+							if ( true === $first ) {
 								$b     = $array[ $key ];
 								$first = false;
 							}
 							$b = array( $v => $b );
 						}
-						$returnArray[ $x[0] ] = array_merge_recursive(
-							$returnArray[ $x[0] ], $b[ $x[0] ]
+						$return_array[ $x[0] ] = array_merge_recursive(
+							$return_array[ $x[0] ],
+							$b[ $x[0] ]
 						);
 					} else {
-						$returnArray[ $key ] = $array[ $key ];
+						$return_array[ $key ] = $array[ $key ];
 					}
 				}
 			}
 
-			return $returnArray;
+			return $return_array;
 		}
 
 
 		/**
+		 * Get INI File
+		 *
+		 * @since ?
+		 *
 		 * @param      $assoc_arr
 		 * @param bool $has_sections
-		 *
 		 * @return string
 		 */
 		function get_ini_file( $assoc_arr, $has_sections = true ) {
@@ -305,12 +321,12 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 					foreach ( $elem as $key2 => $elem2 ) {
 						if ( is_array( $elem2 ) ) {
 							for ( $i = 0; $i < count( $elem2 ); $i ++ ) {
-								$content .= $key2 . "[] = \"" . $elem2[ $i ] . "\"\n";
+								$content .= $key2 . '[] = "' . $elem2[ $i ] . "\"\n";
 							}
-						} else if ( $elem2 == '' ) {
+						} elseif ( '' == $elem2 ) {
 							$content .= $key2 . " = \n";
 						} else {
-							$content .= $key2 . " = \"" . $elem2 . "\"\n";
+							$content .= $key2 . ' = "' . $elem2 . "\"\n";
 						}
 					}
 				}
@@ -318,12 +334,12 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 				foreach ( $assoc_arr as $key => $elem ) {
 					if ( is_array( $elem ) ) {
 						for ( $i = 0; $i < count( $elem ); $i ++ ) {
-							$content .= $key2 . "[] = \"" . $elem[ $i ] . "\"\n";
+							$content .= $key2 . '[] = "' . $elem[ $i ] . "\"\n";
 						}
-					} else if ( $elem == '' ) {
+					} elseif ( '' == $elem ) {
 						$content .= $key2 . " = \n";
 					} else {
-						$content .= $key2 . " = \"" . $elem . "\"\n";
+						$content .= $key2 . ' = "' . $elem . "\"\n";
 					}
 				}
 			}
@@ -331,21 +347,27 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 			return $content;
 		}
 
-
 		/**
-		 * @param $string
+		 * Parse INI Advanced
 		 *
+		 * @since ?
+		 *
+		 * @param $string
 		 * @return array
 		 */
 		function parse_ini_advanced( $string ) {
 			return $this->recursive_parse(
 				$this->parse_ini_helper(
-					parse_ini_string( $string, true )
+					parse_ini_string( $string, true ) // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctions.parse_ini_stringFound
 				)
 			);
 		}
 
-
+		/**
+		 * Do Importer/Exporter
+		 *
+		 * @since ?
+		 */
 		function do_importer_exporter() {
 			$submit       = null;
 			$count        = 0;
@@ -355,7 +377,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 			if ( isset( $_REQUEST['nonce-aioseop'] ) ) {
 				$nonce = $_REQUEST['nonce-aioseop'];
 			}
-			$post_fields = Array(
+			$post_fields = array(
 				'keywords',
 				'description',
 				'title',
@@ -371,41 +393,41 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 			if ( ! empty( $_REQUEST['export_submit'] ) ) {
 				$submit = 'Export';
 			}
-			if ( ( $submit != null ) && wp_verify_nonce( $nonce, 'aioseop-nonce' ) ) {
+			if ( ( null != $submit ) && wp_verify_nonce( $nonce, 'aioseop-nonce' ) ) {
 				switch ( $submit ) {
 					case 'Import':
 						try {
-							// Parses export file
+							// Parses export file.
 							$file          = $this->get_sanitized_file(
 								$_FILES['aiosp_importer_exporter_import_submit']['tmp_name']
 							);
-							$section       = Array();
+							$section       = array();
 							$section_label = null;
 							foreach ( $file as $line_number => $line ) {
 								$line    = trim( $line );
-								$matches = Array();
+								$matches = array();
 								if ( empty( $line ) ) {
 									continue;
 								}
-								if ( $line[0] == ';' ) {
+								if ( ';' == $line[0] ) {
 									continue;
 								}
-								if ( preg_match( "/^\[(\S+)\]$/", $line, $label ) ) {
+								if ( preg_match( '/^\[(\S+)\]$/', $line, $label ) ) {
 									$section_label = strval( $label[1] );
-									if ( $section_label == 'post_data' ) {
+									if ( 'post_data' == $section_label ) {
 										$count ++;
 									}
 									if ( ! isset( $section[ $section_label ] ) ) {
-										$section[ $section_label ] = Array();
+										$section[ $section_label ] = array();
 									}
 								} elseif ( preg_match( "/^(\S+)\s*=\s*'(.*)'$/", $line, $matches ) ) {
-									if ( $section_label == 'post_data' ) {
+									if ( 'post_data' == $section_label ) {
 										$section[ $section_label ][ $count ][ $matches[1] ] = $matches[2];
 									} else {
 										$section[ $section_label ][ $matches[1] ] = $matches[2];
 									}
-								} elseif ( preg_match( "/^(\S+)\s*=\s*NULL$/", $line, $matches ) ) {
-									if ( $section_label == 'post_data' ) {
+								} elseif ( preg_match( '/^(\S+)\s*=\s*NULL$/', $line, $matches ) ) {
+									if ( 'post_data' == $section_label ) {
 										$section[ $section_label ][ $count ][ $matches[1] ] = null;
 									} else {
 										$section[ $section_label ][ $matches[1] ] = null;
@@ -413,7 +435,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 								} else {
 									$this->warnings[] = sprintf(
 										__(
-											'<b>Warning:</b> Line not matched: <b>"%s"</b>, On Line: <b>%s</b>',
+											'<b>Warning:</b> Line not matched: <b>"%1$s"</b>, On Line: <b>%2$s</b>',
 											'all-in-one-seo-pack'
 										),
 										$line,
@@ -422,22 +444,23 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 								}
 							}
 
-							// Updates Plugin Settings
+							// Updates Plugin Settings.
 							if ( is_array( $section ) ) {
 								foreach ( $section as $label => $module_options ) {
 									if ( is_array( $module_options ) ) {
 										foreach ( $module_options as $key => $value ) {
 
-											// Updates Post Data
-											if ( $label == 'post_data' ) {
+											// Updates Post Data.
+											if ( 'post_data' == $label ) {
 												$post_exists = post_exists(
 													$module_options[ $key ]['post_title'],
 													'',
 													$module_options[ $key ]['post_date']
 												);
 												$target      = get_post( $post_exists );
-												if ( ( ! empty( $module_options[ $key ]['post_type'] ) )
-												     && $post_exists != null
+												if (
+														( ! empty( $module_options[ $key ]['post_type'] ) ) &&
+														null != $post_exists
 												) {
 													if ( is_array( $value ) ) {
 														foreach ( $value as $field_name => $field_value ) {
@@ -468,22 +491,22 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 														$target_title
 													);
 												}
-												if ( $post_warning != null ) {
+												if ( null != $post_warning ) {
 													$this->warnings[] = $post_warning;
 													$post_warning     = null;
 												}
 
-												// Updates Module Settings
+												// Updates Module Settings.
 											} else {
 												$module_options[ $key ] = str_replace(
-													Array( "\'", '\n', '\r' ),
-													Array( "'", "\n", "\r" ),
+													array( "\'", '\n', '\r' ),
+													array( "'", "\n", "\r" ),
 													maybe_unserialize( $value )
 												);
 											}
 										}
 
-										// Updates Module Settings
+										// Updates Module Settings.
 										$this->update_class_option(
 											$module_options,
 											$label
@@ -492,8 +515,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 								}
 							}
 						} catch ( Exception $e ) {
-							// Shows only one warning when compromised file is imported
-							$this->warnings = array();
+							// Shows only one warning when compromised file is imported.
+							$this->warnings   = array();
 							$this->warnings[] = $e->getMessage();
 							add_action(
 								$this->prefix . 'settings_header_errors',
@@ -502,30 +525,30 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 							break;
 						}
 
-						// Shows all errors found
+						// Shows all errors found.
 						if ( ! empty( $this->warnings ) ) {
 							add_action(
 								$this->prefix . 'settings_header',
-								Array( $this, 'show_import_warnings' ),
+								array( $this, 'show_import_warnings' ),
 								5
 							);
 						}
 
 						break;
 					case 'Export':
-
-						// Creates Files Contents
+						// Creates Files Contents.
 						$settings_file = 'settings_aioseop.ini';
-						$buf           = '; ' . __(
-								'Settings export file for All in One SEO Pack', '
-							all-in-one-seo-pack'
-							) . "\n";
+						/* translators: %s is a placeholder, which means that it should not be translated. It will be replaced with the name of the plugin, All in One SEO Pack. */
+						$buf = '; ' . sprintf(
+							__( 'Settings export file for %s', 'all-in-one-seo-pack' ),
+							AIOSEOP_PLUGIN_NAME
+						) . "\n";
 
-						// Adds all settings to settings file
+						// Adds all settings to settings file.
 						$buf = $aiosp->settings_export( $buf );
 						$buf = apply_filters( 'aioseop_export_settings', $buf );
 
-						// Sends File to browser
+						// Sends File to browser.
 						$strlength = strlen( $buf );
 						header( 'Content-type: application/ini' );
 						header( "Content-Disposition: attachment; filename=$settings_file" );
@@ -538,32 +561,41 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Importer_Exporter' ) ) {
 		}
 
 
+		/**
+		 * Settings Update
+		 *
+		 * @since ?
+		 * @deprecated
+		 */
 		function settings_update() {
 		}
 
 		/**
+		 * Get Sanitized File
+		 *
 		 * Returns sanitized imported file.
 		 *
-		 * @since
+		 * @since 2.3.4.2
 		 *
 		 * @param string $filename Path to where the uploaded file is located.
-		 *
 		 * @return array Sanitized file as array.
 		 * @throws Exception
 		 */
 		private function get_sanitized_file( $filename ) {
 			$file = file( $filename );
 			for ( $i = count( $file ) - 1; $i >= 0; -- $i ) {
-				// Remove insecured lines
+				// Remove insecured lines.
 				if ( preg_match( '/\<(\?php|script)/', $file[ $i ] ) ) {
-					throw new Exception( __(
-						'<b>Security warning:</b> Your file looks compromised. Please check the file for any script-injection.',
-						'all-in-one-seo-pack'
-					) );
+					throw new Exception(
+						__(
+							'<b>Security warning:</b> Your file looks compromised. Please check the file for any script-injection.',
+							'all-in-one-seo-pack'
+						)
+					);
 				}
-				// Apply security filters
+				// Apply security filters.
 				$file[ $i ] = strip_tags( trim( $file[ $i ] ) );
-				// Remove empty lines
+				// Remove empty lines.
 				if ( empty( $file[ $i ] ) ) {
 					unset( $file[ $i ] );
 				}

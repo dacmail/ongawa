@@ -1,4 +1,10 @@
 <?php
+/**
+ * AIOSEOP Updates Class
+ *
+ * @package All_in_One_SEO_Pack
+ * @since ?
+ */
 
 /**
  * Handles detection of new plugin version updates.
@@ -13,7 +19,6 @@ class AIOSEOP_Updates {
 
 	/**
 	 * Constructor
-	 *
 	 */
 	function __construct() {
 
@@ -56,12 +61,12 @@ class AIOSEOP_Updates {
 				$aiosp->update_class_option( $aioseop_options );
 			}
 
-			if( ! is_network_admin() || !isset( $_GET['activate-multi'] ) ) {
+			if ( ! is_network_admin() || ! isset( $_GET['activate-multi'] ) ) {
 				// Replace this to reactivate update welcome screen.
-				//set_transient( '_aioseop_activation_redirect', true, 30 ); // Sets 30 second transient for welcome screen redirect on activation.
+				set_transient( '_aioseop_activation_redirect', true, 30 ); // Sets 30 second transient for welcome screen redirect on activation.
 			}
 			delete_transient( 'aioseop_feed' );
-			add_action( 'admin_init', array( $this, 'aioseop_welcome' ) );
+			// add_action( 'admin_init', array( $this, 'aioseop_welcome' ) ); //Uncomment for welcome screen.
 
 		}
 
@@ -72,11 +77,11 @@ class AIOSEOP_Updates {
 		$this->do_feature_updates();
 	}
 
-	function aioseop_welcome(){
+	function aioseop_welcome() {
 		if ( get_transient( '_aioseop_activation_redirect' ) ) {
 			delete_transient( '_aioseop_activation_redirect' );
-			//$aioseop_welcome = new aioseop_welcome();
-			//$aioseop_welcome->init( TRUE );
+			$aioseop_welcome = new aioseop_welcome();
+			$aioseop_welcome->init( true );
 		}
 
 	}
@@ -114,6 +119,39 @@ class AIOSEOP_Updates {
 			set_transient( '_aioseop_activation_redirect', true, 30 ); // Sets 30 second transient for welcome screen redirect on activation.
 		}
 
+		if (
+			( ! AIOSEOPPRO && version_compare( $old_version, '2.9', '<' ) ) ||
+			( AIOSEOPPRO && version_compare( $old_version, '2.10', '<' ) )
+		) {
+			$this->bad_bots_remove_semrush_201810();
+		}
+
+		if (
+			version_compare( $old_version, '3.0', '<' )
+		) {
+			$this->bad_bots_remove_exabot_201902();
+			$this->sitemap_excl_terms_201905();
+		}
+
+		if (
+				version_compare( $old_version, '3.1', '<' )
+		) {
+			$this->reset_flush_rewrite_rules_201906();
+		}
+
+		// Cause the update to occur again for 3.2.6.
+		if (
+				version_compare( $old_version, '3.2', '<' ) ||
+				version_compare( $old_version, '3.2.6', '<' )
+		) {
+			$this->update_schema_markup_201907();
+		}
+
+		if ( version_compare( $old_version, '3.4.3', '<' ) ) {
+			if ( empty( $aioseop_options['modules']['aiosp_feature_manager_options']['aiosp_feature_manager_enable_sitemap'] ) ) {
+				aioseop_delete_rewrite_rules();
+			}
+		}
 	}
 
 	/**
@@ -128,11 +166,16 @@ class AIOSEOP_Updates {
 
 		// Remove 'DOC' from bad bots list to avoid false positives.
 		if ( isset( $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'] ) ) {
-			$list                                                                                 = $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'];
-			$list                                                                                 = str_replace( array(
-				"DOC\r\n",
-				"DOC\n",
-			), '', $list );
+			$list = $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'];
+			$list = str_replace(
+				array(
+					"DOC\r\n",
+					"DOC\n",
+				),
+				'',
+				$list
+			);
+
 			$aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'] = $list;
 			update_option( 'aioseop_options', $aioseop_options );
 			$aiosp->update_class_option( $aioseop_options );
@@ -154,11 +197,16 @@ class AIOSEOP_Updates {
 
 		// Remove 'yandex' from bad bots list to avoid false positives.
 		if ( isset( $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'] ) ) {
-			$list                                                                                 = $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'];
-			$list                                                                                 = str_replace( array(
-				"yandex\r\n",
-				"yandex\n",
-			), '', $list );
+			$list = $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'];
+			$list = str_replace(
+				array(
+					"yandex\r\n",
+					"yandex\n",
+				),
+				'',
+				$list
+			);
+
 			$aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'] = $list;
 			update_option( 'aioseop_options', $aioseop_options );
 			$aiosp->update_class_option( $aioseop_options );
@@ -176,13 +224,97 @@ class AIOSEOP_Updates {
 
 		// Remove 'SeznamBot' from bad bots list to avoid false positives.
 		if ( isset( $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'] ) ) {
-			$list                                                                                 = $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'];
-			$list                                                                                 = str_replace( array(
-				"SeznamBot\r\n",
-				"SeznamBot\n",
-			), '', $list );
+			$list = $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'];
+			$list = str_replace(
+				array(
+					"SeznamBot\r\n",
+					"SeznamBot\n",
+				),
+				'',
+				$list
+			);
+
 			$aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'] = $list;
 			update_option( 'aioseop_options', $aioseop_options );
+			$aiosp->update_class_option( $aioseop_options );
+		}
+	}
+
+	/**
+	 * Removes semrush from bad bot blocker.
+	 *
+	 * @since 2.9
+	 * @global $aiosp, $aioseop_options
+	 */
+	function bad_bots_remove_semrush_201810() {
+		global $aiosp, $aioseop_options;
+
+		// Remove 'SemrushBot' from bad bots list to avoid false positives.
+		if ( isset( $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'] ) ) {
+			$list = $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'];
+			$list = str_replace(
+				array(
+					"SemrushBot\r\n",
+					"SemrushBot\n",
+				),
+				'',
+				$list
+			);
+
+			$aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'] = $list;
+			update_option( 'aioseop_options', $aioseop_options );
+			$aiosp->update_class_option( $aioseop_options );
+		}
+	}
+
+	/**
+	 * Removes Exabot from bad bot blocker to allow Alexabot. (#2105)
+	 *
+	 * @since 3.0
+	 * @global $aiosp, $aioseop_options
+	 */
+	function bad_bots_remove_exabot_201902() {
+		global $aiosp, $aioseop_options;
+
+		if ( isset( $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'] ) ) {
+			$list = $aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'];
+			$list = str_replace(
+				array(
+					"Exabot\r\n",
+					"Exabot\n",
+				),
+				'',
+				$list
+			);
+
+			$aioseop_options['modules']['aiosp_bad_robots_options']['aiosp_bad_robots_blocklist'] = $list;
+			update_option( 'aioseop_options', $aioseop_options );
+			$aiosp->update_class_option( $aioseop_options );
+		}
+	}
+
+	/**
+	 * Converts excl_categories to excl_terms
+	 *
+	 * @since 3.0
+	 * @global $aiosp, $aioseop_options
+	 */
+	public function sitemap_excl_terms_201905() {
+		global $aiosp, $aioseop_options;
+		$aioseop_options = aioseop_get_options();
+		if ( ! isset( $aioseop_options['modules'] ) && ! isset( $aioseop_options['modules']['aiosp_sitemap_options'] ) ) {
+			return;
+		}
+
+		$options = $aioseop_options['modules']['aiosp_sitemap_options'];
+
+		if ( ! empty( $options['aiosp_sitemap_excl_categories'] ) ) {
+			$options['aiosp_sitemap_excl_terms']['category']['taxonomy'] = 'category';
+			$options['aiosp_sitemap_excl_terms']['category']['terms']    = $options['aiosp_sitemap_excl_categories'];
+			unset( $options['aiosp_sitemap_excl_categories'] );
+
+			$aioseop_options['modules']['aiosp_sitemap_options'] = $options;
+
 			$aiosp->update_class_option( $aioseop_options );
 		}
 	}
@@ -215,4 +347,65 @@ class AIOSEOP_Updates {
 			);
 		}
 	}
+
+	/**
+	 * Flushes rewrite rules for XML Sitemap URL changes
+	 *
+	 * @since 3.1
+	 */
+	public function reset_flush_rewrite_rules_201906() {
+		add_action( 'shutdown', 'flush_rewrite_rules' );
+	}
+
+	/**
+	 * Update to add schema markup settings.
+	 *
+	 * @since 3.2
+	 */
+	public function update_schema_markup_201907() {
+		global $aiosp;
+		global $aioseop_options;
+
+		$update_values = array(
+			'aiosp_schema_markup'               => '1',
+			'aiosp_schema_search_results_page'  => '1',
+			'aiosp_schema_social_profile_links' => '',
+			'aiosp_schema_site_represents'      => 'organization',
+			'aiosp_schema_organization_name'    => '',
+			'aiosp_schema_organization_logo'    => '',
+			'aiosp_schema_person_user'          => '1',
+			'aiosp_schema_phone_number'         => '',
+			'aiosp_schema_contact_type'         => 'none',
+		);
+
+		if ( isset( $aioseop_options['aiosp_schema_markup'] ) ) {
+			if ( empty( $aioseop_options['aiosp_schema_markup'] ) || 'off' === $aioseop_options['aiosp_schema_markup'] ) {
+				$update_values['aiosp_schema_markup'] = '0';
+			}
+		}
+		if ( isset( $aioseop_options['aiosp_google_sitelinks_search'] ) ) {
+			if ( empty( $aioseop_options['aiosp_google_sitelinks_search'] ) || 'off' === $aioseop_options['aiosp_google_sitelinks_search'] ) {
+				$update_values['aiosp_schema_search_results_page'] = '0';
+			}
+		}
+		if ( isset( $aioseop_options['modules']['aiosp_opengraph_options']['aiosp_opengraph_profile_links'] ) ) {
+			$update_values['aiosp_schema_social_profile_links'] = $aioseop_options['modules']['aiosp_opengraph_options']['aiosp_opengraph_profile_links'];
+		}
+		if ( isset( $aioseop_options['modules']['aiosp_opengraph_options']['aiosp_opengraph_person_or_org'] ) ) {
+			if ( 'person' === $aioseop_options['modules']['aiosp_opengraph_options']['aiosp_opengraph_person_or_org'] ) {
+				$update_values['aiosp_schema_site_represents'] = 'person';
+			}
+		}
+		if ( isset( $aioseop_options['modules']['aiosp_opengraph_options']['aiosp_opengraph_social_name'] ) ) {
+			$update_values['aiosp_schema_organization_name'] = $aioseop_options['modules']['aiosp_opengraph_options']['aiosp_opengraph_social_name'];
+		}
+
+		// Add/update values to options.
+		foreach ( $update_values as $key => $value ) {
+			$aioseop_options[ $key ] = $value;
+		}
+
+		$aiosp->update_class_option( $aioseop_options );
+	}
+
 }

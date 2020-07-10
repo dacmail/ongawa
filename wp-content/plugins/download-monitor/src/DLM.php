@@ -150,6 +150,10 @@ class WP_DLM {
 		$post_type_manager = new DLM_Post_Type_Manager();
 		$post_type_manager->setup();
 
+		// Setup Log Filters
+		$log_filters = new DLM_Log_Filters();
+		$log_filters->setup();
+
 		// Setup actions
 		$this->setup_actions();
 
@@ -181,6 +185,9 @@ class WP_DLM {
 	private function setup_integrations() {
 		$yoast = new DLM_Integrations_YoastSEO();
 		$yoast->setup();
+
+		$post_types_order = new DLM_Integrations_PostTypesOrder();
+		$post_types_order->setup();
 	}
 
 	/**
@@ -239,7 +246,9 @@ class WP_DLM {
 	 * @return void
 	 */
 	public function frontend_scripts() {
-		wp_enqueue_style( 'dlm-frontend', $this->get_plugin_url() . '/assets/css/frontend.css' );
+		if ( apply_filters( 'dlm_frontend_scripts', true ) ) {
+			wp_enqueue_style( 'dlm-frontend', $this->get_plugin_url() . '/assets/css/frontend.css' );
+		}
 	}
 
 	/**
@@ -417,7 +426,7 @@ class WP_DLM {
 		DLM_Debug_Logger::deprecated( __METHOD__ );
 
 		// Return files
-		return $this->service('hasher')->get_file_hashes( $file_path );
+		return $this->service( 'hasher' )->get_file_hashes( $file_path );
 	}
 
 	/**
