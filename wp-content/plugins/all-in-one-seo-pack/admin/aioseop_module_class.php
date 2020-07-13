@@ -930,25 +930,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		}
 
 		/**
-		 * Get Term Labels
-		 *
-		 * @since ?
-		 *
-		 * @param $post_objs
-		 * @return array
-		 */
-		function get_term_labels( $post_objs ) {
-			$post_types = array();
-			foreach ( $post_objs as $p ) {
-				if ( ! empty( $p->name ) ) {
-					$post_types[ $p->term_id ] = $p->name;
-				}
-			}
-
-			return $post_types;
-		}
-
-		/**
 		 * Get Post Type Titles
 		 *
 		 * @since ?
@@ -974,22 +955,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		 */
 		function get_taxonomy_titles( $args = array() ) {
 			return $this->get_object_labels( get_taxonomies( $args, 'objects' ) );
-		}
-
-		/**
-		 * Gets the category titles.
-		 *
-		 * @since 3.0 Changed function name from `get_category_titles` to `get_term_titles`. (#240)
-		 * @since 3.0 Changed `get_categories()` to `get_terms()` to fetch all (custom) terms. (#240)
-		 *
-		 * @see WP_Term_Query::__constructor()
-		 * @link https://developer.wordpress.org/reference/classes/wp_term_query/__construct/
-		 *
-		 * @param array $args An array for arguments to query by. See WP_Term_Query::__constructor() for more info.
-		 * @return array
-		 */
-		function get_term_titles( $args = array() ) {
-			return $this->get_term_labels( get_terms( $args ) );
 		}
 
 		/**
@@ -2570,6 +2535,30 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					}
 					$buf .= "<textarea name='$name' $attr>$value</textarea>";
 					break;
+				case 'address':
+					$address_defaults = array(
+						'street_address'   => '',
+						'address_locality' => '',
+						'address_region'   => '',
+						'postal_code'      => '',
+						'address_country'  => '',
+					);
+					$value = wp_parse_args( $value, $address_defaults );
+
+					$buf .= '
+						<label for="' . $name . '_street_address" class="aioseop_label_street_address">' . __( 'Street Address', 'all-in-one-seo-pack' ) . '</label>
+						<input name="' . $name . '_street_address" class="aioseop_input_street_address" type="text" ' . $attr . ' value="' . $value['street_address'] . '" />
+						<label for="' . $name . '_address_locality" class="aioseop_label_address_locality">' . __( 'City', 'all-in-one-seo-pack' ) . '</label>
+						<input name="' . $name . '_address_locality" class="aioseop_input_address_locality" type="text" ' . $attr . ' value="' . $value['address_locality'] . '" />
+						<label for="' . $name . '_address_region" class="aioseop_label_address_region">' . __( 'State', 'all-in-one-seo-pack' ) . '</label>
+						<input name="' . $name . '_address_region" class="aioseop_input_address_region" type="text" ' . $attr . ' value="' . $value['address_region'] . '" />
+						<label for="' . $name . '_postal_code" class="aioseop_label_postal_code">' . __( 'Zip code', 'all-in-one-seo-pack' ) . '</label>
+						<input name="' . $name . '_postal_code" class="aioseop_input_postal_code" type="text" ' . $attr . ' value="' . $value['postal_code'] . '" />
+						<label for="' . $name . '_address_country" class="aioseop_label_address_country">' . __( 'Country', 'all-in-one-seo-pack' ) . '</label>
+						<input name="' . $name . '_address_country" class="aioseop_input_address_country" type="text" ' . $attr . ' value="' . $value['address_country'] . '" />
+						';
+					$buf = '<div class="aioseop_postal_address">' . $buf . '</div>';
+					break;
 				case 'image':
 					$buf .= '<input class="aioseop_upload_image_checker" type="hidden" name="' . $name . '_checker" value="0">' .
 							"<input class='aioseop_upload_image_button button-primary' type='button' value='";
@@ -2835,6 +2824,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 						case 'filename':
 							$this->options[ $k ] = sanitize_file_name( $this->options[ $k ] );
 							break;
+						case 'address':
+							foreach ( $this->options[ $k ] as &$address_value ) {
+								$address_value = wp_kses_post( $address_value );
+							}
+							break;
 						case 'url':
 							// fall through.
 						case 'text':
@@ -2924,11 +2918,26 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					/* translators: %s is a placeholder and will be replace with the name of the plugin. */
 					$message         = sprintf( __( '%s Options Updated.', 'all-in-one-seo-pack' ), AIOSEOP_PLUGIN_NAME );
 					$default_options = $this->default_options( $location );
-					foreach ( $default_options as $k => $v ) {
-						if ( isset( $_POST[ $k ] ) ) {
-							$this->options[ $k ] = stripslashes_deep( $_POST[ $k ] );
+					$prefix          = $this->prefix;
+					foreach ( $this->default_options as $k => $option_arr ) {
+						if ( isset( $option_arr['type'] ) && 'address' === $option_arr['type'] ) {
+							$address_values = array(
+								'street_address'   => '',
+								'address_locality' => '',
+								'address_region'   => '',
+								'postal_code'      => '',
+								'address_country'  => '',
+							);
+							foreach ( $address_values as $address_key => &$address_value ) {
+								if ( isset( $_POST[ $prefix . $k . '_' . $address_key ] ) ) {
+									$address_value = stripslashes_deep( $_POST[ $prefix . $k . '_' . $address_key ] );
+								}
+							}
+							$this->options[ $prefix . $k ] = $address_values;
+						} elseif ( isset( $_POST[ $prefix . $k ] ) ) {
+							$this->options[ $prefix . $k ] = stripslashes_deep( $_POST[ $prefix . $k ] );
 						} else {
-							$this->options[ $k ] = '';
+							$this->options[ $prefix . $k ] = '';
 						}
 					}
 					$this->sanitize_options( $location );

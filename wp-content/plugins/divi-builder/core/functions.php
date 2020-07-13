@@ -1307,6 +1307,50 @@ function et_get_attachment_id_by_url( $url ) {
 		$attachment_id             = (int) $wpdb->get_var( $attachments_sql_query );
 	}
 
+	// There is a case the GUID image URL stored differently with the URL
+	// served in the frontend for a featured image, so the query will always fail.
+	// Hence we add another fallback query to the _wp_attached_file value in 
+	// the postmeta table to match with the image relative path.
+	if ( ! $attachment_id ) {
+		$uploads         = wp_get_upload_dir();
+		$uploads_baseurl = trailingslashit( $uploads['baseurl'] );
+
+		if ( 0 === strpos( $normalized_url, $uploads_baseurl ) ) {
+			$file_path = str_replace( $uploads_baseurl, '', $normalized_url );
+			$file_path_no_resize = preg_replace( '/-(\d+)x(\d+)\.(jpg|jpeg|gif|png)$/', '.$3', $file_path );
+
+			if ( $file_path === $file_path_no_resize ) {
+				$attachments_sql_query = $wpdb->prepare(
+					"SELECT post_id
+					FROM $wpdb->postmeta
+					WHERE `meta_key` = %s
+						AND `meta_value` = %s",
+					'_wp_attached_file',
+					$file_path
+				);
+			} else {
+				// Scenario: Trying to find the attachment for a file called x-150x150.jpg.
+				// 1. Since WordPress adds the -150x150 suffix for thumbnail sizes we cannot be
+				// sure if this is an attachment or an attachment's generated thumbnail.
+				// 2. Since both x.jpg and x-150x150.jpg can be uploaded as separate attachments
+				// we must decide which is a better match.
+				// 3. The above is why we order by meta_value length and use the first result.
+				$attachments_sql_query = $wpdb->prepare(
+					"SELECT post_id
+					FROM $wpdb->postmeta
+					WHERE `meta_key` = %s
+						AND `meta_value` IN ( %s, %s )
+					ORDER BY CHAR_LENGTH( `meta_value` ) DESC",
+					'_wp_attached_file',
+					$file_path,
+					$file_path_no_resize
+				);
+			}
+
+			$attachment_id = (int) $wpdb->get_var( $attachments_sql_query );
+		}
+	}
+
 	// Cache data only if attachment ID is found.
 	if ( $attachment_id && et_core_is_uploads_dir_url( $normalized_url ) ) {
 		$cache[ $normalized_url ] = $attachment_id;
@@ -1753,3 +1797,68 @@ if ( ! function_exists( 'et_core_get_websafe_fonts' ) ) :
 		return apply_filters( 'et_websafe_fonts', $websafe_fonts );
 	}
 endif;
+
+if ( ! function_exists( 'et_maybe_update_hosting_card_status' ) ) :
+	/**
+	 * Divi Hosting Card :: Update dismiss status via ET API
+	 *
+	 * @since 4.4.7
+	 */
+	function et_maybe_update_hosting_card_status() {
+		$et_account        = et_core_get_et_account();
+		$et_username       = et_()->array_get( $et_account, 'et_username', '' );
+		$et_api_key        = et_()->array_get( $et_account, 'et_api_key', '' );
+
+		// Exit if ET Username and/or ET API Key is not found
+		if ( '' === $et_username || '' === $et_api_key ) {
+			// Remove any WP Cron for Updating Hosting Card Status
+			wp_unschedule_hook( 'et_maybe_update_hosting_card_status_cron' );
+
+			return;
+		}
+
+		global $wp_version;
+
+		// Prepare settings for API request
+		$options = array(
+			'timeout'    => 30,
+			'body'       => array(
+				'action'   => 'disable_hosting_card',
+				'username' => $et_username,
+				'api_key'  => $et_api_key,
+			),
+			'user-agent' => 'WordPress/' . $wp_version . '; ' . home_url( '/' ),
+		);
+
+		$request               = wp_remote_post( 'https://www.elegantthemes.com/api/api.php', $options );
+		$request_response_code = wp_remote_retrieve_response_code( $request );
+		$response_body         = wp_remote_retrieve_body( $request );
+		$response              = (array) json_decode( $response_body );
+
+		// API request has been updated successfully and the User has already disabled the card, or,
+		// when API request was successful and returns error message
+		if ( 'disabled' === et_()->array_get( $response, 'status' ) || '' !== et_()->array_get( $response, 'error', '' ) ) {
+			// Remove any WP Cron for Updating Hosting Card Status
+			wp_unschedule_hook( 'et_maybe_update_hosting_card_status_cron' );
+
+			return;
+		}
+
+		// Fail-safe :: Schedule WP Cron to try again
+		// Once something were wrong in API request, or, response has error code
+		if ( is_wp_error( $request ) || 200 !== $request_response_code ) {
+
+			// First API request has failed, which were done already in above, second request
+			// (via cron) will be made in a minute, then third (via cron) and future (via cron)
+			// call will be per hour. Once API request is successful, cron will be removed
+			$timestamp = time() + 1 * MINUTE_IN_SECONDS;
+
+			if ( ! wp_next_scheduled( 'et_maybe_update_hosting_card_status_cron' ) ) {
+				wp_schedule_event( $timestamp, 'hourly', 'et_maybe_update_hosting_card_status_cron' );
+			}
+		}
+	}
+endif;
+
+// Action for WP Cron: Disable Hosting Card status via ET API
+add_action( 'et_maybe_update_hosting_card_status_cron', 'et_maybe_update_hosting_card_status' );

@@ -374,10 +374,10 @@ class ET_Builder_Block_Editor_Integration {
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( $edit_url ),
 				esc_attr( sprintf(
-					__( 'Edit &#8220;%s&#8221; in Divi', 'et-builder' ),
+					__( 'Edit &#8220;%s&#8221; in Divi', 'et_builder' ),
 					_draft_or_post_title( $post->ID )
 				) ),
-				esc_html__( 'Edit With Divi', 'et-builder' )
+				esc_html__( 'Edit With Divi', 'et_builder' )
 			),
 		);
 

@@ -54,6 +54,9 @@ class Images_Optimizer {
 	 * @since  5.0.0
 	 */
 	public function initialize() {
+		// Flush the cache, to avoid stucked optimizations.
+		Supercacher::purge_cache();
+
 		// Reset the status.
 		update_option( 'siteground_optimizer_image_optimization_completed', 0, false );
 		update_option( 'siteground_optimizer_image_optimization_status', 0, false );

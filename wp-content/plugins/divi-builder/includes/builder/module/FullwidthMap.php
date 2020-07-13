@@ -73,7 +73,7 @@ class ET_Builder_Module_Fullwidth_Map extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'JtTSSI6wlU0' ),
+				'id'   => 'JtTSSI6wlU0',
 				'name' => esc_html__( 'An introduction to the Fullwidth Map module', 'et_builder' ),
 			),
 		);
@@ -146,8 +146,8 @@ class ET_Builder_Module_Fullwidth_Map extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'tab_slug'        => 'advanced',
 				'toggle_slug'     => 'controls',
@@ -159,8 +159,8 @@ class ET_Builder_Module_Fullwidth_Map extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'tab_slug'        => 'advanced',
 				'toggle_slug'     => 'controls',
@@ -173,8 +173,8 @@ class ET_Builder_Module_Fullwidth_Map extends ET_Builder_Module {
 				'type'            => 'hidden',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'affects'         => array(
 					'grayscale_filter_amount',

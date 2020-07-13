@@ -12,19 +12,19 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module_Type_Post
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Content', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Content' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'layout'  => esc_html__( 'Layout', 'et_builder' ),
-					'overlay' => esc_html__( 'Overlay', 'et_builder' ),
+					'layout'  => et_builder_i18n( 'Layout' ),
+					'overlay' => et_builder_i18n( 'Overlay' ),
 					'text'    => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
-					'image' => esc_html__( 'Image', 'et_builder' ),
+					'image' => et_builder_i18n( 'Image' ),
 				),
 			),
 		);
@@ -32,7 +32,7 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module_Type_Post
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'title'   => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main'         => "{$this->main_css_element} h2, {$this->main_css_element} .et_pb_module_header",
 						'limited_main' => "{$this->main_css_element} h2, {$this->main_css_element} h2 a, {$this->main_css_element} h1.et_pb_module_header, {$this->main_css_element} h1.et_pb_module_header a, {$this->main_css_element} h3.et_pb_module_header, {$this->main_css_element} h3.et_pb_module_header a, {$this->main_css_element} h4.et_pb_module_header, {$this->main_css_element} h4.et_pb_module_header a, {$this->main_css_element} h5.et_pb_module_header, {$this->main_css_element} h5.et_pb_module_header a, {$this->main_css_element} h6.et_pb_module_header, {$this->main_css_element} h6.et_pb_module_header a",
@@ -94,7 +94,7 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module_Type_Post
 							'border_styles' => "{$this->main_css_element} .et_portfolio_image",
 						),
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'      => 'advanced',
 					'toggle_slug'   => 'image',
 				),
@@ -174,7 +174,7 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module_Type_Post
 				'selector' => '.et_portfolio_image',
 			),
 			'overlay' => array(
-				'label'    => esc_html__( 'Overlay', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Overlay' ),
 				'selector' => '.et_overlay',
 			),
 			'overlay_icon' => array(
@@ -201,7 +201,7 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module_Type_Post
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'AZheY1hVcJc' ),
+				'id'   => 'AZheY1hVcJc',
 				'name' => esc_html__( 'An introduction to the Filterable Portfolio module', 'et_builder' ),
 			),
 		);
@@ -210,7 +210,7 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module_Type_Post
 	function get_fields() {
 		$fields = array(
 			'fullwidth' => array(
-				'label'           => esc_html__( 'Layout', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Layout' ),
 				'type'            => 'select',
 				'option_category' => 'layout',
 				'options'         => array(
@@ -258,8 +258,8 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module_Type_Post
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'toggle_slug'       => 'elements',
 				'description'       => esc_html__( 'Turn project titles on or off.', 'et_builder' ),
@@ -272,8 +272,8 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module_Type_Post
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'toggle_slug'       => 'elements',
 				'description'       => esc_html__( 'Turn the category links on or off.', 'et_builder' ),
@@ -286,8 +286,8 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module_Type_Post
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'toggle_slug'       => 'elements',
 				'description'       => esc_html__( 'Enable or disable pagination for this feed.', 'et_builder' ),

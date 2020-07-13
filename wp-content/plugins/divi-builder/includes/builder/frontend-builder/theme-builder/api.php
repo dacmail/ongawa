@@ -148,6 +148,8 @@ function et_theme_builder_api_save() {
 		et_theme_builder_trash_draft_and_unused_posts();
 	}
 
+	et_theme_builder_clear_wp_cache();
+
 	wp_send_json_success( array(
 		'updatedTemplateIds' => (object) $updated_ids,
 	) );
@@ -266,13 +268,13 @@ function et_theme_builder_api_export_theme_builder() {
 		}
 	}
 
-	$defaults_manager = ET_Builder_Custom_Defaults_Settings::instance();
-	$defaults         = $defaults_manager->get_custom_defaults();
+	$presets_manager = ET_Builder_Global_Presets_Settings::instance();
+	$presets         = $presets_manager->get_global_presets();
 
-	if ( ! empty( $defaults ) ) {
+	if ( ! empty( $presets ) ) {
 		$steps[] = array(
-			'type' => 'defaults',
-			'data' => $defaults,
+			'type' => 'presets',
+			'data' => $presets,
 		);
 	}
 
@@ -482,10 +484,11 @@ function et_theme_builder_api_import_theme_builder() {
 	}
 
 	$override_default_website_template = '1' === $_->array_get( $_POST, 'override_default_website_template', '0' );
-	$import_defaults                   = '1' === $_->array_get( $_POST, 'import_defaults', '0' );
+	$import_presets                    = '1' === $_->array_get( $_POST, 'import_presets', '0' );
 	$has_default_template              = $_->array_get( $export, 'has_default_template', false );
 	$has_global_layouts                = $_->array_get( $export, 'has_global_layouts', false );
-	$defaults                          = $_->array_get( $export, 'defaults', array() );
+	$presets                           = $_->array_get( $export, 'presets', array() );
+	$presets_rewrite_map               = array();
 	$incoming_layout_duplicate         = false;
 
 	// Maybe ask the user to make a decision on how to deal with global layouts.
@@ -504,18 +507,9 @@ function et_theme_builder_api_import_theme_builder() {
 		}
 	}
 
-	// Maybe import defaults if there are any and if the user has decided to.
-	if ( $import_defaults && is_array( $defaults ) && ! empty( $defaults ) ) {
-		if ( ! $portability->import_custom_defaults( $defaults ) ) {
-			$defaults_error = apply_filters( 'et_core_portability_import_error_message', '' );
-
-			if ( $defaults_error ) {
-				wp_send_json_error( array(
-					'code'  => ET_Theme_Builder_Api_Errors::PORTABILITY_IMPORT_DEFAULTS_FAILURE,
-					'error' => $defaults_error,
-				) );
-			}
-		}
+	// Make imported preset overrides to avoid collisions with local presets
+	if ( $import_presets && is_array( $presets ) && ! empty( $presets ) ) {
+		$presets_rewrite_map = $portability->prepare_to_import_layout_presets( $presets );
 	}
 
 	// Prepare import steps.
@@ -570,7 +564,9 @@ function et_theme_builder_api_import_theme_builder() {
 		'override_default_website_template' => $override_default_website_template,
 		'incoming_layout_duplicate'         => $incoming_layout_duplicate,
 		'layout_id_map'                     => $layout_id_map,
-		'defaults'                          => $import_defaults ? array() : et_()->array_get( $export, 'defaults', array() ),
+		'presets'                           => $presets,
+		'import_presets'                    => $import_presets,
+		'presets_rewrite_map'               => $presets_rewrite_map,
 	), 60 * 60 * 24 );
 
 	wp_send_json_success( array(
@@ -603,20 +599,24 @@ function et_theme_builder_api_import_theme_builder_step() {
 		wp_send_json_error();
 	}
 
-	$layout_keys       = array( 'header', 'body', 'footer' );
-	$portability       = et_core_portability_load( 'et_theme_builder' );
-	$steps             = $export['steps'];
-	$ready             = empty( $steps );
-	$layout_id_map     = $export['layout_id_map'];
-	$defaults          = $export['defaults'];
-	$templates         = array();
-	$template_settings = array();
-	$chunks            = 1;
+	$layout_keys         = array( 'header', 'body', 'footer' );
+	$portability         = et_core_portability_load( 'et_theme_builder' );
+	$steps               = $export['steps'];
+	$ready               = empty( $steps );
+	$layout_id_map       = $export['layout_id_map'];
+	$presets             = $export['presets'];
+	$presets_rewrite_map = $export['presets_rewrite_map'];
+	$import_presets      = $export['import_presets'];
+	$templates           = array();
+	$template_settings   = array();
+	$chunks              = 1;
 
 	if ( ! $ready ) {
-		$import_step = et_theme_builder_api_import_theme_builder_load_layout( $portability, $steps[ $step ]['id'], $steps[ $step ]['group'] );
-		$import_step = array_merge( $import_step, array( 'defaults' => $defaults ) );
-		$result      = $portability->import_theme_builder( $id, $import_step, count( $steps ), $step, $chunk );
+		$import_step                   = et_theme_builder_api_import_theme_builder_load_layout( $portability, $steps[ $step ]['id'], $steps[ $step ]['group'] );
+		$import_step                   = array_merge( $import_step, array( 'presets' => $presets ) );
+		$import_step                   = array_merge( $import_step, array( 'presets_rewrite_map' => $presets_rewrite_map ) );
+		$import_step['import_presets'] = $import_presets;
+		$result                        = $portability->import_theme_builder( $id, $import_step, count( $steps ), $step, $chunk );
 
 		if ( false === $result ) {
 			wp_send_json_error();
@@ -634,6 +634,19 @@ function et_theme_builder_api_import_theme_builder_step() {
 	}
 
 	if ( $ready ) {
+		if ( $import_presets && is_array( $presets ) && ! empty( $presets ) ) {
+			if ( ! $portability->import_global_presets( $presets ) ) {
+				$presets_error = apply_filters( 'et_core_portability_import_error_message', '' );
+
+				if ( $presets_error ) {
+					wp_send_json_error( array(
+						'code'  => ET_Theme_Builder_Api_Errors::PORTABILITY_IMPORT_PRESETS_FAILURE,
+						'error' => $presets_error,
+					) );
+				}
+			}
+		}
+
 		$portability->delete_temp_files( $transient );
 
 		$conditions = array();

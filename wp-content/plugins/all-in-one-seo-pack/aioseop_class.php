@@ -229,6 +229,8 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 		$blog_name          = esc_attr( get_bloginfo( 'name' ) );
 		parent::__construct();
 
+		$this->checkIfLicensed();
+
 		$this->default_options = array(
 			'license_key'                 => array(
 				/* translators: This is a setting where users can enter their license code for All in One SEO Pack Pro. */
@@ -5102,21 +5104,9 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				$optlist = array_diff( $optlist, array( 'sitemap_priority', 'sitemap_frequency' ) );
 			}
 
-			foreach ( $optlist as $field_name ) {
-				$field = "aiosp_$field_name";
-				if ( isset( $_POST[ $field ] ) ) {
-					$$field = $_POST[ $field ];
-				}
-
-				delete_post_meta( $id, "_aioseop_{$field_name}" );
-			}
-
-			foreach ( $optlist as $field_name ) {
-				$var   = "aiosp_$field_name";
-				$field = "_aioseop_$field_name";
-				if ( isset( $$var ) && ! empty( $$var ) ) {
-					add_post_meta( $id, $field, $$var );
-				}
+			foreach ( $optlist as $optionName ) {
+				$value = isset( $_POST[ "aiosp_$optionName" ] ) ? $_POST[ "aiosp_$optionName" ] : '';
+				update_post_meta( $id, "_aioseop_$optionName", $value );
 			}
 		}
 	}
@@ -5213,12 +5203,31 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				$url = esc_url( admin_url( 'admin.php?page=' . $menu_slug ) );
 			}
 
+			// Check if there are new notifications.
+			$notifications = '';
+			$notices       = new AIOSEOP_Notices();
+			if ( count( $notices->remote_notices ) ) {
+				$count         = count( $notices->remote_notices ) < 10 ? count( $notices->remote_notices ) : '!';
+				$notifications = ' <div class="aioseo-menu-notification-counter"><span>' . $count . '</span></div>';
+			}
+
 			$wp_admin_bar->add_menu(
 				array(
 					'id'    => AIOSEOP_PLUGIN_DIRNAME,
-					'title' => '<span class="ab-icon aioseop-admin-bar-logo"></span>' . __( 'SEO', 'all-in-one-seo-pack' ),
+					'title' => '<span class="ab-icon aioseop-admin-bar-logo"></span>' . __( 'SEO', 'all-in-one-seo-pack' ) . $notifications,
 				)
 			);
+
+			if ( $notifications ) {
+				$wp_admin_bar->add_menu(
+					array(
+						'id'     => 'aioseop-notifications',
+						'parent' => AIOSEOP_PLUGIN_DIRNAME,
+						'title'  => __( 'Notifications', 'all-in-one-seo-pack' ) . $notifications,
+						'href'   => $url,
+					)
+				);
+			}
 
 			if ( ! is_admin() ) {
 				$wp_admin_bar->add_menu(
@@ -5238,6 +5247,10 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 					'href'   => $url,
 				)
 			);
+
+			if ( ! is_admin() ) {
+				AIOSEOP_Education::external_tools( $wp_admin_bar );
+			} 
 
 			$aioseop_admin_menu = 1;
 			if ( ! empty( $post ) ) {
@@ -5380,22 +5393,10 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				$optlist = array_diff( $optlist, array( 'sitemap_priority', 'sitemap_frequency' ) );
 			}
 
-			foreach ( $optlist as $field_name ) {
-				$field = "aiosp_$field_name";
-				if ( isset( $_POST[ $field ] ) ) {
-					$$field = $_POST[ $field ];
-				}
-
-				delete_term_meta( $id, "_aioseop_{$field_name}" );
-			}
-
-			foreach ( $optlist as $field_name ) {
-				$var   = "aiosp_$field_name";
-				$field = "_aioseop_$field_name";
-
-				if ( isset( $$var ) && ! empty( $$var ) ) {
-					add_term_meta( $id, $field, $$var );
-				}
+			
+			foreach ( $optlist as $optionName ) {
+				$value = isset( $_POST[ "aiosp_$optionName" ] ) ? $_POST[ "aiosp_$optionName" ] : '';
+				update_term_meta( $id, "_aioseop_$optionName", $value );
 			}
 		}
 	}
@@ -5793,5 +5794,25 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				do_action( $this->prefix . $action . '_' . $name );
 			}
 		}
+	}
+
+	/**
+	 * Checks if the plugin has a license key set, and otherwise wipes the addons/plan settings.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @return void
+	 */
+	private function checkIfLicensed() {
+		global $aioseop_options;
+		if ( ! $aioseop_options['aiosp_license_key'] ) {
+			if ( isset( $aioseop_options['addons'] ) ) {
+				$aioseop_options['addons'] = '';
+			}
+			if ( isset( $aioseop_options['plan'] ) ) {
+				$aioseop_options['plan'] = 'unlicensed';
+			}
+		}
+		update_option( 'aioseop_options', $aioseop_options );
 	}
 }

@@ -1524,3 +1524,183 @@ function et_theme_builder_decorate_page_resource_slug( $post_id, $resource_slug 
 	return $resource_slug;
 }
 add_filter( 'et_builder_cache_post_type', 'et_theme_builder_cache_post_type' );
+
+/**
+ * Clear cache of 3P caching plugins partially on the posts or all of them.
+ *
+ * @since ??
+ *
+ * @param string|array $post_ids 'all' or array of post IDs.
+ *
+ * @return void
+ */
+function et_theme_builder_clear_wp_cache( $post_ids = 'all' ) {
+	if ( ! et_pb_detect_cache_plugins() ) {
+		return;
+	}
+
+	if ( empty( $post_ids ) ) {
+		return;
+	}
+
+	if ( 'all' === $post_ids ) {
+		et_core_clear_wp_cache();
+	} else if ( is_array( $post_ids ) ) {
+		foreach( $post_ids as $post_id ) {
+			et_core_clear_wp_cache( $post_id );
+		}
+	}
+}
+
+/**
+ * Clear cache of 3P caching plugins fully or partially after TB layouts saved.
+ *
+ * Clear all the cache when the template updated is:
+ * - Default template
+ * - Used on archive, 404, or all posts
+ * - Non static homepage
+ *
+ * @since ??
+ *
+ * @param int $layout_id
+ *
+ * @return void
+ */
+function et_theme_builder_clear_wp_post_cache( $layout_id = '' ) {
+	$layout_type = get_post_type( $layout_id );
+
+	if ( ! et_theme_builder_is_layout_post_type( $layout_type ) ) {
+		return;
+	}
+
+	if ( ! et_pb_detect_cache_plugins() ) {
+		return;
+	}
+
+	// Get template of current TB layout.
+	$template = new WP_Query( array(
+		'post_type'              => ET_THEME_BUILDER_TEMPLATE_POST_TYPE,
+		'post_status'            => 'publish',
+		'posts_per_page'         => 1,
+		'fields'                 => 'ids',
+		'no_found_rows'          => true,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+		'meta_query'             => array(
+			'relation'  => 'AND',
+			array(
+				'key'     => "_et_enabled",
+				'value'   => '1',
+				'compare' => '=',
+			),
+			array(
+				'key'     => "_{$layout_type}_id",
+				'value'   => $layout_id,
+				'compare' => '=',
+			),
+			array(
+				'key'     => "_{$layout_type}_enabled",
+				'value'   => '1',
+				'compare' => '=',
+			),
+			array(
+				'key'     => '_et_theme_builder_marked_as_unused',
+				'compare' => 'NOT EXISTS',
+			),
+		)
+	) );
+
+	if ( ! $template->have_posts() ) {
+		return;
+	}
+
+	$_                   = et_();
+	$template_id         = $_->array_get( $template->posts, '0' );
+	$template_use_on     = get_post_meta( $template_id, '_et_use_on', false );
+	$is_template_default = '1' === get_post_meta( $template_id, '_et_default', true );
+
+	// Unassigned Template - False or empty _et_use_on means it's unassigned.
+	if ( empty( $template_use_on ) ) {
+		// Clear All - If the template is 'default' because it's enabled globally.
+		if ( $is_template_default ) {
+			et_theme_builder_clear_wp_cache();
+		}
+		return;
+	}
+
+	$target_post_ids = array();
+
+	foreach( $template_use_on as $location ) {
+		$location_pieces = explode( ':', $location );
+		$location_first  = $_->array_get( $location_pieces, '0' );
+		$location_last   = end( $location_pieces );
+
+		if ( in_array( $location_first, array( 'archive', '404' ) ) || 'all' === $location_last ) {
+			// Path: archive:user:id:{user_id}, singular:post_type:{post_type_slug}:all,
+			// archive:taxonomy:{taxonomy_name}:all, etc.
+			// Clear All - If the template is being used on 'archive:' or ':all' posts.
+			$target_post_ids = 'all';
+			break;
+		} else if ( 'homepage' === $location_first ) {
+			// Path: homepage
+			$homepage_id       = (int) get_option( 'page_on_front' );
+			$target_post_ids[] = $homepage_id;
+			if ( ! $homepage_id ) {
+				// Clear All - If the homepage is non static page.
+				$target_post_ids = 'all';
+				break;
+			}
+		} else if ( 'singular' === $location_first ) {
+			$singular_type = $_->array_get( $location_pieces, '3' );
+
+			if ( 'id' === $singular_type ) {
+				// Path: singular:post_type:{post_type_slug}:id:{post_id}
+				$target_post_ids[] = (int) $_->array_get( $location_pieces, '4' );
+			} else if ( 'children' === $singular_type ) {
+				// Path: singular:post_type:{post_type_slug}:children:id:{post_id}
+				$parent_id       = (int) $_->array_get( $location_pieces, '5' );
+				$children_ids    = get_children( array(
+					'posts_per_page' => -1,
+					'post_parent'    => $parent_id,
+					'fields'         => 'ids',
+				) );
+				$target_post_ids = array_merge( $target_post_ids, $children_ids );
+			} else if ( 'term' === $singular_type ) {
+				// Path: singular:taxonomy:{taxonomy_name}:term:id:{term_id}
+				$taxonomy        = $_->array_get( $location_pieces, '2' );
+				$taxonomy_object = get_taxonomy( $taxonomy );
+				$taxonomy_type   = ! empty( $taxonomy_object->object_type ) ? $_->array_get( $taxonomy_object->object_type, '0' ) : 'post';
+				$term_id         = (int) $_->array_get( $location_pieces, '5' );
+				$posts_ids       = get_posts( array(
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+					'post_type'      => $taxonomy_type,
+					'tax_query'      => array(
+						array(
+							'taxonomy' => $taxonomy,
+							'field'    => 'term_id',
+							'terms'    => $term_id,
+						),
+					),
+				) );
+				$target_post_ids = array_merge( $target_post_ids, $posts_ids );
+			}
+		} else if ( 'woocommerce' === $location_first && et_is_woocommerce_plugin_active() && function_exists( 'wc_get_page_id' ) ) {
+			// Path: woocommerce:my_account, woocommerce:cart, etc.
+			$woocommerce_page    = str_replace( '_', '', $_->array_get( $location_pieces, '1' ) );
+			$woocommerce_page_id = wc_get_page_id( $woocommerce_page );
+			if ( $woocommerce_page_id ) {
+				$target_post_ids[] = $woocommerce_page_id;
+			}
+		}
+	}
+
+	// Remove duplicate posts.
+	if ( is_array( $target_post_ids ) ) {
+		$target_post_ids = array_unique( $target_post_ids );
+	}
+
+	et_theme_builder_clear_wp_cache( $target_post_ids );
+}
+
+add_action( 'et_save_post', 'et_theme_builder_clear_wp_post_cache' );

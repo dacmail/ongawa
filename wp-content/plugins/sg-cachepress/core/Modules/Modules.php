@@ -770,10 +770,10 @@ class Modules {
 					// Add the default card.
 					array(
 						array(
-							'type' => 'default',
-							'title' => 'Welcome to SG Optimizer',
-							'text' => 'Get the best performance for your WordPress website with our optimization plugin. It handles caching, system settings, and all the necessary configurations for a blazing-fast website. With the SiteGround Optimizer enabled, you’re getting the very best from your hosting environment!',
-							'icon' => 'presentational-speed-caching',
+							'type'       => 'default',
+							'title'      => __( 'Welcome to SG Optimizer', 'sg-cachepress' ),
+							'text'       => __( 'Get the best performance for your WordPress website with our optimization plugin. It handles caching, system settings, and all the necessary configurations for a blazing-fast website. With the SiteGround Optimizer enabled, you’re getting the very best from your hosting environment!', 'sg-cachepress' ),
+							'icon'       => 'presentational-speed-caching',
 							'icon_color' => 'salmon',
 						),
 					)

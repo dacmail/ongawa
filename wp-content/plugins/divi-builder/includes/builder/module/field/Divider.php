@@ -132,7 +132,7 @@ class ET_Builder_Module_Field_Divider extends ET_Builder_Module_Field_Base {
 						'description' => esc_html__( 'Select the divider shape that you would like to use. Shapes are represented visually within the list.', 'et_builder' ),
 						'type'    => 'divider',
 						'options' => array(
-							'none'        => esc_html__( 'None', 'et_builder' ),
+							'none'        => et_builder_i18n( 'None' ),
 							'slant'       => esc_html__( 'Slant', 'et_builder' ),
 							'slant2'      => esc_html__( 'Slant 2', 'et_builder' ),
 							'arrow'       => esc_html__( 'Arrow', 'et_builder' ),
@@ -276,8 +276,8 @@ class ET_Builder_Module_Field_Divider extends ET_Builder_Module_Field_Base {
 		endforeach; // End foreach().
 
 		// Set our labels.
-		$structure['bottom_divider']['label'] = esc_html__( 'Bottom', 'et_builder' );
-		$structure['top_divider']['label']    = esc_html__( 'Top', 'et_builder' );
+		$structure['bottom_divider']['label'] = et_builder_i18n( 'Bottom' );
+		$structure['top_divider']['label']    = et_builder_i18n( 'Top' );
 
 		$additional_options['divider_settings'] = array(
 			'label'               => esc_html__( 'Dividers', 'et_builder' ),

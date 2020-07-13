@@ -2,7 +2,7 @@
 
 class ET_Builder_Module_Text extends ET_Builder_Module {
 	function init() {
-		$this->name       = esc_html__( 'Text', 'et_builder' );
+		$this->name       = et_builder_i18n( 'Text' );
 		$this->plural     = esc_html__( 'Texts', 'et_builder' );
 		$this->slug       = 'et_pb_text';
 		$this->vb_support = 'on';
@@ -10,13 +10,13 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'text' => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 45,
 						'tabbed_subtoggles' => true,
 						'bb_icons_support' => true,
@@ -75,7 +75,7 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 						),
 					),
 					'width' => array(
-						'title'    => esc_html__( 'Sizing', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Sizing' ),
 						'priority' => 65,
 					),
 				),
@@ -87,7 +87,7 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'text'   => array(
-					'label'           => esc_html__( 'Text', 'et_builder' ),
+					'label'           => et_builder_i18n( 'Text' ),
 					'css'             => array(
 						'line_height' => "{$this->main_css_element} p",
 						'color'       => "{$this->main_css_element}.et_pb_text",
@@ -103,7 +103,7 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 					'hide_text_align' => true,
 				),
 				'link'   => array(
-					'label'    => esc_html__( 'Link', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Link' ),
 					'css'      => array(
 						'main' => "{$this->main_css_element} a",
 						'color' => "{$this->main_css_element}.et_pb_text a",
@@ -280,7 +280,7 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'oL00RjEKZaU' ),
+				'id'   => 'oL00RjEKZaU',
 				'name' => esc_html__( 'An introduction to the Text module', 'et_builder' ),
 			),
 		);
@@ -289,7 +289,7 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'content' => array(
-				'label'           => esc_html__( 'Body', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Body' ),
 				'type'            => 'tiny_mce',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Here you can create the content that will be used within the module.', 'et_builder' ),
@@ -304,10 +304,10 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 				'type'              => 'select',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'disc'    => esc_html__( 'Disc', 'et_builder' ),
-					'circle'  => esc_html__( 'Circle', 'et_builder' ),
-					'square'  => esc_html__( 'Square', 'et_builder' ),
-					'none'    => esc_html__( 'None', 'et_builder' ),
+					'disc'    => et_builder_i18n( 'Disc' ),
+					'circle'  => et_builder_i18n( 'Circle' ),
+					'square'  => et_builder_i18n( 'Square' ),
+					'none'    => et_builder_i18n( 'None' ),
 				),
 				'priority'          => 80,
 				'default'           => 'disc',
@@ -323,8 +323,8 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 				'type'              => 'select',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'outside' => esc_html__( 'Outside', 'et_builder' ),
-					'inside'  => esc_html__( 'Inside', 'et_builder' ),
+					'outside' => et_builder_i18n( 'Outside' ),
+					'inside'  => et_builder_i18n( 'Inside' ),
 				),
 				'priority'          => 85,
 				'default'           => 'outside',
@@ -394,8 +394,8 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 				'type'              => 'select',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'inside'  => esc_html__( 'Inside', 'et_builder' ),
-					'outside' => esc_html__( 'Outside', 'et_builder' ),
+					'inside'  => et_builder_i18n( 'Inside' ),
+					'outside' => et_builder_i18n( 'Outside' ),
 				),
 				'priority'          => 85,
 				'default'           => 'inside',

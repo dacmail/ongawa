@@ -27,6 +27,34 @@ class ET_Builder_Module_Field_Transform extends ET_Builder_Module_Field_Base {
 	);
 
 	public function get_fields( array $args = array() ) {
+		static $i18n;
+
+		if ( ! isset( $i18n ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n = array(
+				'scale'     => array(
+					'label' => esc_html__( 'Transform Scale', 'et_builder' ),
+				),
+				'translate' => array(
+					'label' => esc_html__( 'Transform Translate', 'et_builder' ),
+				),
+				'rotate'    => array(
+					'label' => esc_html__( 'Transform Rotate', 'et_builder' ),
+				),
+				'skew'      => array(
+					'label' => esc_html__( 'Transform Skew', 'et_builder' ),
+				),
+				'origin'    => array(
+					'label' => esc_html__( 'Transform Origin', 'et_builder' ),
+				),
+				'styles'    => array(
+					'label'       => esc_html__( 'Transform', 'et_builder' ),
+					'description' => esc_html__( 'Using the transform controls, you can performance visual adjustments to any element using a combination of Scale, Translation, Rotation and Skew settings. This allows you to create advanced design effects without the need of a separate graphic design program.', 'et_builder' ),
+				),
+			);
+			// phpcs:enable
+		}
+
 		$settings = wp_parse_args( array(
 			'option_category' => 'layout',
 			'tab_slug'        => 'advanced',
@@ -45,7 +73,7 @@ class ET_Builder_Module_Field_Transform extends ET_Builder_Module_Field_Base {
 				'controls' => array(
 					'transform_scale' => array(
 						'type'           => 'transform',
-						'label'          => esc_html__( 'Transform Scale', 'et_builder' ),
+						'label'          => $i18n['scale']['label'],
 						'default'        => "${defaults['scale']}|${defaults['scale']}",
 						'default_unit'   => '%',
 						'range_settings' => array(
@@ -63,7 +91,7 @@ class ET_Builder_Module_Field_Transform extends ET_Builder_Module_Field_Base {
 				'controls' => array(
 					'transform_translate' => array(
 						'type'           => 'transform',
-						'label'          => esc_html__( 'Transform Translate', 'et_builder' ),
+						'label'          => $i18n['translate']['label'],
 						'default'        => "${defaults['translate']}|${defaults['translate']}",
 						'default_unit'   => 'px',
 						'range_settings' => array(
@@ -81,7 +109,7 @@ class ET_Builder_Module_Field_Transform extends ET_Builder_Module_Field_Base {
 				'controls' => array(
 					'transform_rotate' => array(
 						'type'           => 'transform',
-						'label'          => esc_html__( 'Transform Rotate', 'et_builder' ),
+						'label'          => $i18n['rotate']['label'],
 						'default'        => "${defaults['rotate']}|${defaults['rotate']}|${defaults['rotate']}",
 						'default_unit'   => 'deg',
 						'range_settings' => array(
@@ -99,7 +127,7 @@ class ET_Builder_Module_Field_Transform extends ET_Builder_Module_Field_Base {
 				'controls' => array(
 					'transform_skew' => array(
 						'type'           => 'transform',
-						'label'          => esc_html__( 'Transform Skew', 'et_builder' ),
+						'label'          => $i18n['skew']['label'],
 						'default'        => "${defaults['skew']}|${defaults['skew']}",
 						'default_unit'   => 'deg',
 						'range_settings' => array(
@@ -119,7 +147,7 @@ class ET_Builder_Module_Field_Transform extends ET_Builder_Module_Field_Base {
 				'controls' => array(
 					'transform_origin' => array(
 						'type'           => 'transform',
-						'label'          => esc_html__( 'Transform Origin', 'et_builder' ),
+						'label'          => $i18n['origin']['label'],
 						'default'        => "${defaults['origin']}|${defaults['origin']}",
 						'default_unit'   => '%',
 						'range_settings' => array(
@@ -135,7 +163,7 @@ class ET_Builder_Module_Field_Transform extends ET_Builder_Module_Field_Base {
 		);
 
 		$additional_options['transform_styles'] = array(
-			'label'               => esc_html__( 'Transform', 'et_builder' ),
+			'label'               => $i18n['styles']['label'],
 			'tab_slug'            => $settings['tab_slug'],
 			'toggle_slug'         => $settings['toggle_slug'],
 			'type'                => 'composite',
@@ -145,8 +173,7 @@ class ET_Builder_Module_Field_Transform extends ET_Builder_Module_Field_Base {
 			'mobile_options'      => true,
 			'responsive'          => true,
 			'bb_support'          => false,
-			'description'         => esc_html__( 'Using the transform controls, you can performance visual adjustments to any element using a combination of Scale, Translation, Rotation and Skew settings. This allows you to create advanced design effects without the need of a separate graphic design program.',
-				'et_builder' ),
+			'description'         => $i18n['styles']['description'],
 			'composite_structure' => $tabs,
 		);
 

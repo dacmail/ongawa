@@ -23,7 +23,11 @@ class ComposerStaticInitc338f7fbd7d73a58c836a6fc15bad979
         array (
             'PHPCompatibility\\' => 17,
         ),
-
+        'C' => 
+        array (
+            'CharlesRumley\\Tests\\' => 20,
+            'CharlesRumley\\' => 14,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -38,6 +42,24 @@ class ComposerStaticInitc338f7fbd7d73a58c836a6fc15bad979
         'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
         array (
             0 => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src',
+        ),
+        'CharlesRumley\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/charles-rumley/php-po-to-json/tests',
+        ),
+        'CharlesRumley\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/charles-rumley/php-po-to-json/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'S' => 
+        array (
+            'Sepia' => 
+            array (
+                0 => __DIR__ . '/..' . '/sepia/po-parser/src',
+            ),
         ),
     );
 
@@ -301,6 +323,7 @@ class ComposerStaticInitc338f7fbd7d73a58c836a6fc15bad979
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitc338f7fbd7d73a58c836a6fc15bad979::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitc338f7fbd7d73a58c836a6fc15bad979::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitc338f7fbd7d73a58c836a6fc15bad979::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitc338f7fbd7d73a58c836a6fc15bad979::$classMap;
 
         }, null, ClassLoader::class);

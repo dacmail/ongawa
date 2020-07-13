@@ -46,7 +46,8 @@ class Cli_Purge {
 	 */
 	public function purge_everything() {
 		$response = $this->supercacher->purge_everything();
-
+		$this->supercacher->delete_assets();
+		
 		if ( true == $response ) {
 			return \WP_CLI::success( 'Cache Successfully Purged' );
 		}

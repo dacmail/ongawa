@@ -13,8 +13,8 @@ class ET_Builder_Module_Video_Slider extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'elements' => esc_html__( 'Elements', 'et_builder' ),
-					'overlay'  => esc_html__( 'Overlay', 'et_builder' ),
+					'elements' => et_builder_i18n( 'Elements' ),
+					'overlay'  => et_builder_i18n( 'Overlay' ),
 				),
 			),
 			'advanced' => array(
@@ -79,7 +79,7 @@ class ET_Builder_Module_Video_Slider extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'gwTruYDcxoE' ),
+				'id'   => 'gwTruYDcxoE',
 				'name' => esc_html__( 'An introduction to the Video Slider module', 'et_builder' ),
 			),
 		);
@@ -92,8 +92,8 @@ class ET_Builder_Module_Video_Slider extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on' => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on' => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'off',
 				'toggle_slug'     => 'overlay',
@@ -106,8 +106,8 @@ class ET_Builder_Module_Video_Slider extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'        => 'elements',
@@ -144,8 +144,8 @@ class ET_Builder_Module_Video_Slider extends ET_Builder_Module {
 				'description'      => esc_html__( 'If you would like to control the size of the icon, you must first enable this option.', 'et_builder' ),
 				'type'             => 'yes_no_button',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'affects'          => array(
@@ -190,8 +190,8 @@ class ET_Builder_Module_Video_Slider extends ET_Builder_Module {
 				'type'              => 'select',
 				'option_category'   => 'color_option',
 				'options'           => array(
-					'light' => esc_html__( 'Light', 'et_builder' ),
-					'dark'  => esc_html__( 'Dark', 'et_builder' ),
+					'light' => et_builder_i18n( 'Light' ),
+					'dark'  => et_builder_i18n( 'Dark' ),
 				),
 				'tab_slug'          => 'advanced',
 				'toggle_slug'       => 'colors',

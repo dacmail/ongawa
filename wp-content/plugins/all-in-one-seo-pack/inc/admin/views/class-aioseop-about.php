@@ -399,7 +399,7 @@ class AIOSEOP_About {
 			'woocommerce'        => esc_html__( 'WooCommerce Integration', 'all-in-one-seo-pack' ),
 			'xml_sitemap'        => esc_html__( 'XML Sitemap', 'all-in-one-seo-pack' ),
 			'video_sitemap'      => esc_html__( 'Video XML Sitemap', 'all-in-one-seo-pack' ),
-			// 'news_sitemap'       => esc_html__( 'News Sitemap', 'all-in-one-seo-pack' ),
+			'news_sitemap'       => esc_html__( 'News Sitemap', 'all-in-one-seo-pack' ),
 			'google_tag_manager' => esc_html__( 'Google Tag Manager', 'all-in-one-seo-pack' ),
 			'image_seo'          => esc_html__( 'Image SEO', 'all-in-one-seo-pack' ),
 			'schema'             => esc_html__( 'Schema Rich Snippets', 'all-in-one-seo-pack' ),
@@ -610,7 +610,7 @@ class AIOSEOP_About {
 				'pro'  => array(
 					'status' => 'full',
 					'text'   => array(
-						'<strong>' . esc_html__( 'Submit Your Latest News Stories to Search Engines', 'all-in-one-seo-pack' ) . '</strong>',
+						'<strong>' . esc_html__( 'Submit Your Latest News Stories to Google News (Business & Agency plans only)', 'all-in-one-seo-pack' ) . '</strong>',
 					),
 				),
 			),
@@ -624,7 +624,7 @@ class AIOSEOP_About {
 				'pro'  => array(
 					'status' => 'full',
 					'text'   => array(
-						'<strong>' . esc_html__( 'Control The Title & Alt Tag Attribute of Your Images', 'all-in-one-seo-pack' ) . '</strong>',
+						'<strong>' . esc_html__( 'Control The Title & Alt Tag Attribute of Your Images (Business & Agency plans only)', 'all-in-one-seo-pack' ) . '</strong>',
 					),
 				),
 			),
@@ -654,7 +654,16 @@ class AIOSEOP_About {
 					'status' => 'full',
 					'text'   => array(
 						'<strong>' . esc_html__( 'Complete Support', 'all-in-one-seo-pack' ) . '</strong>',
-						esc_html__( 'Posts, Pages, Categories, Tags + Breadcrumb Navigation', 'all-in-one-seo-pack' ),
+						sprintf(
+							'<ul><li>%1$s</li><li>%2$s</li><li>%3$s</li></ul>',
+							esc_html__( 'Posts, Pages, Categories, Tags', 'all-in-one-seo-pack' ),
+							esc_html__( 'Breadcrumb Navigation', 'all-in-one-seo-pack' ),
+							sprintf(
+								'%1$s <strong>%2$s</strong>',
+								esc_html__( 'Local Business schema', 'all-in-one-seo-pack' ),
+								esc_html__( '(Business & Agency plans only)', 'all-in-one-seo-pack' )
+							)
+						),
 					),
 				),
 			),

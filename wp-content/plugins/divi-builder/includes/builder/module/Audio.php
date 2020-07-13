@@ -12,18 +12,18 @@ class ET_Builder_Module_Audio extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 					'audio'        => esc_html__( 'Audio', 'et_builder' ),
-					'image'        => esc_html__( 'Image', 'et_builder' ),
+					'image'        => et_builder_i18n( 'Image' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'image' => array(
-						'title' => esc_html__( 'Image', 'et_builder' ),
+						'title' => et_builder_i18n( 'Image' ),
 					),
 					'text'  => array(
-						'title' => esc_html__( 'Text', 'et_builder' ),
+						'title' => et_builder_i18n( 'Text' ),
 					),
 				),
 			),
@@ -32,7 +32,7 @@ class ET_Builder_Module_Audio extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'title' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => "{$this->main_css_element} h2, {$this->main_css_element} h1.et_pb_module_header, {$this->main_css_element} h3.et_pb_module_header, {$this->main_css_element} h4.et_pb_module_header, {$this->main_css_element} h5.et_pb_module_header, {$this->main_css_element} h6.et_pb_module_header",
 						'important' => 'plugin_only',
@@ -72,7 +72,7 @@ class ET_Builder_Module_Audio extends ET_Builder_Module {
 							'border_styles' => '%%order_class%% .et_pb_audio_cover_art',
 						)
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'     => 'advanced',
 					'toggle_slug'  => 'image',
 				),
@@ -182,7 +182,7 @@ class ET_Builder_Module_Audio extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '3bg1qUaSZ5I' ),
+				'id'   => '3bg1qUaSZ5I',
 				'name' => esc_html__( 'An introduction to the Audio Player module', 'et_builder' ),
 			),
 		);
@@ -243,7 +243,7 @@ class ET_Builder_Module_Audio extends ET_Builder_Module {
 				),
 			),
 			'title' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Define a title.', 'et_builder' ),
@@ -273,10 +273,10 @@ class ET_Builder_Module_Audio extends ET_Builder_Module {
 				'hover'           => 'tabs',
 			),
 			'image_url' => array(
-				'label'              => esc_html__( 'Image', 'et_builder' ),
+				'label'              => et_builder_i18n( 'Image' ),
 				'type'               => 'upload',
 				'option_category'    => 'basic_option',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'choose_text'        => esc_attr__( 'Choose an Image', 'et_builder' ),
 				'update_text'        => esc_attr__( 'Set As Image', 'et_builder' ),
 				'description'        => esc_html__( 'Upload your desired image, or type in the URL to the image you would like to display.', 'et_builder' ),

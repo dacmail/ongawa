@@ -1,4 +1,16 @@
 <div id="ctf-admin" class="wrap">
+	<?php
+	$lite_notice_dismissed = get_transient( 'twitter_feed_dismiss_lite' );
+
+	if ( ! $lite_notice_dismissed ) :
+		?>
+        <div id="ctf-notice-bar" style="display:none">
+            <span class="ctf-notice-bar-message"><?php _e( 'You\'re using Custom Twitter Feeds Lite. To unlock more features consider <a href="https://smashballoon.com/custom-twitter-feeds/?utm_campaign=twitter-free&utm_source=noticebar&utm_medium=litenotice" target="_blank" rel="noopener noreferrer">upgrading to Pro</a>.', 'custom-twitter-feeds'); ?></span>
+            <button type="button" class="dismiss" title="<?php _e( 'Dismiss this message.', 'custom-twitter-feeds'); ?>" data-page="overview">
+            </button>
+        </div>
+	<?php endif; ?>
+
     <h1>Custom Twitter Feeds</h1>
     <?php
     // this controls which view is included based on the selected tab
@@ -33,7 +45,7 @@
     }
     ?>
 
-    <p><span class="fa fa-life-ring" aria-hidden="true"></span>&nbsp; <?php _e('Need help setting up the plugin? Check out our <a href="https://smashballoon.com/custom-twitter-feeds/free/" target="_blank">setup directions</a>', 'custom-twitter-feeds'); ?></p>
+    <p><span class="fa fa-life-ring" aria-hidden="true"></span>&nbsp; <?php _e('Need help setting up the plugin? Check out our <a href="https://smashballoon.com/custom-twitter-feeds/free/?utm_campaign=twitter-free&utm_source=settings&utm_medium=helpsetup" target="_blank">setup directions</a>', 'custom-twitter-feeds'); ?></p>
 
     <div class="ctf-quick-start">
         <h3><span class="fa fa-rocket" aria-hidden="true"></span>&nbsp; <?php _e( 'Display your feed', 'custom-twitter-feeds'); ?></h3>
@@ -42,8 +54,9 @@
         <p><?php _e( "Find out how to display <a href='?page=custom-twitter-feeds&tab=display'>multiple feeds</a>.", "custom-twitter-feeds" ); ?></p>
     </div>
 
-    <a href="https://smashballoon.com/custom-twitter-feeds/demo" target="_blank" class="ctf-pro-notice">
+    <a href="https://smashballoon.com/custom-twitter-feeds/demo?utm_campaign=twitter-free&utm_source=settings&utm_medium=pronotice" target="_blank" class="ctf-pro-notice">
         <img src="<?php echo plugins_url( '../../img/pro-notice.png?1' , __FILE__ ) ?>" alt="Custom Twitter Feeds Pro" />
     </a>
-    
+
+    <p class="ctf-footnote dashicons-before dashicons-admin-plugins"> Check out our free plugins: <a href="https://wordpress.org/plugins/custom-facebook-feed/" target="_blank">Facebook</a>, <a href="https://wordpress.org/plugins/instagram-feed/" target="_blank">Instagram</a>, and <a href="https://wordpress.org/plugins/feeds-for-youtube/" target="_blank">YouTube</a>.</p>
 </div>

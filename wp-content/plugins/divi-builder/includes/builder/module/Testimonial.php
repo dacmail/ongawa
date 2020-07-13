@@ -11,20 +11,20 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
-					'image'        => esc_html__( 'Image', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
+					'image'        => et_builder_i18n( 'Image' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'icon'       => esc_html__( 'Quote Icon', 'et_builder' ),
 					'text'       => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 51,
 					),
 					'image' => array(
-						'title' => esc_html__( 'Image', 'et_builder' ),
+						'title' => et_builder_i18n( 'Image' ),
 						'priority' => 49,
 					),
 					'animation' => array(
@@ -38,7 +38,7 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'body'     => array(
-					'label'            => esc_html__( 'Body', 'et_builder' ),
+					'label'            => et_builder_i18n( 'Body' ),
 					'css'              => array(
 						'main' => "{$this->main_css_element} *",
 					),
@@ -67,7 +67,7 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 					),
 				),
 				'position' => array(
-					'label'           => esc_html__( 'Position', 'et_builder' ),
+					'label'           => et_builder_i18n( 'Position' ),
 					'css'             => array(
 						'main' => "{$this->main_css_element} .et_pb_testimonial_position, {$this->main_css_element} .et_pb_testimonial_separator",
 					),
@@ -117,7 +117,7 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 					),
 				),
 				'position' => array(
-					'label'           => esc_html__( 'Position', 'et_builder' ),
+					'label'           => et_builder_i18n( 'Position' ),
 					'css'             => array(
 						'main' => "{$this->main_css_element} .et_pb_testimonial_position, {$this->main_css_element} .et_pb_testimonial_separator",
 					),
@@ -174,7 +174,7 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 							'border_styles' => "%%order_class%% .et_pb_testimonial_portrait",
 						),
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'     => 'advanced',
 					'toggle_slug'  => 'image',
 					'defaults'        => array(
@@ -264,7 +264,7 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'FkQuawiGWUw' ),
+				'id'   => 'FkQuawiGWUw',
 				'name' => esc_html__( 'An introduction to the Testimonial module', 'et_builder' ),
 			),
 		);
@@ -323,10 +323,10 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 				'default_on_front' => 'off',
 			),
 			'portrait_url' => array(
-				'label'              => esc_html__( 'Image', 'et_builder' ),
+				'label'              => et_builder_i18n( 'Image' ),
 				'type'               => 'upload',
 				'option_category'    => 'basic_option',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'choose_text'        => esc_attr__( 'Choose an Image', 'et_builder' ),
 				'update_text'        => esc_attr__( 'Set As Image', 'et_builder' ),
 				'description'        => esc_html__( 'Upload your desired image, or type in the URL to the image you would like to display.', 'et_builder' ),
@@ -340,8 +340,8 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'description'     => esc_html__( 'Choose whether or not the quote icon should be visible.', 'et_builder' ),
@@ -350,7 +350,7 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 				'hover'           => 'tabs',
 			),
 			'content' => array(
-				'label'           => esc_html__( 'Body', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Body' ),
 				'type'            => 'tiny_mce',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Input the main text content for your module here.', 'et_builder' ),
@@ -417,8 +417,8 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 				'description'      => esc_html__( 'If you would like to control the size of the icon, you must first enable this option.', 'et_builder' ),
 				'type'             => 'yes_no_button',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'affects'          => array(
@@ -705,7 +705,8 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 				),
 			),
 		) );
-
+		// Added span wrapper for comma between Job Title and Company Title
+		$testimonials_metas_string = implode( '<span class="et_pb_testimonial_separator">,</span> ', $metas );
 		$output = sprintf(
 			'<div%3$s class="%4$s"%10$s%11$s>
 				%9$s
@@ -721,7 +722,7 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 			et_core_esc_previously( $author ),
 			$this->module_id(),
 			$this->module_classname( $render_slug ),
-			et_core_esc_previously( implode( ', ', $metas ) ), // #5
+			et_core_esc_previously( $testimonials_metas_string ), // #5
 			'', // Deprecated
 			$portrait_image,
 			$video_background,

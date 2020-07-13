@@ -13,7 +13,7 @@ class ET_Builder_Module_Social_Media_Follow_Item extends ET_Builder_Module {
 			'general'  => array(
 				'toggles' => array(
 					'main_content' => esc_html__( 'Network', 'et_builder' ),
-					'link'         => esc_html__( 'Link', 'et_builder' ),
+					'link'         => et_builder_i18n( 'Link' ),
 				),
 			),
 			'advanced' => array(
@@ -28,15 +28,15 @@ class ET_Builder_Module_Social_Media_Follow_Item extends ET_Builder_Module {
 
 		$this->custom_css_fields = array(
 			'before' => array(
-				'label'    => esc_html__( 'Before', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Before' ),
 				'selector' => '.et_pb_social_media_follow li%%order_class%%:before',
 			),
 			'main_element' => array(
-				'label'    => esc_html__( 'Main Element', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Main Element' ),
 				'selector' => '.et_pb_social_media_follow li%%order_class%%',
 			),
 			'after' => array(
-				'label'    => esc_html__( 'After', 'et_builder' ),
+				'label'    => et_builder_i18n( 'After' ),
 				'selector' => '.et_pb_social_media_follow li%%order_class%%:after',
 			),
 			'social_icon' => array(
@@ -199,7 +199,7 @@ class ET_Builder_Module_Social_Media_Follow_Item extends ET_Builder_Module {
 				'toggle_slug' => 'main_content',
 			),
 			'content' => array(
-				'label'       => esc_html__( 'Body', 'et_builder' ),
+				'label'       => et_builder_i18n( 'Body' ),
 				'type'        => 'hidden',
 				'toggle_slug' => 'main_content',
 			),
@@ -258,8 +258,8 @@ class ET_Builder_Module_Social_Media_Follow_Item extends ET_Builder_Module {
 				'description'      => esc_html__( 'If you would like to control the size of the icon, you must first enable this option.', 'et_builder' ),
 				'type'             => 'yes_no_button',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'affects'          => array(

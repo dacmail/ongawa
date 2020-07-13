@@ -97,6 +97,9 @@ function _et_pb_autoload( $class ) {
 				require_once 'module/helpers/WooCommerceModules.php';
 			}
 			break;
+		case 'ET_Builder_I18n':
+			require_once 'feature/I18n.php';
+			break;
 	}
 }
 

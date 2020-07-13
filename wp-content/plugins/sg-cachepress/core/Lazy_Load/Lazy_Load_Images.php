@@ -13,8 +13,9 @@ class Lazy_Load_Images {
 	 * @since 5.0.0
 	 */
 	public function __construct() {
+		$priority = get_option( 'siteground_optimizer_lazyload_shortcodes' ) ? 9999 : 10;
 		// Replace the 'src' attr with 'data-src' in the_content.
-		add_filter( 'the_content', array( $this, 'filter_html' ) );
+		add_filter( 'the_content', array( $this, 'filter_html' ), $priority );
 
 		// If enabled replace the 'src' attr with 'data-src' in text widgets.
 		if ( Options::is_enabled( 'siteground_optimizer_lazyload_textwidgets' ) ) {
@@ -54,7 +55,7 @@ class Lazy_Load_Images {
 			empty( $content ) ||
 			is_admin() ||
 			( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) ||
-			method_exists( 'FLBuilderModel', 'is_builder_enabled' )
+			( method_exists( 'FLBuilderModel', 'is_builder_enabled' ) && true === \FLBuilderModel::is_builder_enabled() )
 		) {
 			return $content;
 		}
@@ -86,10 +87,12 @@ class Lazy_Load_Images {
 					continue;
 				}
 
-				$orig_image = str_replace( $classes, $classes . ' lazyload', $image );
+				$orig_image = preg_replace( '/class=["\'](.*?)["\']/is', 'class="lazyload $1"', $image );
 			} else {
-				$orig_image = str_replace( 'src=', 'class="lazyload" src=', $image );
+				$orig_image = str_replace( '<img', '<img class="lazyload"', $image );
 			}
+
+
 			// Search patterns.
 			$patterns = array(
 				'/(?<!noscript\>)((<img.*?src=["|\'].*?["|\']).*?(\/?>))/i',

@@ -12,12 +12,12 @@ class ET_Builder_Module_Countdown_Timer extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'text' => esc_html__( 'Text', 'et_builder' ),
+					'text' => et_builder_i18n( 'Text' ),
 				),
 			),
 		);
@@ -25,7 +25,7 @@ class ET_Builder_Module_Countdown_Timer extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'header' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main'      => "{$this->main_css_element} h4, {$this->main_css_element} h1.title, {$this->main_css_element} h2.title, {$this->main_css_element} h3.title, {$this->main_css_element} h5.title, {$this->main_css_element} h6.title",
 						'important' => array( 'size', 'plugin_all' ),
@@ -124,7 +124,7 @@ class ET_Builder_Module_Countdown_Timer extends ET_Builder_Module {
 				'selector' => '.et_pb_countdown_timer_container',
 			),
 			'title' => array(
-				'label'    => esc_html__( 'Title', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Title' ),
 				'selector' => '.title',
 			),
 			'timer_section' => array(
@@ -135,7 +135,7 @@ class ET_Builder_Module_Countdown_Timer extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'irIXKlOw6JA' ),
+				'id'   => 'irIXKlOw6JA',
 				'name' => esc_html__( 'An introduction to the Countdown Timer module', 'et_builder' ),
 			),
 		);
@@ -144,7 +144,7 @@ class ET_Builder_Module_Countdown_Timer extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'title' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'This is the title displayed for the countdown timer.', 'et_builder' ),

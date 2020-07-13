@@ -65,7 +65,20 @@ class Supercacher_Helper {
 	 * @since  5.0.0
 	 */
 	public function set_bypass_cookie() {
-		setcookie( 'wpSGCacheBypass', 1, time() + 100 * MINUTE_IN_SECONDS, '/' );
+		if ( version_compare( phpversion(), '7.3', '>=' ) ) {
+			setcookie(
+				'wpSGCacheBypass',
+				1,
+				array(
+					'expires'  => time() + 100 * MINUTE_IN_SECONDS,
+					'path'     => COOKIEPATH,
+					'httponly' => true,
+					'samesite' => 'Lax',
+				)
+			);
+		} else {
+			setcookie( 'wpSGCacheBypass', 1, time() + 100 * MINUTE_IN_SECONDS, COOKIEPATH . ';samesite=Lax;' );
+		}
 	}
 
 	/**
@@ -74,7 +87,11 @@ class Supercacher_Helper {
 	 * @since  5.0.0
 	 */
 	public function remove_bypass_cookie() {
-		setcookie( 'wpSGCacheBypass', 0, time() - HOUR_IN_SECONDS, '/' );
+		if ( empty( $_COOKIE['wpSGCacheBypass'] ) ) {
+			return;
+		}
+
+		setcookie( 'wpSGCacheBypass', 0, time() - HOUR_IN_SECONDS, COOKIEPATH );
 	}
 
 	/**

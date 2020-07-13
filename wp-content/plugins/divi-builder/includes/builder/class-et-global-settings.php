@@ -631,12 +631,12 @@ class ET_Global_Settings {
 			$defaults['et_pb_filterable_portfolio-zoom_icon_color'] = et_get_option( 'accent_color', '#2ea3f2' );
 		}
 
-		$custom_defaults_manager = ET_Builder_Custom_Defaults_Settings::instance();
-		if ( ! et_is_builder_plugin_active() && ! ET_Builder_Custom_Defaults_Settings::is_customizer_migrated() ) {
-			$custom_defaults_manager->migrate_customizer_settings( $defaults );
+		$module_presets_manager = ET_Builder_Global_Presets_Settings::instance();
+		if ( ! et_is_builder_plugin_active() && ! ET_Builder_Global_Presets_Settings::is_customizer_migrated() ) {
+			$module_presets_manager->migrate_customizer_settings( $defaults );
 		}
 
-		$custom_defaults_unmigrated = et_get_option( ET_Builder_Custom_Defaults_Settings::CUSTOM_DEFAULTS_UNMIGRATED_OPTION, false );
+		$custom_defaults_unmigrated = et_get_option( ET_Builder_Global_Presets_Settings::CUSTOM_DEFAULTS_UNMIGRATED_OPTION, false );
 
 		// reformat defaults array and add actual values to it
 		foreach( $defaults as $setting_name => $default_value ) {
@@ -645,14 +645,14 @@ class ET_Global_Settings {
 			);
 
 			if ( ! et_is_builder_plugin_active() ) {
-				$actual_value  = et_get_option( $setting_name, '', '', true );
+				$actual_value  = (string) et_get_option( $setting_name, '', '', true );
 				$add_as_actual = false;
 
 				// Pass Theme Customizer non module specific settings
 				$setting_array = explode( '-', $setting_name );
 				$module_name   = $setting_array[0];
 
-				if ( empty( $setting_array[1] ) || ! empty( $custom_defaults_unmigrated->$module_name ) && in_array( $setting_array[1], ET_Builder_Custom_Defaults_Settings::$phase_two_settings ) ) {
+				if ( empty( $setting_array[1] ) || ! empty( $custom_defaults_unmigrated->$module_name ) && in_array( $setting_array[1], ET_Builder_Global_Presets_Settings::$phase_two_settings ) ) {
 					$add_as_actual = true;
 				}
 

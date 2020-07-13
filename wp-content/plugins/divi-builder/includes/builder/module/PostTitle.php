@@ -14,16 +14,16 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'elements'   => esc_html__( 'Elements', 'et_builder' ),
+					'elements'   => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'text'     => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
-					'image_settings' => esc_html__( 'Image', 'et_builder' )
+					'image_settings' => et_builder_i18n( 'Image' )
 				),
 			),
 		);
@@ -48,7 +48,7 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 			),
 			'fonts'                 => array(
 				'title' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'use_all_caps' => true,
 					'css'      => array(
 						'main' => "{$this->main_css_element} .et_pb_title_container h1.entry-title, {$this->main_css_element} .et_pb_title_container h2.entry-title, {$this->main_css_element} .et_pb_title_container h3.entry-title, {$this->main_css_element} .et_pb_title_container h4.entry-title, {$this->main_css_element} .et_pb_title_container h5.entry-title, {$this->main_css_element} .et_pb_title_container h6.entry-title",
@@ -93,7 +93,7 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 
 		$this->custom_css_fields = array(
 			'post_title' => array(
-				'label'    => esc_html__( 'Title', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Title' ),
 				'selector' => 'h1',
 			),
 			'post_meta' => array(
@@ -108,7 +108,7 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'wb8c06U0uCU' ),
+				'id'   => 'wb8c06U0uCU',
 				'name' => esc_html__( 'An introduction to the Post Title module', 'et_builder' ),
 			),
 		);
@@ -121,8 +121,8 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'toggle_slug'       => 'elements',
@@ -135,8 +135,8 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'affects'           => array(
@@ -154,8 +154,8 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'depends_show_if'   => 'on',
@@ -169,8 +169,8 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'depends_show_if'   => 'on',
@@ -196,8 +196,8 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'show_if'           => array(
@@ -214,8 +214,8 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'depends_show_if'   => 'on',
@@ -229,8 +229,8 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'affects'           => array(
@@ -261,8 +261,8 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default'         => 'on',
 				'tab_slug'        => 'advanced',
@@ -379,8 +379,8 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'type'              => 'select',
 				'option_category'   => 'color_option',
 				'options'           => array(
-					'dark'  => esc_html__( 'Dark', 'et_builder' ),
-					'light' => esc_html__( 'Light', 'et_builder' ),
+					'dark'  => et_builder_i18n( 'Dark' ),
+					'light' => et_builder_i18n( 'Light' ),
 				),
 				'default_on_front'  => 'dark',
 				'tab_slug'          => 'advanced',
@@ -393,8 +393,8 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'color_option',
 				'options'           => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front'  => 'off',
 				'affects'           => array(

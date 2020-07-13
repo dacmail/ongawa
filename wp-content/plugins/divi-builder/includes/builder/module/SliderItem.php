@@ -4,7 +4,7 @@ require_once 'helpers/Slider.php';
 
 class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 	function init() {
-		$this->name                        = esc_html__( 'Slide', 'et_builder' );
+		$this->name                        = et_builder_i18n( 'Slide' );
 		$this->plural                      = esc_html__( 'Slides', 'et_builder' );
 		$this->slug                        = 'et_pb_slide';
 		$this->vb_support                  = 'on';
@@ -18,24 +18,24 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 					'image_video'  => esc_html__( 'Image & Video', 'et_builder' ),
 					'player_pause' => esc_html__( 'Player Pause', 'et_builder' ),
 					'admin_label' => array(
-						'title'    => esc_html__( 'Admin Label', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Admin Label' ),
 						'priority' => 99,
 					),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'overlay'    => esc_html__( 'Overlay', 'et_builder' ),
+					'overlay'    => et_builder_i18n( 'Overlay' ),
 					'navigation' => esc_html__( 'Navigation', 'et_builder' ),
 					'image' => array(
-						'title' => esc_html__( 'Image', 'et_builder' ),
+						'title' => et_builder_i18n( 'Image' ),
 					),
 					'text'       => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 				),
@@ -53,7 +53,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'header' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => ".et_pb_slider {$this->main_css_element}.et_pb_slide .et_pb_slide_description .et_pb_slide_title",
 						'limited_main' => ".et_pb_slider {$this->main_css_element}.et_pb_slide .et_pb_slide_description .et_pb_slide_title, .et_pb_slider {$this->main_css_element}.et_pb_slide .et_pb_slide_description .et_pb_slide_title a",
@@ -71,7 +71,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 					),
 				),
 				'body'   => array(
-					'label'    => esc_html__( 'Body', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Body' ),
 					'css'      => array(
 						'main'        => ".et_pb_slider.et_pb_module {$this->main_css_element}.et_pb_slide .et_pb_slide_description .et_pb_slide_content",
 						'line_height' => "{$this->main_css_element} p",
@@ -92,7 +92,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 			),
 			'button'                => array(
 				'button' => array(
-					'label' => esc_html__( 'Button', 'et_builder' ),
+					'label' => et_builder_i18n( 'Button' ),
 					'css'      => array(
 						'main' => ".et_pb_slider {$this->main_css_element}.et_pb_slide .et_pb_more_button.et_pb_button",
 						'limited_main' => ".et_pb_slider {$this->main_css_element}.et_pb_slide .et_pb_more_button.et_pb_button",
@@ -132,7 +132,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 							'border_styles' => '%%order_class%%.et_pb_slide .et_pb_slide_image img',
 						)
 					),
-					'label_prefix'    => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix'    => et_builder_i18n( 'Image' ),
 					'tab_slug'        => 'advanced',
 					'toggle_slug'     => 'image',
 					'depends_show_if' => 'off',
@@ -250,7 +250,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '-YeoR2xSLOY' ),
+				'id'   => '-YeoR2xSLOY',
 				'name' => esc_html__( 'An introduction to the Slider module', 'et_builder' ),
 			),
 		);
@@ -259,7 +259,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'heading' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Define the title text for your slide.', 'et_builder' ),
@@ -269,7 +269,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 				'hover'           => 'tabs',
 			),
 			'button_text' => array(
-				'label'           => esc_html__( 'Button', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Button' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Define the text for the slide button', 'et_builder' ),
@@ -300,10 +300,10 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 				'default_on_front' => 'off',
 			),
 			'image' => array(
-				'label'              => esc_html__( 'Image', 'et_builder' ),
+				'label'              => et_builder_i18n( 'Image' ),
 				'type'               => 'upload',
 				'option_category'    => 'configuration',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'choose_text'        => esc_attr__( 'Choose a Slide Image', 'et_builder' ),
 				'update_text'        => esc_attr__( 'Set As Slide Image', 'et_builder' ),
 				'affects'            => array(
@@ -320,8 +320,9 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					// Uses cached uppercase translation but keeps the lowercase not change definition content.
+					'on'  => strtolower( et_builder_i18n( 'Yes' ) ),
 				),
 				'affects'           => array(
 					'bg_overlay_color',
@@ -346,8 +347,9 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					// Uses cached uppercase translation but keeps the lowercase not change definition content.
+					'on'  => strtolower( et_builder_i18n( 'Yes' ) ),
 				),
 				'default_on_front' => '',
 				'affects'           => array(
@@ -373,8 +375,8 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 				'type'            => 'select',
 				'option_category' => 'layout',
 				'options'         => array(
-					'center' => esc_html__( 'Center', 'et_builder' ),
-					'bottom' => esc_html__( 'Bottom', 'et_builder' ),
+					'center' => et_builder_i18n( 'Center' ),
+					'bottom' => et_builder_i18n( 'Bottom' ),
 				),
 				'default_on_front' => 'center',
 				'tab_slug'        => 'advanced',
@@ -415,15 +417,15 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => '',
 				'toggle_slug'     => 'player_pause',
 				'description'     => esc_html__( 'Allow video to be paused by other players when they begin playing' ,'et_builder' ),
 			),
 			'content' => array(
-				'label'           => esc_html__( 'Body', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Body' ),
 				'type'            => 'tiny_mce',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Input your main slide text content here.', 'et_builder' ),
@@ -453,7 +455,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 				'hover'          => 'tabs',
 			),
 			'admin_title' => array(
-				'label'       => esc_html__( 'Admin Label', 'et_builder' ),
+				'label'       => et_builder_i18n( 'Admin Label' ),
 				'type'        => 'text',
 				'description' => esc_html__( 'This will change the label of the slide in the builder for easy identification.', 'et_builder' ),
 				'toggle_slug' => 'admin_label',
@@ -543,7 +545,21 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 		// Attribute inheritance should be done on front-end / published page only.
 		// Don't run attribute inheritance in VB and Backend to avoid attribute inheritance accidentally being saved on VB / BB
 		if ( ! empty( $et_pb_slider ) && ! is_admin() && ! et_fb_is_enabled() ) {
+			$view_modes = array( '', '__hover', '_phone', '_tablet' );
 			foreach ( $et_pb_slider as $slider_attr => $slider_attr_value ) {
+				$maybe_next_slider_attr = false;
+				foreach( $view_modes as $mode ) {
+					$current_view_bc_enable_attr = 'background_enable_color' . $mode;
+					if( $slider_attr === $current_view_bc_enable_attr) {
+						// Do not inherit the background color off from the parent slider
+						$this->props[ $current_view_bc_enable_attr ] = isset( $this->props[ $current_view_bc_enable_attr ] ) && 'off' === $this->props[ $current_view_bc_enable_attr ] ? 'off' : 'on';
+						$maybe_next_slider_attr = true;
+					}
+				}
+				if( $maybe_next_slider_attr ) {
+					continue;
+				}
+
 				// Get default value
 				$default = isset( $this->fields_unprocessed[ $slider_attr ][ 'default' ] ) ? $this->fields_unprocessed[ $slider_attr ][ 'default' ] : '';
 
@@ -723,7 +739,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 			et_pb_responsive_options()->generate_responsive_css( $bg_overlay_color_values, '%%order_class%%.et_pb_slide .et_pb_slide_overlay_container', 'background-color', $render_slug, '', 'color' );
 		}
 
-		if ( ! empty( $background_color ) ) {
+		if ( ! empty( $background_color ) && 'off' !== $this->props['background_enable_color'] ) {
 			ET_Builder_Element::set_style( $render_slug, array(
 				'selector'    => '%%order_class%%',
 				'declaration' => sprintf(

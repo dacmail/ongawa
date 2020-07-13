@@ -11,18 +11,18 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 			'general'  => array(
 				'toggles' => array(
 					'main_content' => esc_html__( 'Images', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'layout'  => esc_html__( 'Layout', 'et_builder' ),
-					'overlay' => esc_html__( 'Overlay', 'et_builder' ),
+					'layout'  => et_builder_i18n( 'Layout' ),
+					'overlay' => et_builder_i18n( 'Overlay' ),
 					'image' => array(
-						'title' => esc_html__( 'Image', 'et_builder' ),
+						'title' => et_builder_i18n( 'Image' ),
 					),
 					'text'    => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 				),
@@ -41,7 +41,7 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'title'   => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main'  => "{$this->main_css_element} .et_pb_gallery_title",
 						'hover' => "{$this->main_css_element} .et_pb_gallery_title:hover",
@@ -94,7 +94,7 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 							'border_styles' => "{$this->main_css_element} .et_pb_gallery_image",
 						)
 					),
-					'label_prefix'    => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix'    => et_builder_i18n( 'Image' ),
 					'tab_slug'        => 'advanced',
 					'toggle_slug'     => 'image',
 					'depends_on'      => array( 'fullwidth' ),
@@ -179,7 +179,7 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 				'selector'    => '.et_pb_gallery_item',
 			),
 			'overlay' => array(
-				'label'       => esc_html__( 'Overlay', 'et_builder' ),
+				'label'       => et_builder_i18n( 'Overlay' ),
 				'selector'    => '.et_overlay',
 			),
 			'overlay_icon' => array(
@@ -206,7 +206,7 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'BRjX-pNHk-s' ),
+				'id'   => 'BRjX-pNHk-s',
 				'name' => esc_html__( 'An introduction to the Gallery module', 'et_builder' ),
 			),
 		);
@@ -229,7 +229,7 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 				'description'      => esc_html__( 'Select an ordering method for the gallery. This controls which gallery items appear first in the list.', 'et_builder' ),
 				'type'             => $this->is_loading_bb_data() ? 'hidden' : 'select',
 				'options'          => array(
-					''     => esc_html__( 'Default', 'et_builder' ),
+					''     => et_builder_i18n( 'Default' ),
 					'rand' => esc_html__( 'Random', 'et_builder' ),
 				),
 				'default'          => 'off',
@@ -247,7 +247,7 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 				),
 			),
 			'fullwidth' => array(
-				'label'             => esc_html__( 'Layout', 'et_builder' ),
+				'label'             => et_builder_i18n( 'Layout' ),
 				'type'              => 'select',
 				'option_category'   => 'layout',
 				'options'           => array(
@@ -316,8 +316,8 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 				'type'               => 'yes_no_button',
 				'option_category'    => 'configuration',
 				'options'            => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'   => 'on',
 				'description'        => esc_html__( 'Whether or not to show the title and caption for images (if available).', 'et_builder' ),
@@ -331,8 +331,8 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'description'       => esc_html__( 'Enable or disable pagination for this feed.', 'et_builder' ),
@@ -566,16 +566,15 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 		$data_background_layout = et_pb_background_layout_options()->get_background_layout_attrs( $this->props );
 
 		$output = sprintf(
-			'<div%1$s class="%2$s"%4$s>
+			'<div%1$s class="%2$s"%4$s>%5$s%6$s
 				<div class="et_pb_gallery_items et_post_gallery clearfix" data-per_page="%3$d">',
 			$this->module_id(),
 			$this->module_classname( $render_slug ),
 			esc_attr( $posts_number ),
-			et_core_esc_previously( $data_background_layout )
+			et_core_esc_previously( $data_background_layout ),
+			$parallax_image_background,
+			$video_background
 		);
-
-		$output .= $video_background;
-		$output .= $parallax_image_background;
 
 		// Images: Add CSS Filters and Mix Blend Mode rules (if set)
 		if ( array_key_exists( 'image', $this->advanced_fields ) && array_key_exists( 'css', $this->advanced_fields['image'] ) ) {

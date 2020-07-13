@@ -14,14 +14,14 @@ class ET_Builder_Module_Bar_Counters extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'elements'   => esc_html__( 'Elements', 'et_builder' ),
+					'elements'   => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'layout' => esc_html__( 'Layout', 'et_builder' ),
+					'layout' => et_builder_i18n( 'Layout' ),
 					'text'   => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 					'bar'    => esc_html__( 'Bar', 'et_builder' ),
@@ -50,7 +50,7 @@ class ET_Builder_Module_Bar_Counters extends ET_Builder_Module {
 			),
 			'fonts'                 => array(
 				'title' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => "{$this->main_css_element} .et_pb_counter_title",
 					),
@@ -119,7 +119,7 @@ class ET_Builder_Module_Bar_Counters extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '2QLX8Lwr3cs' ),
+				'id'   => '2QLX8Lwr3cs',
 				'name' => esc_html__( 'An introduction to the Bar Counter module', 'et_builder' ),
 			),
 		);
@@ -143,8 +143,8 @@ class ET_Builder_Module_Bar_Counters extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'toggle_slug'       => 'elements',
 				'default_on_front'  => 'on',

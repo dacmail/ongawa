@@ -12,16 +12,16 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
-					'image'        => esc_html__( 'Image', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
+					'image'        => et_builder_i18n( 'Image' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'icon'  => esc_html__( 'Icon', 'et_builder' ),
-					'image' => esc_html__( 'Image', 'et_builder' ),
+					'image' => et_builder_i18n( 'Image' ),
 					'text'  => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 				),
@@ -39,7 +39,7 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'header' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main'      => "{$this->main_css_element} h4, {$this->main_css_element} h1.et_pb_module_header, {$this->main_css_element} h2.et_pb_module_header, {$this->main_css_element} h3.et_pb_module_header, {$this->main_css_element} h5.et_pb_module_header, {$this->main_css_element} h6.et_pb_module_header",
 						'important' => 'plugin_only',
@@ -49,7 +49,7 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 					),
 				),
 				'body'     => array(
-					'label'          => esc_html__( 'Body', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Body' ),
 					'css'            => array(
 						'main'  => "{$this->main_css_element}",
 					),
@@ -59,7 +59,7 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 					),
 				),
 				'position' => array(
-					'label'          => esc_html__( 'Position', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Position' ),
 					'css'            => array(
 						'main' => "{$this->main_css_element} .et_pb_member_position",
 					),
@@ -88,7 +88,7 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 							'border_styles' => "{$this->main_css_element} .et_pb_team_member_image",
 						),
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'     => 'advanced',
 					'toggle_slug'  => 'image',
 				),
@@ -163,7 +163,7 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 				'selector' => '.et_pb_team_member_description',
 			),
 			'title' => array(
-				'label'    => esc_html__( 'Title', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Title' ),
 				'selector' => '.et_pb_team_member_description h4',
 			),
 			'member_position' => array(
@@ -178,7 +178,7 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'rrKmaQ0n7Hw' ),
+				'id'   => 'rrKmaQ0n7Hw',
 				'name' => esc_html__( 'An introduction to the Person module', 'et_builder' ),
 			),
 		);
@@ -197,7 +197,7 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 				'hover'           => 'tabs',
 			),
 			'position' => array(
-				'label'           => esc_html__( 'Position', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Position' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( "Input the person's position.", 'et_builder' ),
@@ -207,10 +207,10 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 				'hover'           => 'tabs',
 			),
 			'image_url' => array(
-				'label'              => esc_html__( 'Image', 'et_builder' ),
+				'label'              => et_builder_i18n( 'Image' ),
 				'type'               => 'upload',
 				'option_category'    => 'basic_option',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'choose_text'        => esc_attr__( 'Choose an Image', 'et_builder' ),
 				'update_text'        => esc_attr__( 'Set As Image', 'et_builder' ),
 				'description'        => esc_html__( 'Upload your desired image, or type in the URL to the image you would like to display.', 'et_builder' ),
@@ -252,7 +252,7 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 				'dynamic_content' => 'url',
 			),
 			'content' => array(
-				'label'           => esc_html__( 'Body', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Body' ),
 				'type'            => 'tiny_mce',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Input the main text content for your module here.', 'et_builder' ),
@@ -276,8 +276,8 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 				'description'      => esc_html__( 'If you would like to control the size of the icon, you must first enable this option.', 'et_builder' ),
 				'type'             => 'yes_no_button',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'affects'          => array(

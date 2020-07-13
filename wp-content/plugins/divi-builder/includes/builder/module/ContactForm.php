@@ -17,9 +17,9 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module_Type_WithSpamProt
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 					'email'        => esc_html__( 'Email', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 					'redirect'     => esc_html__( 'Redirect', 'et_builder' ),
 					'spam'         => esc_html__( 'Spam Protection', 'et_builder' ),
 				),
@@ -41,7 +41,7 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module_Type_WithSpamProt
 			),
 			'fonts'                 => array(
 				'title' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => "{$this->main_css_element} h1, {$this->main_css_element} h2.et_pb_contact_main_title, {$this->main_css_element} h3.et_pb_contact_main_title, {$this->main_css_element} h4.et_pb_contact_main_title, {$this->main_css_element} h5.et_pb_contact_main_title, {$this->main_css_element} h6.et_pb_contact_main_title",
 					),
@@ -75,7 +75,7 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module_Type_WithSpamProt
 			),
 			'button'                => array(
 				'button' => array(
-					'label' => esc_html__( 'Button', 'et_builder' ),
+					'label' => et_builder_i18n( 'Button' ),
 					'css' => array(
 						'main'         => "{$this->main_css_element}.et_pb_module .et_pb_button",
 						'limited_main' => "{$this->main_css_element}.et_pb_module .et_pb_button",
@@ -191,7 +191,7 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module_Type_WithSpamProt
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'y3NSTE6BSfo' ),
+				'id'   => 'y3NSTE6BSfo',
 				'name' => esc_html__( 'An introduction to the Contact Form module', 'et_builder' ),
 			),
 		);
@@ -259,8 +259,8 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module_Type_WithSpamProt
 					'type'             => 'yes_no_button',
 					'option_category'  => 'configuration',
 					'options'          => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'toggle_slug'      => 'spam',
 					'description'      => esc_html__( 'Turn the captcha on or off using this option.', 'et_builder' ),
@@ -283,7 +283,7 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module_Type_WithSpamProt
 					'toggle_slug'     => 'email',
 				),
 				'title'              => array(
-					'label'           => esc_html__( 'Title', 'et_builder' ),
+					'label'           => et_builder_i18n( 'Title' ),
 					'type'            => 'text',
 					'option_category' => 'basic_option',
 					'description'     => esc_html__( 'Define a title for your contact form.', 'et_builder' ),
@@ -304,8 +304,8 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module_Type_WithSpamProt
 					'type'             => 'yes_no_button',
 					'option_category'  => 'configuration',
 					'options'          => array(
-						'off' => esc_html__( 'No', 'et_builder' ),
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
+						'off' => et_builder_i18n( 'No' ),
+						'on'  => et_builder_i18n( 'Yes' ),
 					),
 					'affects'          => array(
 						'redirect_url',
@@ -632,9 +632,9 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module_Type_WithSpamProt
 		$et_pb_captcha = sprintf( '
 			<div class="et_pb_contact_right">
 				<p class="clearfix">
-					<span class="et_pb_contact_captcha_question">%1$s</span> = <input type="text" size="2" class="input et_pb_contact_captcha" data-first_digit="%3$s" data-second_digit="%4$s" value="" name="et_pb_contact_captcha_%2$s" data-required_mark="required" autocomplete="disabled">
+					<span class="et_pb_contact_captcha_question">%1$s</span> = <input type="text" size="2" class="input et_pb_contact_captcha" data-first_digit="%3$s" data-second_digit="%4$s" value="" name="et_pb_contact_captcha_%2$s" data-required_mark="required" autocomplete="off">
 				</p>
-			</div> <!-- .et_pb_contact_right -->',
+			</div><!-- .et_pb_contact_right -->',
 			sprintf( '%1$s + %2$s', esc_html( $et_pb_first_digit ), esc_html( $et_pb_second_digit ) ),
 			esc_attr( $et_pb_contact_form_num ),
 			esc_attr( $et_pb_first_digit ),

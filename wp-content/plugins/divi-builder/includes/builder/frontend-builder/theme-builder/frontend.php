@@ -91,6 +91,9 @@ function et_theme_builder_frontend_override_template( $template ) {
 	}
 
 	if ( $override_header || $override_footer ) {
+		// wp-version >= 5.2
+		remove_action( 'wp_body_open', 'wp_admin_bar_render', 0 );
+
 		add_action( 'get_header', 'et_theme_builder_frontend_override_header' );
 		add_action( 'get_footer', 'et_theme_builder_frontend_override_footer' );
 	}

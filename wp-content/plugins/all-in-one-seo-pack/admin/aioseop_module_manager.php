@@ -261,13 +261,12 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 
 				// Don't load Pro modules if Pro was previously installed.
 				switch ( $mod ) {
-					case 'video_sitemap': // phpcs:ignore PSR2.ControlStructures.SwitchDeclaration
-					case 'image_seo': { // phpcs:ignore PSR2.ControlStructures.SwitchDeclaration
+					case 'schema_local_business':
+					case 'video_sitemap':
+					case 'image_seo':
 						break;
-					}
-					default: { // phpcs:ignore PSR2.ControlStructures.SwitchDeclaration
+					default:
 						return $this->do_load_module( $mod );
-					}
 				}
 			}
 

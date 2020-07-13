@@ -11,13 +11,13 @@ class ET_Builder_Module_Code extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'width' => array(
-						'title'    => esc_html__( 'Sizing', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Sizing' ),
 						'priority' => 65,
 					),
 				),
@@ -40,7 +40,7 @@ class ET_Builder_Module_Code extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'dTY6-Cbr00A' ),
+				'id'   => 'dTY6-Cbr00A',
 				'name' => esc_html__( 'An introduction to the Code module', 'et_builder' ),
 			),
 		);

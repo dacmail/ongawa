@@ -54,6 +54,9 @@ class Images_Optimizer_Webp {
 	 * @since  5.0.0
 	 */
 	public function initialize() {
+		// Flush the cache, to avoid stucked optimizations.
+		Supercacher::purge_cache();
+
 		// Reset the status.
 		update_option( 'siteground_optimizer_webp_conversion_completed', 0, false );
 		update_option( 'siteground_optimizer_webp_conversion_status', 0, false );

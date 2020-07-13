@@ -21,6 +21,9 @@ use SiteGround_Optimizer\Install_Service\Install_5_3_10;
 use SiteGround_Optimizer\Install_Service\Install_5_4_0;
 use SiteGround_Optimizer\Install_Service\Install_5_4_3;
 use SiteGround_Optimizer\Install_Service\Install_5_5_0;
+use SiteGround_Optimizer\Install_Service\Install_5_5_2;
+use SiteGround_Optimizer\Install_Service\Install_5_5_4;
+use SiteGround_Optimizer\Install_Service\Install_Cleanup;
 use SiteGround_Optimizer\Supercacher\Supercacher;
 
 /**
@@ -52,6 +55,8 @@ class Install_Service {
 			new Install_5_4_0(),
 			new Install_5_4_3(),
 			new Install_5_5_0(),
+			new Install_5_5_2(),
+			new Install_5_5_4(),
 		);
 
 		add_action( 'upgrader_process_complete', array( $this, 'install' ) );
@@ -75,6 +80,8 @@ class Install_Service {
 			// Delete the transient after the install.
 			delete_transient( '_siteground_optimizer_installing' );
 		}
+
+		Install_Cleanup::cleanup();
 	}
 
 	/**

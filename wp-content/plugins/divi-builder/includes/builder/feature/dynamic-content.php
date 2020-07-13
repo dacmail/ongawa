@@ -99,7 +99,7 @@ function et_builder_get_built_in_dynamic_content_fields( $post_id ) {
 	}
 
 	$date_format_options = array(
-		'default' => esc_html__( 'Default', 'et_builder' ),
+		'default' => et_builder_i18n( 'Default' ),
 		'M j, Y'  => esc_html__( 'Aug 6, 1999 (M j, Y)', 'et_builder' ),
 		'F d, Y'  => esc_html__( 'August 06, 1999 (F d, Y)', 'et_builder' ),
 		'm/d/Y'   => esc_html__( '08/06/1999 (m/d/Y)', 'et_builder' ),
@@ -164,8 +164,8 @@ function et_builder_get_built_in_dynamic_content_fields( $post_id ) {
 				'label'   => esc_html__( 'Link to Comments Area', 'et_builder' ),
 				'type'    => 'yes_no_button',
 				'options' => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default' => 'on',
 			),
@@ -182,8 +182,8 @@ function et_builder_get_built_in_dynamic_content_fields( $post_id ) {
 					'label'   => esc_html__( 'Link to Category Index Pages', 'et_builder' ),
 					'type'    => 'yes_no_button',
 					'options' => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default' => 'on',
 				),
@@ -213,8 +213,8 @@ function et_builder_get_built_in_dynamic_content_fields( $post_id ) {
 					'label'   => esc_html__( 'Link to Tag Index Pages', 'et_builder' ),
 					'type'    => 'yes_no_button',
 					'options' => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default' => 'on',
 				),
@@ -282,8 +282,8 @@ function et_builder_get_built_in_dynamic_content_fields( $post_id ) {
 				'label'   => esc_html__( 'Link Name', 'et_builder' ),
 				'type'    => 'yes_no_button',
 				'options' => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default' => 'off',
 			),
@@ -416,8 +416,8 @@ function et_builder_get_built_in_dynamic_content_fields( $post_id ) {
 				'label'   => esc_html__( 'Enable raw HTML', 'et_builder' ),
 				'type'    => 'yes_no_button',
 				'options' => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default' => 'off',
 				'show_on' => 'text',
@@ -445,12 +445,12 @@ function et_builder_get_built_in_dynamic_content_fields( $post_id ) {
 			$settings = isset( $field['fields'] ) ? $field['fields'] : array();
 			$settings = array_merge( array(
 				'before' => array(
-					'label'   => esc_html__( 'Before', 'et_builder' ),
+					'label'   => et_builder_i18n( 'Before' ),
 					'type'    => 'text',
 					'default' => '',
 				),
 				'after'  => array(
-					'label'   => esc_html__( 'After', 'et_builder' ),
+					'label'   => et_builder_i18n( 'After' ),
 					'type'    => 'text',
 					'default' => '',
 				),
@@ -506,7 +506,7 @@ function et_builder_get_taxonomy_types( $post_type ) {
 /**
  * Get a user-friendly custom field label for the given meta key.
  *
- * @since ??
+ * @since 4.4.4
  *
  * @param string $key
  *
@@ -522,7 +522,7 @@ function et_builder_get_dynamic_content_custom_field_label( $key ) {
 /**
  * Get all dynamic content fields in a given string.
  *
- * @since ??
+ * @since 4.4.4
  *
  * @param string $content
  *
@@ -578,7 +578,7 @@ function et_builder_get_used_dynamic_content_meta_keys( $post_id ) {
 /**
  * Get most used meta keys on public post types.
  *
- * @since ??
+ * @since 4.4.4
  *
  * @param integer $post_id
  *
@@ -679,13 +679,13 @@ function et_builder_get_custom_dynamic_content_fields( $post_id ) {
 			'type'     => 'any',
 			'fields'   => array(
 				'before' => array(
-					'label'   => esc_html__( 'Before', 'et_builder' ),
+					'label'   => et_builder_i18n( 'Before' ),
 					'type'    => 'text',
 					'default' => '',
 					'show_on' => 'text',
 				),
 				'after'  => array(
-					'label'   => esc_html__( 'After', 'et_builder' ),
+					'label'   => et_builder_i18n( 'After' ),
 					'type'    => 'text',
 					'default' => '',
 					'show_on' => 'text',
@@ -701,8 +701,8 @@ function et_builder_get_custom_dynamic_content_fields( $post_id ) {
 				'label'   => esc_html__( 'Enable raw HTML', 'et_builder' ),
 				'type'    => 'yes_no_button',
 				'options' => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default' => 'off',
 				'show_on' => 'text',
@@ -864,6 +864,8 @@ function et_builder_resolve_dynamic_content( $name, $settings, $post_id, $contex
 	 * @return string
 	 */
 	$content = apply_filters( "et_builder_resolve_dynamic_content_{$name}", $content, $settings, $post_id, $context, $overrides );
+
+	$content = et_maybe_enable_embed_shortcode( $content, $is_content );
 
 	return $is_content ? do_shortcode( $content ) : $content;
 }
@@ -1639,13 +1641,35 @@ function et_builder_clean_dynamic_content( $value ) {
  * @return ET_Builder_Value|null
  */
 function et_builder_parse_dynamic_content_json( $json ) {
+	$post_types         = et_builder_get_public_post_types();
 	$dynamic_content    = json_decode( $json, true );
 	$is_dynamic_content = is_array( $dynamic_content ) && isset( $dynamic_content['dynamic'] ) && (bool) $dynamic_content['dynamic'];
 	$has_content        = is_array( $dynamic_content ) && isset( $dynamic_content['content'] ) && is_string( $dynamic_content['content'] );
 	$has_settings       = is_array( $dynamic_content ) && isset( $dynamic_content['settings'] ) && is_array( $dynamic_content['settings'] );
+	$has_category_type  = is_array( $dynamic_content ) && isset( $dynamic_content['settings'] ) && isset( $dynamic_content['settings']['category_type'] );
+
+	// When adding a section from library get_post_type() will not work, and post type has to be fetched from $_POST
+	$is_added_from_library = isset( $_POST['et_post_type'] );
 
 	if ( ! $is_dynamic_content || ! $has_content || ! $has_settings ) {
 		return null;
+	}
+
+	// Replaces layout_category with proper category_type depending on the post type on which the layout is added
+	if ( $has_category_type ) {
+		if ( $is_added_from_library ) {
+			$correct_post_type = sanitize_text_field( $_POST['et_post_type'] );
+			$correct_post_type = in_array( $correct_post_type, $post_types ) ? $correct_post_type : 'post';
+		} else {
+			$correct_post_type = get_post_type();
+			$correct_post_type = in_array( $correct_post_type, $post_types ) ? $correct_post_type : 'post';
+		}
+
+		if ( 'post' === $correct_post_type ) {
+			$dynamic_content['settings']['category_type'] = 'category';
+		} else if ( ! in_array( $correct_post_type, array( 'post', 'layout' ) ) ) {
+			$dynamic_content['settings']['category_type'] = $correct_post_type . '_category';
+		}
 	}
 
 	return new ET_Builder_Value(

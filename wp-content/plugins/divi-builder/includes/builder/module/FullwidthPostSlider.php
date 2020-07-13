@@ -21,19 +21,19 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content'   => esc_html__( 'Content', 'et_builder' ),
-					'elements'       => esc_html__( 'Elements', 'et_builder' ),
+					'main_content'   => et_builder_i18n( 'Content' ),
+					'elements'       => et_builder_i18n( 'Elements' ),
 					'featured_image' => esc_html__( 'Featured Image', 'et_builder' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'layout'     => esc_html__( 'Layout', 'et_builder' ),
-					'overlay'    => esc_html__( 'Overlay', 'et_builder' ),
+					'layout'     => et_builder_i18n( 'Layout' ),
+					'overlay'    => et_builder_i18n( 'Overlay' ),
 					'navigation' => esc_html__( 'Navigation', 'et_builder' ),
-					'image'      => esc_html__( 'Image', 'et_builder' ),
+					'image'      => et_builder_i18n( 'Image' ),
 					'text'       => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 				),
@@ -51,7 +51,7 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'header' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => "{$this->main_css_element} .et_pb_slide_description .et_pb_slide_title, {$this->main_css_element} .et_pb_slide_description .et_pb_slide_title a",
 						'important' => array( 'size', 'font-size' ),
@@ -61,7 +61,7 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 					),
 				),
 				'body'   => array(
-					'label'          => esc_html__( 'Body', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Body' ),
 					'css'            => array(
 						'line_height' => "{$this->main_css_element}",
 						'main'        => "{$this->main_css_element} .et_pb_slide_content, {$this->main_css_element} .et_pb_slide_content div",
@@ -100,7 +100,7 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 			),
 			'button'                => array(
 				'button' => array(
-					'label' => esc_html__( 'Button', 'et_builder' ),
+					'label' => et_builder_i18n( 'Button' ),
 					'css' => array(
 						'main'         => "{$this->main_css_element} .et_pb_more_button.et_pb_button",
 						'limited_main' => "{$this->main_css_element} .et_pb_more_button.et_pb_button",
@@ -201,7 +201,7 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 							'border_styles' => '%%order_class%% .et_pb_slide .et_pb_slide_image img',
 						)
 					),
-					'label_prefix'    => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix'    => et_builder_i18n( 'Image' ),
 					'tab_slug'        => 'advanced',
 					'toggle_slug'     => 'image',
 					'depends_show_if' => 'off',
@@ -294,7 +294,7 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'rDaVUZjDaGQ' ),
+				'id'   => 'rDaVUZjDaGQ',
 				'name' => esc_html__( 'An introduction to the Fullwidth Post Slider module', 'et_builder' ),
 			),
 		);
@@ -513,8 +513,8 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'description'      => esc_html__( 'Display posts for the current page. Useful on archive and index pages.', 'et_builder' ),
 				'computed_affects' => array(
@@ -582,8 +582,8 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'     => 'elements',
@@ -596,8 +596,8 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'toggle_slug'       => 'elements',
@@ -610,8 +610,8 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'affects' => array(
@@ -623,7 +623,7 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'hover'             => 'tabs',
 			),
 			'more_text' => array(
-				'label'             => esc_html__( 'Button', 'et_builder' ),
+				'label'             => et_builder_i18n( 'Button' ),
 				'type'              => 'text',
 				'option_category'   => 'configuration',
 				'default_on_front'  => esc_html__( 'Read More', 'et_builder' ),
@@ -660,8 +660,8 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default'           => 'on',
 				'depends_show_if'   => 'off',
@@ -688,8 +688,9 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					// Uses cached uppercase translation but keeps the lowercase not change definition content.
+					'on'  => strtolower( et_builder_i18n( 'Yes' ) ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_fron' => 'on',
 				'toggle_slug'     => 'elements',
@@ -703,8 +704,9 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					// Uses cached uppercase translation but keeps the lowercase not change definition content.
+					'on'  => strtolower( et_builder_i18n( 'Yes' ) ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'affects' => array(
@@ -721,11 +723,11 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'              => 'select',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'background' => esc_html__( 'Background', 'et_builder' ),
-					'left'       => esc_html__( 'Left', 'et_builder' ),
-					'right'      => esc_html__( 'Right', 'et_builder' ),
-					'top'        => esc_html__( 'Top', 'et_builder' ),
-					'bottom'     => esc_html__( 'Bottom', 'et_builder' ),
+					'background' => et_builder_i18n( 'Background' ),
+					'left'       => et_builder_i18n( 'Left' ),
+					'right'      => et_builder_i18n( 'Right' ),
+					'top'        => et_builder_i18n( 'Top' ),
+					'bottom'     => et_builder_i18n( 'Bottom' ),
 				),
 				'default_on_front'  => 'background',
 				'depends_show_if'   => 'on',
@@ -737,8 +739,8 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'affects'         => array(
@@ -763,8 +765,9 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					// Uses cached uppercase translation but keeps the lowercase not change definition content.
+					'on'  => strtolower( et_builder_i18n( 'Yes' ) ),
 				),
 				'affects'         => array(
 					'text_overlay_color',
@@ -789,8 +792,8 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'tab_slug'        => 'custom_css',
@@ -801,8 +804,8 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'tab_slug'        => 'custom_css',
@@ -813,8 +816,8 @@ class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module_Type_Pos
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'tab_slug'        => 'custom_css',

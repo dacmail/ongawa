@@ -16,8 +16,8 @@ class ET_Builder_Module_Video_Slider_Item extends ET_Builder_Module {
 			'general'  => array(
 				'toggles' => array(
 					'main_content' => esc_html__( 'Video', 'et_builder' ),
-					'overlay'      => esc_html__( 'Overlay', 'et_builder' ),
-					'admin_label'  => esc_html__( 'Admin Label', 'et_builder' ),
+					'overlay'      => et_builder_i18n( 'Overlay' ),
+					'admin_label'  => et_builder_i18n( 'Admin Label' ),
 				),
 			),
 			'advanced' => array(
@@ -67,7 +67,7 @@ class ET_Builder_Module_Video_Slider_Item extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'admin_title' => array(
-				'label'       => esc_html__( 'Admin Label', 'et_builder' ),
+				'label'       => et_builder_i18n( 'Admin Label' ),
 				'type'        => 'text',
 				'description' => esc_html__( 'This will change the label of the video in the builder for easy identification.', 'et_builder' ),
 				'toggle_slug' => 'admin_label',
@@ -107,7 +107,7 @@ class ET_Builder_Module_Video_Slider_Item extends ET_Builder_Module {
 				'label'              => esc_html__( 'Image Overlay URL', 'et_builder' ),
 				'type'               => 'upload',
 				'option_category'    => 'basic_option',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'choose_text'        => esc_attr__( 'Choose an Image', 'et_builder' ),
 				'update_text'        => esc_attr__( 'Set As Image', 'et_builder' ),
 				'additional_button'  => sprintf(
@@ -172,8 +172,8 @@ class ET_Builder_Module_Video_Slider_Item extends ET_Builder_Module {
 				'description'      => esc_html__( 'If you would like to control the size of the icon, you must first enable this option.', 'et_builder' ),
 				'type'             => 'yes_no_button',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'affects'          => array(

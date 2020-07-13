@@ -589,6 +589,10 @@ a {
 .toplevel_page_sg-cachepress {
   overflow: visible !important; }
 
+.toplevel_page_sg-cachepress .fs-slug-oceanwp {
+  display: none !important;
+}
+
 #sg-optimizer-app .sg-page,
 #sg-optimizer-app .sg-layout__page {
   height: 100% !important;

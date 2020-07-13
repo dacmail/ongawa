@@ -12,17 +12,17 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'text'  => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 					'width' => array(
-						'title'    => esc_html__( 'Sizing', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Sizing' ),
 						'priority' => 80,
 					),
 				),
@@ -32,7 +32,7 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'header' => array(
-					'label'        => esc_html__( 'Title', 'et_builder' ),
+					'label'        => et_builder_i18n( 'Title' ),
 					'css'          => array(
 						'main'      => "{$this->main_css_element} h2, {$this->main_css_element} h1.et_pb_module_header, {$this->main_css_element} h3.et_pb_module_header, {$this->main_css_element} h4.et_pb_module_header, {$this->main_css_element} h5.et_pb_module_header, {$this->main_css_element} h6.et_pb_module_header",
 						'important' => 'all',
@@ -42,7 +42,7 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 					),
 				),
 				'body'   => array(
-					'label'          => esc_html__( 'Body', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Body' ),
 					'css'            => array(
 						'main' => "{$this->main_css_element} .et_pb_promo_description div",
 					),
@@ -80,7 +80,7 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 			),
 			'button'                => array(
 				'button' => array(
-					'label' => esc_html__( 'Button', 'et_builder' ),
+					'label' => et_builder_i18n( 'Button' ),
 					'css' => array(
 						'main' => "{$this->main_css_element} .et_pb_promo_button.et_pb_button",
 						'limited_main' => "{$this->main_css_element} .et_pb_promo_button.et_pb_button",
@@ -135,7 +135,7 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'E3AEllqnCus' ),
+				'id'   => 'E3AEllqnCus',
 				'name' => esc_html__( 'An introduction to the Call To Action module', 'et_builder' ),
 			),
 		);
@@ -144,7 +144,7 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'title' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Input your value to action title here.', 'et_builder' ),
@@ -174,7 +174,7 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 				'default_on_front' => 'off',
 			),
 			'button_text' => array(
-				'label'           => esc_html__( 'Button', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Button' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Input your desired button text, or leave blank for no button.', 'et_builder' ),
@@ -184,7 +184,7 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 				'hover'           => 'tabs',
 			),
 			'content' => array(
-				'label'           => esc_html__( 'Body', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Body' ),
 				'type'            => 'tiny_mce',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Input the main text content for your module here.', 'et_builder' ),

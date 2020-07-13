@@ -5,7 +5,7 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 		return array(
 			'fonts'      => array(
 				'text'     => array(
-					'label'       => esc_html__( 'Text', 'et_builder' ),
+					'label'       => et_builder_i18n( 'Text' ),
 					'css'         => array(
 						'line_height' => "{$this->main_css_element} p",
 						'color'       => "{$this->main_css_element}",
@@ -20,7 +20,7 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 					'sub_toggle'  => 'p',
 				),
 				'link'     => array(
-					'label'       => esc_html__( 'Link', 'et_builder' ),
+					'label'       => et_builder_i18n( 'Link' ),
 					'css'         => array(
 						'main'  => "{$this->main_css_element} a",
 						'color' => "{$this->main_css_element}.et_pb_post_content a",
@@ -177,7 +177,7 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 							'border_styles' => "{$this->main_css_element} img",
 						)
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'     => 'advanced',
 					'toggle_slug'  => 'image',
 				),
@@ -216,10 +216,10 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 				'type'              => 'select',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'disc'    => esc_html__( 'Disc', 'et_builder' ),
-					'circle'  => esc_html__( 'Circle', 'et_builder' ),
-					'square'  => esc_html__( 'Square', 'et_builder' ),
-					'none'    => esc_html__( 'None', 'et_builder' ),
+					'disc'    => et_builder_i18n( 'Disc' ),
+					'circle'  => et_builder_i18n( 'Circle' ),
+					'square'  => et_builder_i18n( 'Square' ),
+					'none'    => et_builder_i18n( 'None' ),
 				),
 				'priority'          => 80,
 				'default'           => 'disc',
@@ -235,8 +235,8 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 				'type'              => 'select',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'outside' => esc_html__( 'Outside', 'et_builder' ),
-					'inside'  => esc_html__( 'Inside', 'et_builder' ),
+					'outside' => et_builder_i18n( 'Outside' ),
+					'inside'  => et_builder_i18n( 'Inside' ),
 				),
 				'priority'          => 85,
 				'default'           => 'outside',
@@ -306,8 +306,8 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 				'type'              => 'select',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'inside'  => esc_html__( 'Inside', 'et_builder' ),
-					'outside' => esc_html__( 'Outside', 'et_builder' ),
+					'inside'  => et_builder_i18n( 'Inside' ),
+					'outside' => et_builder_i18n( 'Outside' ),
 				),
 				'priority'          => 85,
 				'default'           => 'inside',
@@ -381,9 +381,9 @@ abstract class ET_Builder_Module_Type_PostContent extends ET_Builder_Module {
 		return array(
 			'advanced' => array(
 				'toggles' => array(
-					'image' => esc_html__( 'Image', 'et_builder' ),
+					'image' => et_builder_i18n( 'Image' ),
 					'text'           => array(
-						'title'             => esc_html__( 'Text', 'et_builder' ),
+						'title'             => et_builder_i18n( 'Text' ),
 						'priority'          => 45,
 						'tabbed_subtoggles' => true,
 						'bb_icons_support'  => true,

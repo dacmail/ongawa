@@ -21,22 +21,22 @@ class ET_Builder_Module_Social_Media_Follow extends ET_Builder_Module {
 				'toggles' => array(
 					'alignment' => esc_html__( 'Alignment', 'et_builder' ),
 					'icon'      => esc_html__( 'Icon', 'et_builder' ),
-					'text'      => esc_html__( 'Text', 'et_builder' ),
+					'text'      => et_builder_i18n( 'Text' ),
 				),
 			),
 		);
 
 		$this->custom_css_fields = array(
 			'before' => array(
-				'label'    => esc_html__( 'Before', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Before' ),
 				'selector' => 'ul%%order_class%%:before',
 			),
 			'main_element' => array(
-				'label'    => esc_html__( 'Main Element', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Main Element' ),
 				'selector' => 'ul%%order_class%%',
 			),
 			'after' => array(
-				'label'    => esc_html__( 'After', 'et_builder' ),
+				'label'    => et_builder_i18n( 'After' ),
 				'selector' => 'ul%%order_class%%:after',
 			),
 			'social_follow' => array(
@@ -130,7 +130,7 @@ class ET_Builder_Module_Social_Media_Follow extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '8b0BlM_rlHQ' ),
+				'id'   => '8b0BlM_rlHQ',
 				'name' => esc_html__( 'An introduction to the Social Media Follow module', 'et_builder' ),
 			),
 		);
@@ -155,8 +155,8 @@ class ET_Builder_Module_Social_Media_Follow extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'           => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'default_on_front' => 'off',
 				'toggle_slug'     => 'icon',
@@ -179,8 +179,8 @@ class ET_Builder_Module_Social_Media_Follow extends ET_Builder_Module {
 				'description'      => esc_html__( 'If you would like to control the size of the icon, you must first enable this option.', 'et_builder' ),
 				'type'             => 'yes_no_button',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'affects'          => array(

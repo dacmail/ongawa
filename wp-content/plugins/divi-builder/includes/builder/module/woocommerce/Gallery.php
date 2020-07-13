@@ -31,7 +31,7 @@ class ET_Builder_Module_Woocommerce_Gallery extends ET_Builder_Module_Gallery {
 		unset( $this->settings_modal_toggles['general']['toggles']['main_content'] );
 
 		// Rename Elements Option group to Content.
-		$this->settings_modal_toggles['general']['toggles']['elements'] = esc_html__( 'Content', 'et_builder' );
+		$this->settings_modal_toggles['general']['toggles']['elements'] = et_builder_i18n( 'Content' );
 
 		// Intentionally removing inherited advanced options group.
 		$this->advanced_fields['link_options'] = false;
@@ -75,7 +75,7 @@ class ET_Builder_Module_Woocommerce_Gallery extends ET_Builder_Module_Gallery {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '7X03vBPYJ1o' ),
+				'id'   => '7X03vBPYJ1o',
 				'name' => esc_html__( 'Divi WooCommerce Modules', 'et_builder' ),
 			),
 		);

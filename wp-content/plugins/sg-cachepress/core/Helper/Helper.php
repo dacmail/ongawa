@@ -12,6 +12,7 @@ use SiteGround_Optimizer\Php_Checker\Php_Checker;
 use SiteGround_Optimizer\Front_End_Optimization\Front_End_Optimization;
 use SiteGround_Optimizer\Cli\Cli;
 use SiteGround_Optimizer\Config\Config;
+use SiteGround_Optimizer\I18n\I18n;
 
 /**
  * Helper functions and main initialization class.
@@ -22,8 +23,6 @@ class Helper {
 	 * Create a new helper.
 	 */
 	public function __construct() {
-		// Load the plugin textdomain.
-		add_action( 'after_setup_theme', array( $this, 'load_textdomain' ), 9999 );
 		add_action( 'plugins_loaded', array( $this, 'is_plugin_installed' ) );
 		add_action( 'init', array( $this, 'hide_warnings_in_rest_api' ) );
 		add_filter( 'xmlrpc_login_error', array( $this, 'filter_xmlrpc_login_error' ), 10, 2 );
@@ -40,6 +39,8 @@ class Helper {
 	 * @since  5.0.0
 	 */
 	public function run() {
+		new I18n();
+
 		new Install_Service();
 		// Initialize dashboard page.
 		new Admin();
@@ -67,19 +68,6 @@ class Helper {
 
 		// Init the config class.
 		new Config();
-	}
-
-	/**
-	 * Load the plugin textdomain.
-	 *
-	 * @since 1.0.0
-	 */
-	public function load_textdomain() {
-		load_plugin_textdomain(
-			'sg-cachepress',
-			false,
-			'sg-cachepress/languages'
-		);
 	}
 
 	/**
@@ -127,35 +115,6 @@ class Helper {
 		}
 
 		return 0;
-	}
-
-	/**
-	 * Get i18n strings as a JSON-encoded string
-	 *
-	 * @since 5.0.0
-	 *
-	 * @return string The locale as JSON
-	 */
-	public static function get_i18n_data_json() {
-		$i18n_json = ABSPATH . 'wp-content/plugins/sg-cachepress/languages/json/sg-cachepress-' . get_user_locale() . '.json';
-
-		if ( is_file( $i18n_json ) && is_readable( $i18n_json ) ) {
-
-			$locale_data = @file_get_contents( $i18n_json );
-			if ( $locale_data ) {
-				return $locale_data;
-			}
-		}
-
-		// Return valid empty Jed locale.
-		return json_encode(
-			array(
-				'' => array(
-					'domain' => 'sg-cachepress',
-					'lang'   => is_admin() ? get_user_locale() : get_locale(),
-				),
-			)
-		);
 	}
 
 	/**

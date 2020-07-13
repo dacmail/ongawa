@@ -10,7 +10,7 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 					'image'        => esc_html__( 'Image & Icon', 'et_builder' ),
 				),
 			),
@@ -18,11 +18,11 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 				'toggles' => array(
 					'icon_settings' => esc_html__( 'Image & Icon', 'et_builder' ),
 					'text'          => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 					'width'         => array(
-						'title'    => esc_html__( 'Sizing', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Sizing' ),
 						'priority' => 65,
 					),
 				),
@@ -44,7 +44,7 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'header' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main'  => "{$this->main_css_element} .et_pb_module_header, {$this->main_css_element} .et_pb_module_header a",
 						'hover' => "{$this->main_css_element}:hover .et_pb_module_header, {$this->main_css_element}:hover .et_pb_module_header a",
@@ -54,7 +54,7 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 					),
 				),
 				'body'   => array(
-					'label'          => esc_html__( 'Body', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Body' ),
 					'css'            => array(
 						'line_height' => "{$this->main_css_element} p",
 						'text_align'  => "{$this->main_css_element} .et_pb_blurb_description",
@@ -85,7 +85,7 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 							'border_styles_hover' => '%%order_class%%:hover .et_pb_main_blurb_image .et_pb_image_wrap',
 						),
 					),
-					'label_prefix'    => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix'    => et_builder_i18n( 'Image' ),
 					'tab_slug'        => 'advanced',
 					'toggle_slug'     => 'icon_settings',
 					'depends_on'      => array( 'use_icon' ),
@@ -178,7 +178,7 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'XW7HR86lp8U' ),
+				'id'   => 'XW7HR86lp8U',
 				'name' => esc_html__( 'An introduction to the Blurb module', 'et_builder' ),
 			),
 		);
@@ -188,18 +188,18 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 		$et_accent_color = et_builder_accent_color();
 
 		$image_icon_placement = array(
-			'top' => esc_html__( 'Top', 'et_builder' ),
+			'top' => et_builder_i18n( 'Top' ),
 		);
 
 		if ( ! is_rtl() ) {
-			$image_icon_placement['left'] = esc_html__( 'Left', 'et_builder' );
+			$image_icon_placement['left'] = et_builder_i18n( 'Left' );
 		} else {
-			$image_icon_placement['right'] = esc_html__( 'Right', 'et_builder' );
+			$image_icon_placement['right'] = et_builder_i18n( 'Right' );
 		}
 
 		$fields = array(
 			'title' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'The title of your blurb will appear in bold below your blurb image.', 'et_builder' ),
@@ -233,8 +233,8 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'basic_option',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'toggle_slug'     => 'image',
 				'affects'         => array(
@@ -287,8 +287,8 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'affects'           => array(
 					'use_circle_border',
@@ -316,8 +316,8 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'affects'           => array(
 					'circle_border_color',
@@ -340,10 +340,10 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 				'mobile_options'  => true,
 			),
 			'image' => array(
-				'label'              => esc_html__( 'Image', 'et_builder' ),
+				'label'              => et_builder_i18n( 'Image' ),
 				'type'               => 'upload',
 				'option_category'    => 'basic_option',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'choose_text'        => esc_attr__( 'Choose an Image', 'et_builder' ),
 				'update_text'        => esc_attr__( 'Set As Image', 'et_builder' ),
 				'depends_show_if'    => 'off',
@@ -389,7 +389,7 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 				),
 			),
 			'content' => array(
-				'label'             => esc_html__( 'Body', 'et_builder' ),
+				'label'             => et_builder_i18n( 'Body' ),
 				'type'              => 'tiny_mce',
 				'option_category'   => 'basic_option',
 				'description'       => esc_html__( 'Input the main text content for your module here.', 'et_builder' ),
@@ -447,8 +447,8 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'font_option',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'affects'     => array(
 					'icon_font_size',

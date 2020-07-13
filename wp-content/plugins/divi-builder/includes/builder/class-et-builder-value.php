@@ -63,7 +63,7 @@ class ET_Builder_Value {
 	/**
 	 * Retrieve the value content.
 	 *
-	 * @since ??
+	 * @since 4.4.4
 	 *
 	 * @return string
 	 */

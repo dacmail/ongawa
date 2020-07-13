@@ -73,7 +73,9 @@ if ( et_is_woocommerce_plugin_active() ) {
 				$product_id = ET_Builder_Element::get_current_post_id();
 			} else if ( 'latest' === $valid_product_attr ) {
 				$args = array(
-					'limit' => 1,
+					'limit'       => 1,
+					'post_status' => array( 'publish', 'private' ),
+					'perm'        => 'readable',
 				);
 
 				$products = wc_get_products( $args );

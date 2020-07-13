@@ -20,31 +20,69 @@ class ET_Builder_Module_Field_Position extends ET_Builder_Module_Field_Base {
 			'toggle_slug' => self::TOGGLE_SLUG,
 		);
 
+		static $i18n;
+
+		if ( ! isset( $i18n ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n = array(
+				'positioning' => array(
+					'description' => esc_html__( 'Here you can choose the element\'s position type. Absolutlely positioned elements will float inside their parent elements. Fixed positioned elements will float within the browser viewport. Relatively positioned elements sit statically in their parent container, but can still be offset without disrupting surrounding elements.', 'et_builder' ),
+					'options'     => array(
+						'relative' => esc_html__( 'Relative', 'et_builder' ),
+						'absolute' => esc_html__( 'Absolute', 'et_builder' ),
+						'fixed'    => esc_html__( 'Fixed', 'et_builder' ),
+					),
+				),
+				'origin'      => array(
+					'label'       => esc_html__( 'Location', 'et_builder' ),
+					'description' => esc_html__( 'Here you can adjust the element\'s starting location within its parent container. You can further adjust the element\'s position using the offset controls.', 'et_builder' ),
+				),
+				'offset'      => array(
+					'label'       => esc_html__( 'Offset Origin ', 'et_builder' ),
+					'description' => esc_html__( 'Here you can choose from which corner this element is offset from. The vertical and horizontal offset adjustments will be affected based on the element\'s offset origin.', 'et_builder' ),
+				),
+				'vertical'    => array(
+					'label'       => esc_html__( 'Vertical Offset', 'et_builder' ),
+					'description' => esc_html__( 'Here you can adjust the element\'s position upwards or downwards from its starting location, which may differ based on its offset origin.', 'et_builder' ),
+				),
+				'horizontal'  => array(
+					'label'       => esc_html__( 'Horizontal Offset', 'et_builder' ),
+					'description' => esc_html__( 'Here you can adjust the element\'s position left or right from its starting location, which may differ based on its offset origin.', 'et_builder' ),
+				),
+				'zindex'      => array(
+					'label'       => esc_html__( 'Z Index', 'et_builder' ),
+					'description' => esc_html__( 'Here you can control element position on the z axis. Elements with higher z-index values will sit atop elements with lower z-index values.', 'et_builder' ),
+				),
+			);
+			// phpcs:enable
+		}
+
 		if ( ! $args['hide_position_fields'] ) {
 
 			$corner_options = array(
-				'top_left'     => esc_html__( 'Top Left', 'et_builder' ),
-				'top_right'    => esc_html__( 'Top Right', 'et_builder' ),
-				'bottom_left'  => esc_html__( 'Bottom Left', 'et_builder' ),
-				'bottom_right' => esc_html__( 'Bottom Right', 'et_builder' ),
+				'top_left'     => et_builder_i18n( 'Top Left' ),
+				'top_right'    => et_builder_i18n( 'Top Right' ),
+				'bottom_left'  => et_builder_i18n( 'Bottom Left' ),
+				'bottom_right' => et_builder_i18n( 'Bottom Right' ),
 			);
 
 			$center_options = array(
-				'center_left'   => esc_html__( 'Center Left', 'et_builder' ),
-				'center_center' => esc_html__( 'Center Center', 'et_builder' ),
-				'center_right'  => esc_html__( 'Center Right', 'et_builder' ),
-				'top_center'    => esc_html__( 'Top Center', 'et_builder' ),
-				'bottom_center' => esc_html__( 'Bottom Center', 'et_builder' ),
+				'center_left'   => et_builder_i18n( 'Center Left' ),
+				'center_center' => et_builder_i18n( 'Center Center' ),
+				'center_right'  => et_builder_i18n( 'Center Right' ),
+				'top_center'    => et_builder_i18n( 'Top Center' ),
+				'bottom_center' => et_builder_i18n( 'Bottom Center' ),
 			);
 
 			$additional_options['positioning'] = array(
-				'label'             => esc_html__( 'Position', 'et_builder' ),
+				'label'             => et_builder_i18n( 'Position' ),
+				'description'       => $i18n['positioning']['description'],
 				'type'              => 'select',
 				'options'           => array(
-					'none'     => esc_html__( 'Default', 'et_builder' ),
-					'relative' => esc_html__( 'Relative', 'et_builder' ),
-					'absolute' => esc_html__( 'Absolute', 'et_builder' ),
-					'fixed'    => esc_html__( 'Fixed', 'et_builder' ),
+					'none'     => et_builder_i18n( 'Default' ),
+					'relative' => $i18n['positioning']['options']['relative'],
+					'absolute' => $i18n['positioning']['options']['absolute'],
+					'fixed'    => $i18n['positioning']['options']['fixed'],
 				),
 				'option_category'   => 'layout',
 				'default'           => $args['defaults']['positioning'],
@@ -55,12 +93,12 @@ class ET_Builder_Module_Field_Position extends ET_Builder_Module_Field_Base {
 				'hover'             => 'tabs',
 				'bb_support'        => false,
 				'linked_responsive' => array( 'position_origin_a', 'position_origin_f', 'position_origin_r' ),
-				'description'       => esc_html__( 'Here you can choose the element\'s position type. Absolutlely positioned elements will float inside their parent elements. Fixed positioned elements will float within the browser viewport. Relatively positioned elements sit statically in their parent container, but can still be offset without disrupting surrounding elements.', 'et_builder' ),
 			);
 
 			// Position origin/location options
 			$origin_option = array(
-				'label'            => esc_html__( 'Location', 'et_builder' ),
+				'label'            => $i18n['origin']['label'],
+				'description'      => $i18n['origin']['description'],
 				'type'             => 'position',
 				'options'          => $corner_options + $center_options,
 				'option_category'  => 'layout',
@@ -71,7 +109,6 @@ class ET_Builder_Module_Field_Position extends ET_Builder_Module_Field_Base {
 				'mobile_options'   => true,
 				'hover'            => 'tabs',
 				'bb_support'       => false,
-				'description'      => esc_html__( 'Here you can adjust the element\'s starting location within its parent container. You can further adjust the element\'s position using the offset controls.', 'et_builder' ),
 			);
 
 			// For absolute position
@@ -82,10 +119,10 @@ class ET_Builder_Module_Field_Position extends ET_Builder_Module_Field_Base {
 			$additional_options['position_origin_f']                      = $origin_option;
 			$additional_options['position_origin_f']['linked_responsive'] = array( 'positioning', 'position_origin_a', 'position_origin_r' );
 
-			// For relative position
+// For relative position
 			$additional_options['position_origin_r']                      = $origin_option;
-			$additional_options['position_origin_r']['label']             = esc_html__( 'Offset Origin ', 'et_builder' );
-			$additional_options['position_origin_r']['description']       = esc_html__( 'Here you can choose from which corner this element is offset from. The vertical and horizontal offset adjustments will be affected based on the element\'s offset origin.', 'et_builder' );
+			$additional_options['position_origin_r']['label']             = $i18n['offset']['label'];
+			$additional_options['position_origin_r']['description']       = $i18n['offset']['description'];
 			$additional_options['position_origin_r']['options']           = $corner_options;
 			$additional_options['position_origin_r']['linked_responsive'] = array( 'positioning', 'position_origin_f', 'position_origin_a' );
 
@@ -109,13 +146,13 @@ class ET_Builder_Module_Field_Position extends ET_Builder_Module_Field_Base {
 
 			$additional_options['vertical_offset']                = $offset_option;
 			$additional_options['vertical_offset']['default']     = $args['defaults']['vertical_offset'];
-			$additional_options['vertical_offset']['label']       = esc_html__( 'Vertical Offset', 'et_builder' );
-			$additional_options['vertical_offset']['description'] = esc_html__( 'Here you can adjust the element\'s position upwards or downwards from its starting location, which may differ based on its offset origin.', 'et_builder' );
+			$additional_options['vertical_offset']['label']       = $i18n['vertical']['label'];
+			$additional_options['vertical_offset']['description'] = $i18n['vertical']['description'];
 
 			$additional_options['horizontal_offset']                = $offset_option;
 			$additional_options['horizontal_offset']['default']     = $args['defaults']['horizontal_offset'];
-			$additional_options['horizontal_offset']['label']       = esc_html__( 'Horizontal Offset', 'et_builder' );
-			$additional_options['horizontal_offset']['description'] = esc_html__( 'Here you can adjust the element\'s position left or right from its starting location, which may differ based on its offset origin.', 'et_builder' );
+			$additional_options['horizontal_offset']['label']       = $i18n['horizontal']['label'];
+			$additional_options['horizontal_offset']['description'] = $i18n['horizontal']['description'];
 
 			$responsive_options += array(
 				'vertical_offset',
@@ -128,7 +165,8 @@ class ET_Builder_Module_Field_Position extends ET_Builder_Module_Field_Base {
 
 		if ( ! $args['hide_z_index_fields'] ) {
 			$additional_options['z_index'] = array(
-				'label'            => esc_html__( 'Z Index', 'et_builder' ),
+				'label'            => $i18n['zindex']['label'],
+				'description'      => $i18n['zindex']['description'],
 				'type'             => 'range',
 				'range_settings'   => array(
 					'min'  => -500,
@@ -144,7 +182,6 @@ class ET_Builder_Module_Field_Position extends ET_Builder_Module_Field_Base {
 				'hover'            => 'tabs',
 				'responsive'       => true,
 				'mobile_options'   => true,
-				'description'      => esc_html__( 'Here you can control element position on the z axis. Elements with higher z-index values will sit atop elements with lower z-index values.', 'et_builder' ),
 			);
 
 			$responsive_options += array(

@@ -49,8 +49,8 @@ class ET_Builder_Module_Signup_Item extends ET_Builder_Module {
 							'type'            => 'yes_no_button',
 							'option_category' => 'color_option',
 							'options'         => array(
-								'off' => esc_html__( 'No', 'et_builder' ),
-								'on'  => esc_html__( 'Yes', 'et_builder' ),
+								'off' => et_builder_i18n( 'No' ),
+								'on'  => et_builder_i18n( 'Yes' ),
 							),
 							'affects'         => array(
 								"border_radii_focus",
@@ -188,12 +188,12 @@ class ET_Builder_Module_Signup_Item extends ET_Builder_Module {
 					'main_content'      => esc_html__( 'Field', 'et_builder' ),
 					'field_options'     => esc_html__( 'Field Options', 'et_builder' ),
 					'conditional_logic' => esc_html__( 'Conditional Logic', 'et_builder' ),
-					'background'        => esc_html__( 'Background', 'et_builder' ),
+					'background'        => et_builder_i18n( 'Background' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'layout' => esc_html__( 'Layout', 'et_builder' ),
+					'layout' => et_builder_i18n( 'Layout' ),
 				),
 			),
 		);

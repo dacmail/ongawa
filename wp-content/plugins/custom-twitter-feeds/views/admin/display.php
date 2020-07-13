@@ -67,6 +67,11 @@
         </tr>
 
         <tr class="ctf_table_header"><td colspan=3><?php _e("Customize Options", 'custom-twitter-feeds' ); ?></td></tr>
+        <tr class="ctf_pro">
+            <td>layout</td>
+            <td><?php _e("How posts are arranged visually in the feed.", 'custom-twitter-feeds' ); ?> 'list', 'carousel', or 'masonry'</td>
+            <td><code>[instagram-feed layout=carousel]</code></td>
+        </tr>
         <tr>
             <td>class</td>
             <td><?php _e( "A custom CSS class added to the feed", 'custom-twitter-feeds' ); ?></td>
@@ -86,7 +91,7 @@
         <tr>
             <td>include</td>
             <td><?php _e( "Parts of the Tweet to include in the feed", 'custom-twitter-feeds' ); ?></td>
-            <td><code>[custom-twitter-feeds include="author,date,text,avatar"]</code></td>
+            <td><code>[custom-twitter-feeds include="author,date,text,avatar,logo"]</code></td>
         </tr>
         <tr>
             <td>exclude</td>
@@ -182,6 +187,16 @@
             <td>authortextweight</td>
             <td><?php _e( "Weight of author info font inherit, bold, or normal", 'custom-twitter-feeds' ); ?></td>
             <td><code>[custom-twitter-feeds authortextweight="bold"]</code></td>
+        </tr>
+        <tr>
+            <td>logosize</td>
+            <td><?php _e( "Size of Twitter logo in pixels", 'custom-twitter-feeds' ); ?></td>
+            <td><code>[custom-twitter-feeds logosize="16"]</code></td>
+        </tr>
+        <tr>
+            <td>logocolor</td>
+            <td><?php _e( "Color of Twitter logo. Any color hex code.", 'custom-twitter-feeds' ); ?></td>
+            <td><code>[custom-twitter-feeds logocolor="0ff"]</code></td>
         </tr>
         <tr>
             <td>datetextsize</td>

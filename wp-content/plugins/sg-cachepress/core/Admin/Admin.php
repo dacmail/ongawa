@@ -9,6 +9,7 @@ use SiteGround_Optimizer\Htaccess\Htaccess;
 use SiteGround_Optimizer\Helper\Helper;
 use SiteGround_Optimizer\Multisite\Multisite;
 use SiteGround_Optimizer\Modules\Modules;
+use SiteGround_Optimizer\I18n\I18n;
 
 /**
  * Handle all hooks for our custom admin page.
@@ -19,6 +20,7 @@ class Admin {
 	 * The constructor.
 	 */
 	public function __construct() {
+
 		$this->modules = new Modules();
 		$admin_bar     = new Admin_Bar();
 
@@ -45,7 +47,6 @@ class Admin {
 			add_action( 'wp_ajax_dismiss_blocking_plugins_notice', array( $this, 'hide_blocking_plugins_notice' ) );
 			add_action( 'wp_ajax_dismiss_cache_plugins_notice', array( $this, 'hide_cache_plugins_notice' ) );
 		}
-
 	}
 
 	/**
@@ -151,7 +152,7 @@ class Admin {
 			'is_avalon'          => Helper::is_avalon(),
 			'modules'            => $this->modules->get_active_modules(),
 			'tabs'               => $this->modules->get_active_tabs(),
-			'locale'             => Helper::get_i18n_data_json(),
+			'locale'             => I18n::get_i18n_data_json(),
 			'update_timestamp'   => get_option( 'siteground_optimizer_update_timestamp', 0 ),
 			'cards'              => $this->modules->get_slider_modules(),
 			'is_shop'            => is_plugin_active( 'woocommerce/woocommerce.php' ) ? 1 : 0,
@@ -219,8 +220,14 @@ class Admin {
 			return;
 		}
 
+		$memcache_crashed = (int) get_site_option( 'siteground_optimizer_memcache_crashed', 0 );
+
 		$class = 'notice notice-error';
 		$message = __( 'SG Optimizer has detected that Memcached was turned off. If you want to use it, please enable it from your SiteGround control panel first.', 'sg-cachepress' );
+
+		if ( 1 === $memcache_crashed ) {
+			$message = __( 'Your site tried to store a single object above 1MB in Memcached which is above the limitation and will actually slow your site rather than speed it up. Please, check your Options table for obsolete data before enabling it again. Note that the service will be automatically disabled if such error occurs again.', 'sg-cachepress' );
+		}
 
 		printf(
 			'<div class="%1$s" style="position: relative"><p>%2$s</p><button type="button" class="notice-dismiss dismiss-memcache-notice" data-link="%3$s"><span class="screen-reader-text">Dismiss this notice.</span></button></div>',
@@ -262,8 +269,7 @@ class Admin {
 	 * @since  5.0.0
 	 */
 	public function render() {
-		// Include the partial.
-		include \SiteGround_Optimizer\DIR . '/partials/admin-page.php';
+		echo '<div id="sg-optimizer-app"></div>';
 	}
 
 

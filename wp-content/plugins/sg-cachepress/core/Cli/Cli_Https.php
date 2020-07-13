@@ -24,11 +24,8 @@ class Cli_Https {
 	 *
 	 * ## OPTIONS
 	 * <action>
-	 * : The action: enable\disable\fix.
+	 * : The action: enable\disable.
 	 * Whether to enable or disable the https.
-	 * Use fix to apply fix for insecure content
-	 * <fix_action>
-	 * : Whether to enable or disable the insecure content fix.
 	 */
 	public function __invoke( $args, $assoc_args ) {
 		$this->ssl            = new Ssl();
@@ -39,11 +36,6 @@ class Cli_Https {
 		}
 
 		switch ( $args[0] ) {
-			case 'fix':
-				if ( empty( $args[1] ) ) {
-					return \WP_CLI::error( 'Please provide action: enable/disable' );
-				}
-				return $this->apply_https_fix( $args[1] );
 			case 'enable':
 				$result = $this->ssl->enable();
 				true === $result ? Options::enable_option( 'siteground_optimizer_ssl_enabled' ) : '';
@@ -61,20 +53,6 @@ class Cli_Https {
 		}
 
 		$message = $this->option_service->get_response_message( $result, 'siteground_optimizer_ssl_enabled', $type );
-
-		return true === $result ? \WP_CLI::success( $message ) : \WP_CLI::error( $message );
-	}
-
-	public function apply_https_fix( $action ) {
-		if ( 'enable' === $action ) {
-			$result = Options::enable_option( 'siteground_optimizer_fix_insecure_content' );
-			$type = true;
-		} else {
-			$result = Options::disable_option( 'siteground_optimizer_fix_insecure_content' );
-			$type = false;
-		}
-
-		$message = $this->option_service->get_response_message( $result, 'siteground_optimizer_fix_insecure_content', $type );
 
 		return true === $result ? \WP_CLI::success( $message ) : \WP_CLI::error( $message );
 	}

@@ -22,8 +22,8 @@ class ET_Builder_Module_Divider extends ET_Builder_Module {
 
 		// Show divider options is modifieable via customizer
 		$this->show_divider_options = array(
-			'off' => esc_html__( 'No', 'et_builder' ),
-			'on'  => esc_html__( 'Yes', 'et_builder' ),
+			'off' => et_builder_i18n( 'No' ),
+			'on'  => et_builder_i18n( 'Yes' ),
 		);
 
 		// Handle different default values for Builder Plugin
@@ -34,7 +34,7 @@ class ET_Builder_Module_Divider extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general' => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Visibility', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Visibility' ),
 				),
 			),
 			'advanced' => array(
@@ -78,7 +78,7 @@ class ET_Builder_Module_Divider extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'BL4CEVbDZfw' ),
+				'id'   => 'BL4CEVbDZfw',
 				'name' => esc_html__( 'An introduction to the Divider module', 'et_builder' ),
 			),
 		);
@@ -132,9 +132,9 @@ class ET_Builder_Module_Divider extends ET_Builder_Module {
 				'type'            => 'select',
 				'option_category' => 'layout',
 				'options'         => array(
-					'top'    => esc_html__( 'Top', 'et_builder' ),
+					'top'    => et_builder_i18n( 'Top' ),
 					'center' => esc_html__( 'Vertically Centered', 'et_builder' ),
-					'bottom' => esc_html__( 'Bottom', 'et_builder' ),
+					'bottom' => et_builder_i18n( 'Bottom' ),
 				),
 				'depends_show_if'   => 'on',
 				'tab_slug'          => 'advanced',

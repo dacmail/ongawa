@@ -26,14 +26,14 @@ class ET_Builder_Module_Woocommerce_Add_To_Cart extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Content', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Content' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'text'   => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 45,
 					),
 					'header' => array(
@@ -68,7 +68,7 @@ class ET_Builder_Module_Woocommerce_Add_To_Cart extends ET_Builder_Module {
 						),
 					),
 					'width'  => array(
-						'title'    => esc_html__( 'Sizing', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Sizing' ),
 						'priority' => 80,
 					),
 				),
@@ -78,7 +78,7 @@ class ET_Builder_Module_Woocommerce_Add_To_Cart extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'          => array(
 				'body' => array(
-					'label'           => esc_html__( 'Text', 'et_builder' ),
+					'label'           => et_builder_i18n( 'Text' ),
 					'css'             => array(
 						'main'      => '%%order_class%%, %%order_class%% a, %%order_class%% label, %%order_class%%.et_pb_module .et_pb_module_inner .stock',
 						'important' => 'all',
@@ -124,7 +124,7 @@ class ET_Builder_Module_Woocommerce_Add_To_Cart extends ET_Builder_Module {
 			),
 			'button'         => array(
 				'button' => array(
-					'label'          => esc_html__( 'Button', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Button' ),
 					'css'            => array(
 						'main'         => '%%order_class%% .button',
 						'limited_main' => '%%order_class%% .button',
@@ -331,7 +331,7 @@ class ET_Builder_Module_Woocommerce_Add_To_Cart extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '7X03vBPYJ1o' ),
+				'id'   => '7X03vBPYJ1o',
 				'name' => esc_html__( 'Divi WooCommerce Modules', 'et_builder' ),
 			),
 		);
@@ -364,8 +364,8 @@ class ET_Builder_Module_Woocommerce_Add_To_Cart extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'default'         => 'on',
 				'toggle_slug'     => 'elements',
@@ -378,8 +378,8 @@ class ET_Builder_Module_Woocommerce_Add_To_Cart extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'default'         => 'on',
 				'toggle_slug'     => 'elements',

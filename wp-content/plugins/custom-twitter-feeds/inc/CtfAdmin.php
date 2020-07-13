@@ -99,7 +99,7 @@ class CtfAdmin
         <label for="ctf_have_own_tokens" class="ctf_checkbox"><?php _e( 'Or, manually enter my own Twitter app information' ); ?></label>
         <span class="ctf-tooltip-wrap">
             <a class="ctf-tooltip-link" href="JavaScript:void(0);"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
-            <p class="ctf-tooltip ctf-more-info"><?php _e( 'Check this box if you would like to manually enter the information from your own <a href="https://smashballoon.com/custom-twitter-feeds/docs/create-twitter-app/" target="_blank">Twitter app</a>', 'custom-twitter-feeds' ); ?>.</p>
+            <p class="ctf-tooltip ctf-more-info"><?php _e( 'Check this box if you would like to manually enter the information from your own <a href="https://smashballoon.com/custom-twitter-feeds/docs/create-twitter-app/?utm_campaign=twitter-free&utm_source=settings&utm_medium=createownapp" target="_blank">Twitter app</a>', 'custom-twitter-feeds' ); ?>.</p>
         </span>
         <?php
     }
@@ -116,7 +116,7 @@ class CtfAdmin
 
             <?php if ( isset( $access_token_data['oauth_token'] ) ) : ?>
                 <a href="<?php echo OAUTH_PROCESSOR_URL . admin_url( 'admin.php?page=custom-twitter-feeds' ); ?>" id="ctf-get-token"><i class="fa fa-twitter"></i><?php _e( 'Log in to Twitter and get my Access Token and Secret' ); ?></a>
-                <a class="ctf-tooltip-link" href="https://smashballoon.com/custom-twitter-feeds/token/" target="_blank"><?php _e( "Button not working?", 'custom-twitter-feeds' ); ?></a>
+                <a class="ctf-tooltip-link" href="https://smashballoon.com/custom-twitter-feeds/token/?utm_campaign=twitter-free&utm_source=settings&utm_medium=buttonnotworking" target="_blank"><?php _e( "Button not working?", 'custom-twitter-feeds' ); ?></a>
 
                 <input type="hidden" id="ctf-retrieved-access-token" value="<?php echo esc_html( sanitize_text_field( $access_token_data['oauth_token'] ) ); ?>">
                 <input type="hidden" id="ctf-retrieved-access-token-secret" value="<?php echo esc_html( sanitize_text_field( $access_token_data['oauth_token_secret'] ) ); ?>">
@@ -124,14 +124,14 @@ class CtfAdmin
 
             <?php elseif ( isset( $access_token_data['error'] ) && ! isset( $access_token_data['oauth_token'] ) ) : ?>
 
-                <p class="ctf_notice"><?php _e( 'There was an error with retrieving your access tokens. Please <a href="https://smashballoon.com/custom-twitter-feeds/token/" target="_blank">use this tool</a> to get your access token and secret.' ); ?></p><br>
+                <p class="ctf_notice"><?php _e( 'There was an error with retrieving your access tokens. Please <a href="https://smashballoon.com/custom-twitter-feeds/token/?utm_campaign=twitter-free&utm_source=settings&utm_medium=errorconnecting" target="_blank">use this tool</a> to get your access token and secret.' ); ?></p><br>
                 <a href="<?php echo OAUTH_PROCESSOR_URL . admin_url( 'admin.php?page=custom-twitter-feeds' ); ?>" id="ctf-get-token"><i class="fa fa-twitter"></i><?php _e( 'Log in to Twitter and get my Access Token and Secret' ); ?></a>
-                <a class="ctf-tooltip-link" href="https://smashballoon.com/custom-twitter-feeds/token/" target="_blank"><?php _e( "Button not working?", 'custom-twitter-feeds' ); ?></a>
+                <a class="ctf-tooltip-link" href="https://smashballoon.com/custom-twitter-feeds/token/?utm_campaign=twitter-free&utm_source=settings&utm_medium=errorconnecting" target="_blank"><?php _e( "Button not working?", 'custom-twitter-feeds' ); ?></a>
 
             <?php else : ?>
 
                 <a href="<?php echo OAUTH_PROCESSOR_URL . admin_url( 'admin.php?page=custom-twitter-feeds' ); ?>" id="ctf-get-token"><i class="fa fa-twitter"></i><?php _e( 'Log in to Twitter and get my Access Token and Secret' ); ?></a>
-                <a class="ctf-tooltip-link" href="https://smashballoon.com/custom-twitter-feeds/token/" target="_blank"><?php _e( "Button not working?", 'custom-twitter-feeds' ); ?></a>
+                <a class="ctf-tooltip-link" href="https://smashballoon.com/custom-twitter-feeds/token/?utm_campaign=twitter-free&utm_source=settings&utm_medium=buttonnotworking" target="_blank"><?php _e( "Button not working?", 'custom-twitter-feeds' ); ?></a>
 
             <?php endif; ?>
 
@@ -167,7 +167,7 @@ class CtfAdmin
             'section' => 'ctf_options_connect', // matches the section name
             'option' => 'ctf_options', // matches the options name
             'class' => 'ctf-toggle-consumer', // class for the wrapper and input field
-            'whatis' => 'A Consumer Key and a Consumer Secret are both needed if you want to use credentials from your own Twitter App. You can create these <a href="https://smashballoon.com/custom-twitter-feeds/docs/create-twitter-app/" target="_blank">here</a>', // what is this? text
+            'whatis' => 'A Consumer Key and a Consumer Secret are both needed if you want to use credentials from your own Twitter App. You can create these <a href="https://smashballoon.com/custom-twitter-feeds/docs/create-twitter-app/?utm_campaign=twitter-free&utm_source=settings&utm_medium=createapp" target="_blank">here</a>', // what is this? text
             'size' => '27'
         ) );
 
@@ -180,7 +180,7 @@ class CtfAdmin
             'section' => 'ctf_options_connect', // matches the section name
             'option' => 'ctf_options', // matches the options name
             'class' => 'ctf-toggle-consumer', // class for the wrapper and input field
-            'whatis' => 'A Consumer Key and a Consumer Secret are both needed if you want to use credentials from your own Twitter App. You can create these <a href="https://smashballoon.com/custom-twitter-feeds/docs/create-twitter-app/" target="_blank">here</a>', // what is this? text
+            'whatis' => 'A Consumer Key and a Consumer Secret are both needed if you want to use credentials from your own Twitter App. You can create these <a href="https://smashballoon.com/custom-twitter-feeds/docs/create-twitter-app/?utm_campaign=twitter-free&utm_source=settings&utm_medium=createapp" target="_blank">here</a>', // what is this? text
             'size' => '57'
         ) );
 
@@ -249,6 +249,7 @@ class CtfAdmin
             'whatis' => $search_whatis, // what is this? text
             'label' => $search_label,
             'has_input' => true,
+            'note_after_input' => __( '(only recent tweets initially)', 'custom-twitter-feeds' ),
             'extra' => true
         ) );
 
@@ -321,18 +322,6 @@ class CtfAdmin
             'whatis' => "When removing the plugin your settings are automatically erased. Checking this box will prevent any settings from being deleted. This means that you can uninstall and reinstall the plugin without losing your settings"
         ));
 
-        // ajax theme
-        $this->create_settings_field( array(
-            'name' => 'ajax_theme',
-            'title' => '<label for="ctf_ajax_theme">Are you using an Ajax powered theme?</label>', // label for the input field
-            'callback'  => 'default_checkbox', // name of the function that outputs the html
-            'page' => 'ctf_options_feed_settings', // matches the section name
-            'section' => 'ctf_options_feed_settings', // matches the section name
-            'option' => 'ctf_options', // matches the options name
-            'class' => '',
-            'whatis' => "When navigating your site, if your theme uses Ajax to load content into your pages (meaning your page doesn't refresh) then check this setting. If you're not sure then please check with the theme author"
-        ));
-
         /*
          * "Customize" tab
          */
@@ -385,6 +374,43 @@ class CtfAdmin
             'whatis' => "You can add your own CSS classes to the feed here. To add multiple classes separate each with a space, Eg. classone classtwo classthree"
         ));
 
+	    add_settings_section(
+		    'ctf_options_layout', // matches the section name
+		    'Layout',
+		    array( $this, 'general_section_text' ), // callback function to explain the section
+		    'ctf_options_layout' // matches the section name
+	    );
+
+	    $settings = get_option( 'ctf_options', array() );
+	    $layout = 'list';
+	    $layout_selections = array(
+		    'layout' => $layout,
+		    'carouselcols' => isset( $settings['carouselcols'] ) ? $settings['carouselcols'] : 3,
+		    'carouselmobilecols' => isset( $settings['carouselmobilecols'] ) ? $settings['carouselmobilecols'] : 1,
+		    'carouselarrows' => isset( $settings['carouselarrows'] ) ? $settings['carouselarrows'] : 'onhover',
+		    'carouselpag' => isset( $settings['carouselpag'] ) ? $settings['carouselpag'] : true,
+		    'carouselheight' => isset( $settings['carouselheight'] ) ? $settings['carouselheight'] : 'tallest',
+		    'carouselautoplay' => isset( $settings['carouselautoplay'] ) ? $settings['carouselautoplay'] : false,
+		    'carouseltime' => isset( $settings['carouseltime'] ) ? $settings['carouseltime'] : '5000',
+		    'carouselloop' => isset( $settings['carouselloop'] ) ? $settings['carouselloop'] : 'infinite',
+		    'masonrycols' => isset( $settings['masonrycols'] ) ? $settings['masonrycols'] : 3,
+		    'masonrymobilecols' => isset( $settings['masonrymobilecols'] ) ? $settings['masonrymobilecols'] : 1,
+	    );
+
+	    $this->create_settings_field( array(
+		    'name' => 'class',
+		    'title' => '<label for="ctf_layout">Layout Type</label><code class="ctf_shortcode">layout
+            Eg: layout="masonry"</code>', // label for the input field
+		    'callback'  => 'layout', // name of the function that outputs the html
+		    'page' => 'ctf_options_layout', // matches the section name
+		    'section' => 'ctf_options_layout', // matches the section name
+		    'option' => 'ctf_options', // matches the options name
+		    'class' => 'default-text ctf_pro',
+		    'type' => 'text',
+		    'layout_selections' => $layout_selections,
+		    'whatis' => ""
+	    ));
+
         add_settings_section(
             'ctf_options_showandhide', // matches the section name
             'Show/Hide',
@@ -394,15 +420,16 @@ class CtfAdmin
 
         // show/hide
         $show_hide_list = array(
-            0 => array( 'include_retweeter', 'Retweeted text' ),
-            1 => array( 'include_avatar', 'Avatar image' ),
-            2 => array( 'include_author', 'Author name' ),
-            3 => array( 'include_text', 'Tweet text' ),
-            4 => array( 'include_media_placeholder', 'Media placeholder' ),
-            5 => array( 'include_date', 'Date' ),
-            6 => array( 'include_actions', 'Tweet actions (reply, retweet, like)' ),
-            7 => array( 'include_twitterlink', '"Twitter" link' ),
-            8 => array( 'include_linkbox', 'Quoted tweet box' )
+            array( 'include_retweeter', 'Retweeted text' ),
+            array( 'include_avatar', 'Avatar image' ),
+            array( 'include_author', 'Author name' ),
+	        array( 'include_logo', 'Twitter logo' ),
+	        array( 'include_text', 'Tweet text' ),
+            array( 'include_media_placeholder', 'Media placeholder' ),
+            array( 'include_date', 'Date' ),
+            array( 'include_actions', 'Tweet actions (reply, retweet, like)' ),
+            array( 'include_twitterlink', '"Twitter" link' ),
+            array( 'include_linkbox', 'Quoted tweet box' )
         );
         $show_hide_list = apply_filters( 'ctf_admin_show_hide_list', $show_hide_list );
 
@@ -411,9 +438,9 @@ class CtfAdmin
             'title' => '<label>Include the Following in Tweets <em>(when applicable)</em></label><code class="ctf_shortcode">include exclude
             Eg: include=author,date
             Eg: exclude=actions
-            Options: avatar, author, text,
-            placeholder, date, actions,
-            linkbox </code>', // label for the input field
+            Options: avatar, author,
+            logo, text, placeholder, 
+            date, actions, linkbox </code>', // label for the input field
             'callback'  => 'include_exclude_checkbox', // name of the function that outputs the html
             'page' => 'ctf_options_showandhide', // matches the section name
             'section' => 'ctf_options_showandhide', // matches the section name
@@ -503,6 +530,18 @@ class CtfAdmin
             'ctf_options_advanced' // matches the section name
         );
 
+	    // ajax theme
+	    $this->create_settings_field( array(
+		    'name' => 'ajax_theme',
+		    'title' => '<label for="ctf_ajax_theme">Are you using an Ajax powered theme?</label>', // label for the input field
+		    'callback'  => 'default_checkbox', // name of the function that outputs the html
+		    'page' => 'ctf_options_advanced', // matches the section name
+		    'section' => 'ctf_options_advanced', // matches the section name
+		    'option' => 'ctf_options', // matches the options name
+		    'class' => '',
+		    'whatis' => "When navigating your site, if your theme uses Ajax to load content into your pages (meaning your page doesn't refresh) then check this setting. If you're not sure then please check with the theme author"
+	    ));
+
         // Request Method
         $this->create_settings_field( array(
             'name' => 'request_method',
@@ -578,6 +617,67 @@ class CtfAdmin
             'class' => '',
             'whatis' => "Checking this box will make all Search and Hashtag feeds have a permanent cache saved in the database by default of up to 150 tweets. Tweets will be available for the feed even after the 7 day limit though numbers of retweets and likes will not update"
         ));
+
+	    $this->create_settings_field( array(
+		    'name' => 'selfreplies',
+		    'title' => '<label for="ctf_selfreplies">Always include replies to self in the feed</label><code class="ctf_shortcode">autores
+            Eg: selfreplies=true</code>', // label for the input field
+		    'callback'  => 'default_checkbox', // name of the function that outputs the html
+		    'page' => 'ctf_options_advanced', // matches the section name
+		    'section' => 'ctf_options_advanced', // matches the section name
+		    'option' => 'ctf_options', // matches the options name
+		    'class' => '',
+		    'whatis' => "Twitter considers @mentions of your own account and replies to your own account's tweets as \"reply\" tweets. Enable this setting to include these type of tweets in your feed"
+	    ));
+
+	    $this->create_settings_field( array(
+		    'name' => 'disableintents',
+		    'title' => '<label for="ctf_disableintents">Disable Twitter intents JS</label><code class="ctf_shortcode">disableintents
+            Eg: disableintents=true</code>', // label for the input field
+		    'callback'  => 'default_checkbox', // name of the function that outputs the html
+		    'page' => 'ctf_options_advanced', // matches the section name
+		    'section' => 'ctf_options_advanced', // matches the section name
+		    'option' => 'ctf_options', // matches the options name
+		    'class' => '',
+		    'whatis' => "Twitter provides JavaScript that allows visitors of your site to reply to, retweet, and like tweets without leaving your site. This can be disabled using this setting"
+	    ));
+
+	    $this->create_settings_field( array(
+		    'name' => 'font_method',
+		    'title' => '<label for="ctf_font_method">Icon Method</label>', // label for the input field
+		    'callback'  => 'default_select', // name of the function that outputs the html
+		    'page' => 'ctf_options_advanced', // matches the section name
+		    'section' => 'ctf_options_advanced', // matches the section name
+		    'option' => 'ctf_options', // matches the options name
+		    'class' => 'default-text', // class for the wrapper and input field
+		    'fields' => array(
+			    array( 'svg', 'SVG' ),
+			    array( 'fontfile', 'Font File' )
+		    ),
+		    'whatis' => "This plugin uses SVGs for all icons in the feed. Use this setting to switch to font icons" // what is this? text
+	    ) );
+
+	    $this->create_settings_field( array(
+		    'name' => 'disableawesome',
+		    'title' => '<label for="ctf_disableawesome">Disable icon font</label>', // label for the input field
+		    'callback'  => 'default_checkbox', // name of the function that outputs the html
+		    'page' => 'ctf_options_advanced', // matches the section name
+		    'section' => 'ctf_options_advanced', // matches the section name
+		    'option' => 'ctf_options', // matches the options name
+		    'class' => '',
+		    'whatis' => "Twitter provides JavaScript that allows visitors of your site to reply to, retweet, and like tweets without leaving your site. This can be disabled using this setting"
+	    ));
+
+	    $this->create_settings_field( array(
+		    'name' => 'shorturls',
+		    'title' => '<label for="ctf_shorturls">Use shortened urls</label>', // label for the input field
+		    'callback'  => 'default_checkbox', // name of the function that outputs the html
+		    'page' => 'ctf_options_advanced', // matches the section name
+		    'section' => 'ctf_options_advanced', // matches the section name
+		    'option' => 'ctf_options', // matches the options name
+		    'class' => '',
+		    'whatis' => "Twitter provides shortened versions of links in tweets. Enable this setting to use them instead of the full URLs"
+	    ));
 
         /**
          *  "Style" tab
@@ -788,6 +888,28 @@ class CtfAdmin
             'class' => '',
         ));
 
+	    $this->create_settings_field( array(
+		    'name' => 'logosize',
+		    'title' => '<label for="ctf_logotextsize">Twitter Logo Size</label><code class="ctf_shortcode">logosize
+            Eg: logosize=16</code>', // label for the input field
+		    'callback'  => 'text_size', // name of the function that outputs the html
+		    'page' => 'ctf_options_author', // matches the section name
+		    'section' => 'ctf_options_author', // matches the section name
+		    'option' => 'ctf_options', // matches the options name
+		    'class' => 'default-text', // class for the wrapper and input field
+	    ));
+
+	    $this->create_settings_field( array(
+		    'name' => 'logocolor',
+		    'title' => '<label for="ctf_logocolor">Logo Color</label><code class="ctf_shortcode">logocolor
+            Eg: logocolor=#333</code>', // label for the input field
+		    'callback'  => 'default_color', // name of the function that outputs the html
+		    'page' => 'ctf_options_author', // matches the section name
+		    'section' => 'ctf_options_author', // matches the section name
+		    'option' => 'ctf_options', // matches the options name
+		    'class' => '',
+	    ));
+
         add_settings_section(
             'ctf_options_text', // matches the section name
             'Tweet Text',
@@ -830,6 +952,24 @@ class CtfAdmin
             'option' => 'ctf_options', // matches the options name
             'class' => '',
         ));
+
+	    $this->create_settings_field( array(
+		    'name' => 'textlength',
+		    'title' => '<label for="ctf_textlength">Text Length</label><code class="ctf_shortcode">textlength
+            Eg: textlength=150</code>', // label for the input field
+		    'callback'  => 'default_text', // name of the function that outputs the html
+		    'page' => 'ctf_options_text', // matches the section name
+		    'section' => 'ctf_options_text', // matches the section name
+		    'option' => 'ctf_options', // matches the options name
+		    'class' => '',
+		    'default' => 280,
+		    'min' => 20,
+		    'max' => 280,
+		    'step' => 1,
+		    'example' => 'characters',
+		    'type' => 'number',
+		    'whatis' => 'The number of characters of text to display in the tweet text. An ellipsis link will be added to allow the user to reveal more text if desired',
+	    ));
 
         // custom retweeted text
         $this->create_settings_field( array(
@@ -1164,6 +1304,9 @@ class CtfAdmin
         <?php if ( $args['has_input'] ) : ?>
         <input name="<?php echo $args['option'].'['.$args['name'].'_text'.']'; ?>" id="ctf_<?php echo $args['name'].'_text'; ?>" type="text" value="<?php esc_attr_e( $option_string ); ?>" size="25" />
     <?php endif; ?>
+	    <?php if ( isset( $args['note_after_input'] ) ) : ?>
+        <span class="ctf-note-after-input"><?php echo esc_attr( $args['note_after_input'] ); ?></span>
+    <?php endif; ?>
         <?php if ( isset( $args['whatis'] ) ) : ?>
         <a class="ctf-tooltip-link" href="JavaScript:void(0);"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
         <p class="ctf-tooltip ctf-more-info"><?php _e( $args['whatis'], 'custom-twitter-feeds' ); ?>.</p>
@@ -1198,20 +1341,45 @@ class CtfAdmin
 
     public function cache_time( $args )
     {
-        $options = get_option( $args['option'] );
-        $default = 1;
-        $option_string = ( isset( $options[ $args['name'] ] ) ) ? esc_attr( $options[ $args['name'] ] ) : $default;
-        $selected = ( isset( $options[ $args['name'] . '_unit' ] ) ) ? esc_attr( $options[ $args['name'] . '_unit' ] ) : '3600';
+	    $min_cache_time = 3600;
+	    $options = get_option( $args['option'] );
+	    $unrestricted = isset( $options['have_own_tokens'] ) && $options['have_own_tokens'];
+	    if ( $unrestricted ) {
+		    $min_cache_time = 1;
+	    }
+	    $default = 3;
+	    $option_string = ( isset( $options[ $args['name'] ] ) ) ? esc_attr( $options[ $args['name'] ] ) : $default;
+
+	    $selected = ( isset( $options[ $args['name'] . '_unit' ] ) ) ? esc_attr( $options[ $args['name'] . '_unit' ] ) : '3600';
+	    $actual_time = (int)$option_string * (int)$selected;
+	    $show_notice = false;
+	    if ( get_transient( 'ct_feed_forced_cache_time_raise' ) ) {
+	        $show_notice = true;
+        }
+	    if ( $actual_time < $min_cache_time ) {
+	        set_transient( 'ct_feed_forced_cache_time_raise', 'true', 60 * 60 * 48 );
+		    $show_notice = true;
+		    $option_string = max( 1, $min_cache_time / 3600 );
+            $selected = "3600";
+	    } else {
+		    $selected = ( isset( $options[ $args['name'] . '_unit' ] ) ) ? esc_attr( $options[ $args['name'] . '_unit' ] ) : '3600';
+	    }
+
         ?>
         <input name="<?php echo $args['option'].'['.$args['name'].']'; ?>" id="ctf_<?php echo $args['name']; ?>" class="<?php echo $args['class']; ?>" type="number" value="<?php echo $option_string; ?>" />
         <select name="<?php echo $args['option'].'['.$args['name'].'_unit]'; ?>">
-            <option value="60" <?php if ( $selected == "60" ) echo 'selected="selected"' ?> ><?php esc_attr_e( 'Minutes' ); ?></option>
+            <?php if ( $unrestricted ) : ?>
+                <option value="60" <?php if ( $selected == "60" ) echo 'selected="selected"' ?> ><?php esc_attr_e( 'Minutes' ); ?></option>
+            <?php endif; ?>
             <option value="3600" <?php if ( $selected == "3600" ) echo 'selected="selected"' ?> ><?php esc_attr_e( 'Hours' ); ?></option>
             <option value="86400" <?php if ( $selected == "86400" ) echo 'selected="selected"' ?> ><?php esc_attr_e( 'Days' ); ?></option>
         </select>&nbsp;
         <input id="ctf-clear-cache" class="button-secondary" style="margin-top: 1px;" type="submit" value="<?php esc_attr_e( 'Clear Twitter Cache' ); ?>" />
         <a class="ctf-tooltip-link" href="JavaScript:void(0);"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
         <p class="ctf-tooltip ctf-more-info"><?php _e( 'Clicking this button will clear all cached data for your Twitter feeds', 'custom-twitter-feeds' ); ?>.</p>
+        <?php if ( $show_notice ) : ?>
+            <p class="ctf-more-info"><?php _e( 'Due to changes in Twitter\'s API usage policy, the minimum caching time for the plugin is 1 hour. To check for Tweets more often either create your own Twitter Developer app or upgrade to the Pro version.', 'custom-twitter-feeds' ); ?></p>
+        <?php endif; ?>
         <?php
     }
 
@@ -1431,6 +1599,142 @@ class CtfAdmin
         <?php
     }
 
+	public function layout( $args ) {
+		$selected_type = $args['layout_selections']['layout'];
+		$layout_types = array(
+			'list' => __( 'List', 'instagram-feed' ),
+			'carousel' => __( 'Carousel', 'instagram-feed' ),
+			'masonry' => __( 'Masonry', 'instagram-feed' ),
+		);
+		$layout_images = array(
+			'list' => CTF_PLUGIN_URL . 'img/list.png',
+			'carousel' => CTF_PLUGIN_URL . 'img/carousel.png',
+			'masonry' => CTF_PLUGIN_URL . 'img/masonry.png',
+		);
+		?>
+
+		<?php foreach( $layout_types as $layout_type => $label ) : ?>
+            <div class="ctf_layout_cell <?php if($selected_type === $layout_type) echo "ctf_layout_selected"; ?>">
+                <input class="ctf_layout_type" id="ctf_layout_type_<?php esc_attr_e( $layout_type ); ?>" name="<?php echo $args['option'].'[layout]'; ?>" type="radio" value="<?php esc_attr_e( $layout_type ); ?>" <?php if ( $selected_type === $layout_type ) echo 'checked'; ?>/><label for="ctf_layout_type_<?php esc_attr_e( $layout_type ); ?>"><span class="ctf_label"><?php echo esc_html( $label ); ?></span><img src="<?php echo $layout_images[ $layout_type ]; ?>" /></label>
+
+                <a href="https://smashballoon.com/custom-twitter-feeds/?utm_campaign=twitter-free&utm_source=settings&utm_medium=layout" target="_blank" class="ctf_lock"><i class="fa fa-rocket"></i>Pro</a>
+            </div>
+        <?php endforeach; ?>
+        <div class="ctf_layout_options_wrap">
+            <div class="ctf_layout_settings ctf_layout_type_list">
+                <i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 8px;"></i><span class="ctf_note" style="margin-left: 0;"><?php _e('A full-width list of tweets.'); ?></span>
+            </div>
+            <div class="ctf_layout_settings ctf_layout_type_masonry">
+                <p class="ctf_note" style="margin: 0 0 15px 0;"><a href="">Upgrade to the Pro version to use the Masonry layout option</a></p>
+                <div class="ctf_layout_setting">
+                    <i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 8px;"></i><span class="ctf_note" style="margin-left: 0;"><?php _e('Tweets in columns with no empty space between them.'); ?></span>
+                </div>
+                <div class="ctf_layout_setting">
+                    <label><?php _e('Desktop Columns', 'instagram-feed'); ?></label><code class="ctf_shortcode"> masonrycols
+                        Eg: masonrycols=4</code>
+                    <br />
+                    <select name="<?php echo $args['option'].'[masonrycols]'; ?>" id="ctf_masonrycols">
+                        <?php
+                        $cols_options = array(1,2,3,4,5,6);
+                        foreach ( $cols_options as $option ) :
+                            ?>
+                            <option value="<?php echo esc_attr( $option ); ?>" <?php if((int)$args['layout_selections']['masonrycols'] == (int)$option) echo 'selected="selected"' ?> ><?php echo esc_html( $option ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="ctf_layout_setting">
+                    <label><?php _e('Moblie Columns', 'instagram-feed'); ?></label><code class="ctf_shortcode"> masonrymobilecols
+                        Eg: masonrymobilecols=2</code>
+                    <br />
+                    <select name="<?php echo $args['option'].'[masonrymobilecols]'; ?>" id="ctf_masonrymobilecols">
+                        <?php
+                        $cols_options = array(1,2);
+                        foreach ( $cols_options as $option ) :
+                            ?>
+                            <option value="<?php echo esc_attr( $option ); ?>" <?php if((int)$args['layout_selections']['masonrymobilecols'] == (int)$option) echo 'selected="selected"' ?> ><?php echo esc_html( $option ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="ctf_layout_settings ctf_layout_type_carousel">
+                <p class="ctf_note" style="margin: 0 0 15px 0;"><a href="">Upgrade to the Pro version to use the Carousel layout option</a></p>
+                <div class="ctf_layout_setting">
+                    <i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 8px;"></i><span class="ctf_note" style="margin-left: 0;"><?php _e('Posts are displayed in a slideshow carousel.', 'instagram-feed'); ?></span>
+                </div>
+                <div class="ctf_layout_setting">
+                    <label><?php _e('Desktop Columns', 'instagram-feed'); ?></label><code class="ctf_shortcode"> carouselcols
+                        Eg: carouselcols=4</code>
+                    <br />
+                    <select name="<?php echo $args['option'].'[carouselcols]'; ?>" id="ctf_carouselcols">
+                        <?php
+                        $cols_options = array(1,2,3,4,5,6);
+                        foreach ( $cols_options as $option ) :
+                            ?>
+                            <option value="<?php echo esc_attr( $option ); ?>" <?php if((int)$args['layout_selections']['carouselcols'] == (int)$option) echo 'selected="selected"' ?> ><?php echo esc_html( $option ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="ctf_layout_setting">
+                    <label><?php _e('Moblie Columns', 'instagram-feed'); ?></label><code class="ctf_shortcode"> carouselmobilecols
+                        Eg: carouselmobilecols=2</code>
+                    <br />
+                    <select name="<?php echo $args['option'].'[carouselmobilecols]'; ?>" id="ctf_carouselmobilecols">
+                        <?php
+                        $cols_options = array(1,2);
+                        foreach ( $cols_options as $option ) :
+                            ?>
+                            <option value="<?php echo esc_attr( $option ); ?>" <?php if((int)$args['layout_selections']['carouselmobilecols'] == (int)$option) echo 'selected="selected"' ?> ><?php echo esc_html( $option ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="ctf_layout_setting">
+                    <label><?php _e('Loop Type', 'instagram-feed'); ?></label><code class="ctf_shortcode"> carouselloop
+                        Eg: carouselloop=rewind
+                        carouselloop=infinity</code>
+                    <br />
+                    <select name="<?php echo $args['option'].'[carouselloop]'; ?>" id="ctf_carousel_loop">
+                        <option value="none" <?php if($args['layout_selections']['carouselloop'] == "none") echo 'selected="selected"' ?> ><?php _e( 'None', 'instagram-feed'); ?></option>
+                        <option value="rewind" <?php if($args['layout_selections']['carouselloop'] == "rewind") echo 'selected="selected"' ?> ><?php _e( 'Rewind', 'instagram-feed'); ?></option>
+                        <option value="infinity" <?php if($args['layout_selections']['carouselloop'] == "infinity") echo 'selected="selected"' ?> ><?php _e( 'Infinity', 'instagram-feed'); ?></option>
+                    </select>
+                </div>
+                <div class="ctf_layout_setting">
+                    <label><?php _e('Navigation Arrows', 'instagram-feed'); ?></label><code class="ctf_shortcode"> carouselarrows
+                        Eg: carouselarrows=below</code>
+                    <br />
+                    <select name="<?php echo $args['option'].'[carouselarrows]'; ?>" id="ctf_carousel_loop">
+                        <option value="onhover" <?php if($args['layout_selections']['carouselarrows'] == "onhover") echo 'selected="selected"' ?> ><?php _e( 'Show on Hover', 'instagram-feed'); ?></option>
+                        <option value="below" <?php if($args['layout_selections']['carouselarrows'] == "below") echo 'selected="selected"' ?> ><?php _e( 'Show below feed', 'instagram-feed'); ?></option>
+                        <option value="hide" <?php if($args['layout_selections']['carouselarrows'] == "hide") echo 'selected="selected"' ?> ><?php _e( 'Hide arrows', 'instagram-feed'); ?></option>
+                    </select>
+                </div>
+                <div class="ctf_layout_setting">
+                    <label><?php _e('Carousel Height', 'instagram-feed'); ?></label><code class="ctf_shortcode"> carouselarrows
+                        Eg: carouselarrows=below</code>
+                    <br />
+                    <select name="<?php echo $args['option'].'[carouselheight]'; ?>" id="ctf_carousel_loop">
+                        <option value="tallest" <?php if($args['layout_selections']['carouselheight'] == "tallest") echo 'selected="selected"' ?> ><?php _e( 'Always set to tallest post', 'instagram-feed'); ?></option>
+                        <option value="clickexpand" <?php if($args['layout_selections']['carouselheight'] == "clickexpand") echo 'selected="selected"' ?> ><?php _e( 'Set to shortest post, button to expand', 'instagram-feed'); ?></option>
+                        <option value="auto'" <?php if($args['layout_selections']['carouselheight'] == "auto'") echo 'selected="selected"' ?> ><?php _e( 'Automatically set to post height (forces single column)', 'instagram-feed'); ?></option>
+                    </select>
+                </div>
+                <div class="ctf_layout_setting">
+                    <input type="checkbox" name="<?php echo $args['option'].'[carouselautoplay]'; ?>" id="ctf_carousel_autoplay" <?php if($args['layout_selections']['carouselautoplay'] == true) echo 'checked="checked"' ?> />
+                    <label><?php _e("Enable Autoplay", 'instagram-feed'); ?></label><code class="ctf_shortcode"> carouselautoplay
+                        Eg: carouselautoplay=true</code>
+                </div>
+                <div class="ctf_layout_setting">
+                    <label><?php _e("Interval Time", 'instagram-feed'); ?></label><code class="ctf_shortcode"> carouseltime
+                        Eg: carouseltime=8000</code>
+                    <br />
+                    <input name="<?php echo $args['option'].'[carouseltime]'; ?>" type="text" value="<?php esc_attr_e( $args['layout_selections']['carouseltime'] ); ?>" size="6" /><?php _e("miliseconds", 'instagram-feed'); ?>
+                </div>
+            </div>
+
+        </div>
+		<?php
+	}
+
     public function custom_code( $args )
     {
         $options = get_option( $args['option'] );
@@ -1461,7 +1765,6 @@ class CtfAdmin
 
                 $feed_types = apply_filters( 'ctf_admin_feed_type_list', '' );
                 $cron_clear_cache = isset( $input['cron_cache_clear'] ) ? $input['cron_cache_clear'] : 'no';
-                $ctf_options['ajax_theme'] = false;
                 $ctf_options['have_own_tokens'] = false;
                 $ctf_options['use_own_consumer'] = false;
                 $ctf_options['preserve_settings'] = false;
@@ -1488,8 +1791,9 @@ class CtfAdmin
 
                 // delete feeds cached in transients
                 ctf_clear_cache();
+	            delete_transient( 'ctf_reauthenticate' );
 
-                // process force cache to clear on interval
+	            // process force cache to clear on interval
                 $cache_time = isset( $input['cache_time'] ) ? (int) $input['cache_time'] : 1;
                 $cache_time_unit = isset( $input['cache_time_unit'] ) ? (int) $input['cache_time_unit'] : 3600;
 
@@ -1513,8 +1817,9 @@ class CtfAdmin
             } elseif ( $input['tab'] === 'customize' && isset( $input['class'] ) ) {
 
                 $cron_clear_cache = isset( $input['cron_cache_clear'] ) ? $input['cron_cache_clear'] : 'no';
-                $checkbox_settings = array( 'width_mobile_no_fixed', 'include_retweeter', 'include_avatar', 'include_author', 'include_text', 'include_media_placeholder',
-                    'include_date', 'include_actions', 'include_twitterlink', 'include_linkbox', 'creditctf', 'showbutton', 'showheader', 'persistentcache' );
+                $checkbox_settings = array( 'width_mobile_no_fixed', 'include_retweeter', 'include_avatar', 'include_author', 'include_logo', 'include_text', 'include_media_placeholder',
+                    'include_date', 'include_actions', 'include_twitterlink', 'ajax_theme', 'include_linkbox', 'creditctf', 'showbutton', 'showheader', 'persistentcache', 'selfreplies',
+                    'disableintents', 'disableawesome', 'shorturls' );
                 $checkbox_settings = apply_filters( 'ctf_admin_customize_checkbox_settings', $checkbox_settings );
                 $leave_spaces = array( 'headertext', 'translate_minute', 'translate_hour', 'custom_css', 'custom_js' );
 

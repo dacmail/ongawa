@@ -24,24 +24,8 @@ class Memcache {
 	 */
 	public function __construct() {
 		if ( ! defined( 'WP_CLI' ) ) {
-			add_action( 'wp_login', array( $this, 'status_healthcheck' ) );
-			add_action( 'plugins_loaded', array( $this, 'run' ) );
+			add_action( 'load-toplevel_page_sg-cachepress', array( $this, 'status_healthcheck' ) );
 		}
-	}
-
-	/**
-	 * Initialize the class by hooking and running methods.
-	 *
-	 * @since 5.0.0
-	 */
-	public function run() {
-		// Check if memcache is enabled, but the dropin doesn't exists.
-		if ( ! $this->dropin_exists() && Options::is_enabled( 'siteground_optimizer_enable_memcached' ) ) {
-			// Try to create the memcache droping.
-			Options::disable_option( 'siteground_optimizer_enable_memcached' );
-			return;
-		}
-
 	}
 
 	/**
@@ -51,9 +35,26 @@ class Memcache {
 	 * @since  5.0.0
 	 */
 	public function status_healthcheck() {
-		if ( ! $this->is_connection_working() ) {
-			Options::enable_option( 'siteground_optimizer_memcache_notice' );
-			Options::disable_option( 'siteground_optimizer_enable_memcached' );
+
+		if ( Options::is_enabled( 'siteground_optimizer_enable_memcached' ) ) {
+			// Check if the droping exists.
+			if ( $this->dropin_exists() ) {
+				if ( ! $this->is_connection_working() ) {
+					Options::disable_option( 'siteground_optimizer_enable_memcached' );
+					Options::enable_option( 'siteground_optimizer_memcache_notice' );
+				}
+			} else {
+				Options::disable_option( 'siteground_optimizer_enable_memcached' );
+				Options::enable_option( 'siteground_optimizer_memcache_notice' );
+
+				if ( $this->is_connection_working() ) {
+					if ( file_exists( WP_CONTENT_DIR . '/object-cache-crashed.php' ) ) {
+						Options::enable_option( 'siteground_optimizer_memcache_crashed' );
+					} else {
+						Options::enable_option( 'siteground_optimizer_memcache_dropin_crashed' );
+					}
+				}
+			}
 		}
 	}
 
@@ -161,6 +162,7 @@ class Memcache {
 	protected function is_connection_working() {
 		// Tyr to get the port.
 		$port = $this->get_memcached_port();
+
 		// Bail if the port doesn't exists.
 		if ( empty( $port ) ) {
 			return false;
@@ -191,6 +193,9 @@ class Memcache {
 			return false;
 		}
 
+		// Remove crashed dropin.
+		@unlink( WP_CONTENT_DIR . '/object-cache-crashed.php' );
+
 		// The new object cache.
 		$new_object_cache  = str_replace(
 			array(
@@ -198,7 +203,7 @@ class Memcache {
 				'@changedefaults@',
 			),
 			array(
-				str_replace(' ', '', wp_generate_password( 64, true, true ) ),
+				str_replace( ' ', '', wp_generate_password( 64, true, true ) ),
 				self::IP . ':' . $this->get_memcached_port(),
 			),
 			file_get_contents( \SiteGround_Optimizer\DIR . '/templates/memcached.tpl' )

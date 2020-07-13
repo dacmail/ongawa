@@ -325,7 +325,7 @@ class ET_Builder_Settings {
 				'id'          => 'et_pb_custom_css',
 				'mode'        => 'css',
 				'inline'      => false,
-				'label'       => esc_html__( 'Custom CSS', 'et_builder' ),
+				'label'       => et_builder_i18n( 'Custom CSS' ),
 				'tab_slug'    => 'advanced',
 				'toggle_slug' => 'custom_css',
 			),
@@ -376,7 +376,7 @@ class ET_Builder_Settings {
 				'id'          => 'et_pb_post_settings_title',
 				'show_in_bb'  => false,
 				'post_field'  => 'post_title',
-				'label'       => esc_html__( 'Title', 'et_builder' ),
+				'label'       => et_builder_i18n( 'Title' ),
 				'default'     => '',
 				'tab_slug'    => 'content',
 				'toggle_slug' => 'main_content',
@@ -1060,18 +1060,18 @@ class ET_Builder_Settings {
 
 		$toggles = array(
 			'main_content'          => ! empty( $post_type_obj ) ? $post_type_obj->labels->singular_name : '',
-			'background'            => esc_html__( 'Background', 'et_builder' ),
+			'background'            => et_builder_i18n( 'Background' ),
 			'color_palette'         => esc_html__( 'Color Palette', 'et_builder' ),
-			'custom_css'            => esc_html__( 'Custom CSS', 'et_builder' ),
+			'custom_css'            => et_builder_i18n( 'Custom CSS' ),
 			'enable_bfb'            => esc_html__( 'Enable The Latest Divi Builder Experience', 'et_builder' ),
 			'enable_classic_editor' => esc_html__( 'Enable Classic Editor', 'et_builder' ),
 			'performance'           => esc_html__( 'Performance', 'et_builder' ),
 			'product_tour'          => esc_html__( 'Product Tour', 'et_builder' ),
 			'spacing'               => esc_html__( 'Spacing', 'et_builder' ),
 			'ab_testing'            => esc_html__( 'Split Testing', 'et_builder' ),
-			'text'                  => esc_html__( 'Text', 'et_builder' ),
-			'visibility'            => esc_html__( 'Visibility', 'et_builder' ),
-			'position'              => esc_html__( 'Position', 'et_builder' ),
+			'text'                  => et_builder_i18n( 'Text' ),
+			'visibility'            => et_builder_i18n( 'Visibility' ),
+			'position'              => et_builder_i18n( 'Position' ),
 		);
 
 		/**

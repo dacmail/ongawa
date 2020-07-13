@@ -12,17 +12,17 @@ class ET_Builder_Module_Comments extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'elements'   => esc_html__( 'Elements', 'et_builder' ),
+					'elements'   => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'image' => array(
-						'title'    => esc_html__( 'Image', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Image' ),
 						'priority' => 30,
 					),
 					'text' => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 				),
@@ -59,7 +59,7 @@ class ET_Builder_Module_Comments extends ET_Builder_Module {
 							'border_styles' => '%%order_class%%.et_pb_comments_module .commentlist li img.avatar',
 						),
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'     => 'advanced',
 					'toggle_slug'  => 'image',
 				),
@@ -132,7 +132,7 @@ class ET_Builder_Module_Comments extends ET_Builder_Module {
 			),
 			'button'                => array(
 				'button' => array(
-					'label' => esc_html__( 'Button', 'et_builder' ),
+					'label' => et_builder_i18n( 'Button' ),
 					'css' => array(
 						'main' => "{$this->main_css_element}.et_pb_comments_module .et_pb_button",
 						'limited_main' => "{$this->main_css_element}.et_pb_comments_module .et_pb_button",
@@ -289,7 +289,7 @@ class ET_Builder_Module_Comments extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'k6vskmOxM4U' ),
+				'id'   => 'k6vskmOxM4U',
 				'name' => esc_html__( 'An introduction to the Comments module', 'et_builder' ),
 			),
 		);
@@ -304,8 +304,8 @@ class ET_Builder_Module_Comments extends ET_Builder_Module {
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'toggle_slug'      => 'elements',
 				'default_on_front' => 'on',
@@ -318,8 +318,8 @@ class ET_Builder_Module_Comments extends ET_Builder_Module {
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'toggle_slug'      => 'elements',
 				'default_on_front' => 'on',
@@ -332,8 +332,8 @@ class ET_Builder_Module_Comments extends ET_Builder_Module {
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'toggle_slug'      => 'elements',
 				'default_on_front' => 'on',

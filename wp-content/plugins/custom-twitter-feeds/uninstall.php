@@ -44,5 +44,9 @@ if ( ! $ctf_preserve_settings ) {
 
     // remove any scheduled cron jobs
     wp_clear_scheduled_hook( 'ctf_cron_job' );
+
+	delete_option( 'ctf_usage_tracking_config' );
+	delete_option( 'ctf_usage_tracking' );
+	wp_clear_scheduled_hook( 'ctf_usage_tracking_cron' );
 }
 

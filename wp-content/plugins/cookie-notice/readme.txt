@@ -1,39 +1,40 @@
-=== Cookie Notice for GDPR ===
+=== Cookie Notice for GDPR & CCPA ===
 Contributors: dfactory
 Donate link: http://www.dfactory.eu/
-Tags: gdpr, cookie, cookies, notice, notification, notify, cookie, cookie compliance, cookie law, eu cookie, privacy, privacy directive, consent
+Tags: gdpr, ccpa, cookie, cookies, notice, notification, notify, cookie, cookie law, privacy, policy, consent, law
 Requires at least: 3.3
 Requires PHP: 5.2.4
-Tested up to: 4.9.6
-Stable tag: 1.2.44
+Tested up to: 5.4
+Stable tag: 1.3.2
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
-Cookie Notice allows you to elegantly inform users that your site uses cookies and to comply with the EU cookie law GDPR regulations.
+Cookie Notice allows you to you elegantly inform users that your site uses cookies and helps you comply with the EU GDPR cookie law and CCPA regulations.
 
 == Description ==
 
-[Cookie Notice](http://www.dfactory.eu/plugins/cookie-notice/) allows you to elegantly inform users that your site uses cookies and to comply with the EU cookie law GDPR regulations.
+[Cookie Notice](http://www.dfactory.eu/plugins/cookie-notice/) allows you to elegantly inform users that your site uses cookies and helps you comply with the EU GDPR cookie law and CCPA regulations.
 
 For more information, check out plugin page at [dFactory](http://www.dfactory.eu/) or plugin [support forum](http://www.dfactory.eu/support/forum/cookie-notice/).
 
 = Features include: =
 
-* 100% GDPR compliant
-* Customizable cookie message
-* Redirects users to specified page for more cookie information
+* Customizable message
+* Redirects users to specified page for more information
 * Multiple cookie expiry options
 * Link to Privacy Policy page
 * WordPress Privacy Policy page synchronization
-* Option to accept cookies on scroll
+* Option to accept the notice on scroll
 * Option to set on scroll offset
-* Option to refuse functional cookies
-* Option to revoke the user consent
+* Option to accept the notice with any page click
+* Option to refuse the consent
+* Option to revoke the consent
 * Option to manually block scripts
-* Option to reload the page after cookies are accepted
-* Select the position of the cookie message box
-* Animate the message box after cookie is accepted
-* Select bottons style from None, WordPress and Bootstrap
+* Option to reload the page after accepting the notice
+* Select the position of the notice container
+* Select the position of the privacy policy link
+* Animate the container after notice is accepted
+* Select from 3 buttons style
 * Set the text and bar background colors
 * WPML and Polylang compatible
 * SEO friendly
@@ -66,6 +67,55 @@ No questions yet.
 1. screenshot-1.png
 
 == Changelog ==
+
+= 1.3.2 =
+* Tweak: Speed up Corona Banner loading by moving JS file to footer with async parameter
+* Tweak: Improve buttons CSS padding
+* Tweak: Accessibility improvements on links
+
+= 1.3.1 =
+* Fix: Unable to select Privacy policy link
+* Fix: Blank Cookies policy link in a message
+* Fix: Undefined index: on_click
+* Tweak: Adjusted default opacity back to 100
+
+= 1.3.0 =
+* New: Introducing Corona Banner that displays data about Coronavirus pandemia and five steps recommended by the WHO (World Health Organization)
+* New: Option to set bar opacity
+* New: Accept the notice with close icon
+* Fix: Policy link added to message without policy option enabled
+
+= 1.2.51 =
+* Fix: Problems with iOS and OK/Reject button
+* Tweak: Added Separate cookie expiry for Reject, props Carlos Buchart
+
+= 1.2.50 =
+* Fix: The body css class always set to "cookies-refused"
+* Tweak: Improve IE & Safari CustomEvent and ClassList support
+* Tweak: Change the plugin js init event
+
+= 1.2.49 =
+* New: Option to accept the notice with any page click
+* Tweak: Remove jQuery dependency
+* Tweak: Swtich from jQuery to CSS3 animations
+* Tweak: Improve the CSS and HTML structure
+
+= 1.2.48 =
+* Fix: HTML tags stripped from cookie message
+* Fix: Link target not accepted in inline privacy link
+
+= 1.2.47 =
+* New: Option to select the privacy policy link position
+* Tweak: Do not relad the page on refuse button click
+* Tweak: Added aria-label attribute to cookie notice container
+
+= 1.2.46 =
+* Tweak: Remove WP Super Cache cookie on deactivation
+* Tweak: Remove plugin version from the db on deactivation
+
+= 1.2.45 =
+* Tweak: Improved WP Super Cache support
+* Tweak: CSS container style issue and media query for mobile
 
 = 1.2.44 =
 * Fix: The text of the revoke button ignored in shortcode
@@ -255,6 +305,7 @@ Initial release
 
 == Upgrade Notice ==
 
-= 1.2.44 =
-* Fix: The text of the revoke button ignored in shortcode
-* Fix: Revoke consent button not displayed automatically in top position
+= 1.3.2 =
+* Tweak: Speed up Corona Banner loading by moving JS file to footer with async parameter
+* Tweak: Improve buttons CSS padding
+* Tweak: Accessibility improvements on links

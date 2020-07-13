@@ -28,7 +28,74 @@ if ( ! defined( 'ET_BUILDER_PLACEHOLDER_PORTRAIT_IMAGE_DATA' ) ) {
 	define( 'ET_BUILDER_PLACEHOLDER_PORTRAIT_IMAGE_DATA', 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDUwMCA1MDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxwYXRoIGZpbGw9IiNFQkVCRUIiIGQ9Ik0wIDBoNTAwdjUwMEgweiIvPgogICAgICAgIDxyZWN0IGZpbGwtb3BhY2l0eT0iLjEiIGZpbGw9IiMwMDAiIHg9IjY4IiB5PSIzMDUiIHdpZHRoPSIzNjQiIGhlaWdodD0iNTY4IiByeD0iMTgyIi8+CiAgICAgICAgPGNpcmNsZSBmaWxsLW9wYWNpdHk9Ii4xIiBmaWxsPSIjMDAwIiBjeD0iMjQ5IiBjeT0iMTcyIiByPSIxMDAiLz4KICAgIDwvZz4KPC9zdmc+Cg==' );
 }
 
+// Detect Codeception and load additional code required by tests.
+if ( class_exists( 'Codeception\TestCase\WPTestCase' ) ) {
+	foreach ( glob( ET_BUILDER_DIR . 'tests/codeception/wpunit/*.php' ) as $test_file ) {
+		require_once( $test_file );
+	}
+}
+
 require_once ET_BUILDER_DIR . 'autoload.php';
+
+/**
+ * Retrieve a commonly used translation.
+ *
+ * @since 4.4.9
+ *
+ * @param string $key Translation key.
+ * @param boolean $reset Reset cache.
+ *
+ * @return string
+ */
+function et_builder_i18n( $key, $reset = false ) {
+	static $cache;
+
+	if ( true === $reset ) {
+		$cache = array();
+	}
+
+	if ( ! isset( $cache[ $key ] ) ) {
+		$cache[ $key ] = ET_Builder_I18n::get( $key );
+	}
+
+	return $cache[ $key ];
+
+}
+
+/**
+ * Resets commonly used translations cache.
+ *
+ * @since 4.4.9
+ *
+ * @return void
+ */
+function et_builder_i18n_reset_cache() {
+	et_builder_i18n( '', true );
+}
+
+/**
+ * Escape translation with optional value and caches the result.
+ *
+ * @since 4.4.9
+ *
+ * @param string $text
+ * @param string $value
+ *
+ * @return string.
+ */
+function et_esc_html_once( $text, $value = '' ) {
+	static $cache = array();
+
+	if ( isset( $cache[ $text ][ $value ] ) ) {
+		return $cache[ $text ][ $value ];
+	}
+
+	$escaped = esc_html( '' === $value ? $text : sprintf( $text, $value ) );
+
+	$cache[ $text ][ $value ] = $escaped;
+	return $escaped;
+}
+
 require_once ET_BUILDER_DIR . 'compat/early.php';
 require_once ET_BUILDER_DIR . 'feature/gutenberg/blocks/Layout.php';
 require_once ET_BUILDER_DIR . 'feature/gutenberg/utils/Conversion.php';
@@ -44,8 +111,8 @@ require_once ET_BUILDER_DIR . 'feature/ErrorReport.php';
 require_once ET_BUILDER_DIR . 'api/DiviExtensions.php';
 require_once ET_BUILDER_DIR . 'api/rest/BlockLayout.php';
 require_once ET_BUILDER_DIR . 'frontend-builder/theme-builder/theme-builder.php';
-require_once ET_BUILDER_DIR . 'feature/custom-defaults/Settings.php';
-require_once ET_BUILDER_DIR . 'feature/custom-defaults/History.php';
+require_once ET_BUILDER_DIR . 'feature/global-presets/Settings.php';
+require_once ET_BUILDER_DIR . 'feature/global-presets/History.php';
 
 // Conditional Includes.
 if ( et_is_woocommerce_plugin_active() ) {
@@ -100,8 +167,8 @@ if ( wp_doing_ajax() && ! is_customize_preview() ) {
 			'et_core_portability_export',
 			'et_core_portability_import',
 			'et_builder_migrate_module_customizer_phase_two',
-			'et_builder_save_custom_defaults_history',
-			'et_builder_retrieve_custom_defaults_history',
+			'et_builder_save_global_presets_history',
+			'et_builder_retrieve_global_presets_history',
 			'et_theme_builder_api_import_theme_builder_step',
 			'et_pb_submit_subscribe_form',
 			'et_builder_get_woocommerce_tabs',
@@ -111,7 +178,7 @@ if ( wp_doing_ajax() && ! is_customize_preview() ) {
 	// AJAX requests that use PHP modules cache for performance reasons.
 	$builder_use_cache_actions = array(
 		'heartbeat',
-		'et_builder_retrieve_custom_defaults_history',
+		'et_builder_retrieve_global_presets_history',
 		'et_fb_get_saved_templates',
 		'et_fb_ajax_save',
 		'et_fb_ajax_drop_autosave',

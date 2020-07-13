@@ -26,6 +26,15 @@ class ET_Builder_Element {
 	public $has_advanced_fields;
 
 	/**
+	 * Cached translations.
+	 *
+	 * @since 4.4.9
+	 *
+	 * @var array[]
+	 */
+	protected static $i18n;
+
+	/**
 	 * See {@see deprecations.php}
 	 *
 	 * @var array[]
@@ -154,6 +163,9 @@ class ET_Builder_Element {
 	// woocommerce module
 	private $_is_woocommerce_module;
 
+	// uses for ligatures disabling at elements with letter-spacing CSS property
+	private $letter_spacing_fix_selectors = array();
+
 	/**
 	 * Holds module styles for the current request.
 	 *
@@ -250,9 +262,9 @@ class ET_Builder_Element {
 	const INDEX_INNER_MODULE_ORDER = 'inner_module_order';
 
 	/**
-	 * @var ET_Builder_Custom_Defaults_Settings
+	 * @var ET_Builder_Global_Presets_Settings
 	 */
-	protected static $custom_defaults_manager = null;
+	protected static $global_presets_manager = null;
 
 	/**
 	 * Flag whether the module is rendering.
@@ -354,8 +366,8 @@ class ET_Builder_Element {
 			self::$_ = self::$data_utils = ET_Core_Data_Utils::instance();
 		}
 
-		if ( null === self::$custom_defaults_manager ) {
-			self::$custom_defaults_manager = ET_Builder_Custom_Defaults_Settings::instance();
+		if ( null === self::$global_presets_manager ) {
+			self::$global_presets_manager = ET_Builder_Global_Presets_Settings::instance();
 		}
 
 		if ( null === self::$option_template ) {
@@ -395,6 +407,11 @@ class ET_Builder_Element {
 
 		// Use module cache compression only when we sure we can also decompress.
 		$use_compression = function_exists( 'gzinflate' ) && function_exists( 'gzdeflate' );
+
+		// Disable compression when debugging.
+		if ( function_exists( 'et_builder_definition_sort' ) ) {
+			$use_compression = false;
+		}
 
 		if ( ! empty( self::$_cache[ $slug ] ) ) {
 			// We got sum cache, let's use it.
@@ -484,7 +501,7 @@ class ET_Builder_Element {
 			// add default toggles
 			$default_general_toggles = array(
 				'admin_label' => array(
-					'title'    => esc_html__( 'Admin Label', 'et_builder' ),
+					'title'    => et_builder_i18n( 'Admin Label' ),
 					'priority' => 99,
 				),
 			);
@@ -494,14 +511,25 @@ class ET_Builder_Element {
 
 		$this->_add_settings_modal_toggles( 'custom_css', array(
 			'visibility' => array(
-				'title'    => esc_html__( 'Visibility', 'et_builder' ),
+				'title'    => et_builder_i18n( 'Visibility' ),
 				'priority' => 99,
 			),
 		) );
 
+
+		$i18n =& self::$i18n;
+
+		if ( ! isset( $i18n['toggles'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['toggles'] = array(
+				'scroll' => esc_html__( 'Scroll Effects', 'et_builder' ),
+			);
+			// phpcs:enable
+		}
+
 		$this->_add_settings_modal_toggles( 'custom_css', array(
 			'scroll_effects' => array(
-				'title'    => esc_html__( 'Scroll Effects', 'et_builder' ),
+				'title'    => $i18n['toggles']['scroll'],
 				'priority' => 200,
 			),
 		) );
@@ -595,7 +623,7 @@ class ET_Builder_Element {
 			if ( 'et_pb_column' !== $this->slug ) {
 				// Adding next tabs (design & tab) helps
 				$next_tabs_help = array(
-					'id'   => esc_html__( '1iqjhnHVA9Y', 'et_builder' ),
+					'id'   => '1iqjhnHVA9Y',
 					'name' => esc_html__( 'Design Settings and Advanced Module Settings', 'et_builder' ),
 				);
 
@@ -613,7 +641,7 @@ class ET_Builder_Element {
 
 				// Adding Divi Library helps
 				$this->help_videos[] = array(
-					'id'   => esc_html( 'boNZZ0MYU0E' ),
+					'id'   => 'boNZZ0MYU0E',
 					'name' => esc_html__( 'Saving and loading from the library', 'et_builder' ),
 				);
 			}
@@ -929,6 +957,12 @@ class ET_Builder_Element {
 		if ( 0 === $post_id && et_core_page_resource_is_singular() ) {
 			// It doesn't matter if post id is 0 because we're going to force inline styles.
 			$post_id = et_core_page_resource_get_the_ID();
+		} else {
+			$queried_object = get_queried_object();
+			if ( is_object( $queried_object ) && property_exists( $queried_object , 'term_id' ) ) {
+				$term_id = $queried_object->term_id;
+				$post_id = ! empty( $term_id ) ? $term_id : $post_id;
+			}
 		}
 
 		$is_preview       = is_preview() || is_et_pb_preview();
@@ -938,7 +972,8 @@ class ET_Builder_Element {
 
 		$resource_owner = $unified_styles ? 'core' : 'builder';
 		$resource_slug  = $unified_styles ? 'unified' : 'module-design';
-		$resource_slug .= $unified_styles && et_builder_post_is_of_custom_post_type( $post_id ) ? '-cpt' : '';
+		$resource_slug .= ! empty( $term_id ) ? '-term' : '';
+		$resource_slug .= empty( $term_id ) && $unified_styles && et_builder_post_is_of_custom_post_type( $post_id ) ? '-cpt' : '';
 		$resource_slug  = et_theme_builder_decorate_page_resource_slug( $post_id, $resource_slug );
 
 		// If the post is password protected and a password has not been provided yet,
@@ -1103,6 +1138,13 @@ class ET_Builder_Element {
 
 		// Add _dynamic_attributes field to all modules.
 		$fields_unprocessed['_dynamic_attributes'] = array( 'type' => 'skip' );
+
+		// Add support for the style presets
+		$fields_unprocessed['_module_preset'] = array( 'type' => 'skip' );
+
+		if ( function_exists( 'et_builder_definition_sort' ) ) {
+			et_builder_definition_sort( $fields_unprocessed );
+		}
 
 		if ( $this->_is_official_module ) {
 			$this->_set_fields_unprocessed( $fields_unprocessed );
@@ -1983,7 +2025,7 @@ class ET_Builder_Element {
 
 		$this->_maybe_rebuild_option_template();
 
-		$attrs = $this->_maybe_add_custom_defaults( $attrs, $render_slug );
+		$attrs = $this->_maybe_add_global_presets_settings( $attrs, $render_slug );
 
 		// Use the current layout or post ID for AB testing. This is not guaranteed to be the real
 		// current post ID if we are rendering a TB layout.
@@ -2183,7 +2225,14 @@ class ET_Builder_Element {
 				$content = et_builder_convert_line_breaks( et_builder_replace_code_content_entities( $content ) );
 			}
 
-			$this->props['content'] = $this->content = ! ( isset( $this->is_structure_element ) && $this->is_structure_element ) ? do_shortcode( et_pb_fix_shortcodes( $content, $this->use_raw_content ) ) : '';
+			if( ! ( isset( $this->is_structure_element ) && $this->is_structure_element ) ) {
+				$content = et_pb_fix_shortcodes( $content, $this->use_raw_content );
+				$content = et_maybe_enable_embed_shortcode( $content, true );
+				$this->content = do_shortcode( $content );
+			} else {
+				$this->content = '';
+			}
+			$this->props['content'] = $this->content;
 		}
 
 		// Restart classname on shortcode callback. Module class is only called once, not on every
@@ -2209,8 +2258,8 @@ class ET_Builder_Element {
 		// JS-based calculation (i.e. .et_pb_column in column inner)
 		if ( $this->slug !== $render_slug ) {
 			$this->add_classname( $this->slug );
-			
-			// Apply classnames added to the module that uses other module's shortcode callback 
+
+			// Apply classnames added to the module that uses other module's shortcode callback
 			// (i.e. `process_additional_options` for the column inner)
 			$module = self::get_module( $render_slug, $this->get_post_type() );
 			$this->add_classname( $module->classname );
@@ -2419,9 +2468,13 @@ class ET_Builder_Element {
 
 			foreach( $disabled_on_array as $value ) {
 				if ( 'on' === $value ) {
+					// Added specific declaration to fix the problem when
+					// Video module is hidden for desktop the fullscreen
+					// won't work on mobile screen size.
+					$declaration = 'et_pb_video' === $render_slug ? 'height: 0; padding: 0; overflow: hidden;' : 'display: none !important;';
 					ET_Builder_Module::set_style( $render_slug, array(
 						'selector'    => '%%order_class%%',
-						'declaration' => 'display: none !important;',
+						'declaration' => $declaration,
 						'media_query' => ET_Builder_Element::get_media_query( $current_media_query ),
 					) );
 				}
@@ -2559,8 +2612,8 @@ class ET_Builder_Element {
 		$must_print_fields = apply_filters( $this->slug . '_must_print_attributes', $must_print_fields );
 		$slug              = isset( $this->global_settings_slug ) ? $this->global_settings_slug : $this->slug;
 
-		$module_slug            = self::$custom_defaults_manager->maybe_convert_module_type( $this->slug, $this->props );
-		$module_custom_defaults = self::$custom_defaults_manager->get_module_custom_defaults( $module_slug );
+		$module_slug            = self::$global_presets_manager->maybe_convert_module_type( $this->slug, $this->props );
+		$module_preset_settings = self::$global_presets_manager->get_module_presets_settings( $module_slug, $this->props );
 
 		foreach ( $fields as $field_key => $field_settings ) {
 			$global_setting_name  = "$slug-$field_key";
@@ -2572,7 +2625,7 @@ class ET_Builder_Element {
 
 			$attr_value = self::$_->array_get( $this->props, $field_key, '' );
 
-			if ( $attr_value && $attr_value === $global_setting_value && ! array_key_exists( $field_key, $module_custom_defaults ) ) {
+			if ( $attr_value && $attr_value === $global_setting_value && ! array_key_exists( $field_key, $module_preset_settings ) ) {
 				$this->props[ $field_key ] = '';
 			}
 		}
@@ -2724,7 +2777,7 @@ class ET_Builder_Element {
 		$unsynced_global_attributes = array();
 		$use_updated_global_sync_method = false;
 		$global_module_id = isset( $atts['global_module'] ) ? $atts['global_module'] : false;
-		$is_specialty_placeholder = isset( $atts['template_type'] ) && 'section' === $atts['template_type'] && isset( $atts['specialty'] ) && 'on' === $atts['specialty'];
+		$is_specialty_placeholder = isset( $atts['template_type'] ) && 'section' === $atts['template_type'] && isset( $atts['specialty'] ) && 'on' === $atts['specialty'] && ( ! $content || '' === trim( $content ) );
 		$is_global_template = false;
 		$real_parent_type = $parent_type;
 
@@ -2865,8 +2918,8 @@ class ET_Builder_Element {
 			}
 		}
 
-		$module_slug = self::$custom_defaults_manager->maybe_convert_module_type( $this->slug, $this->props );
-		$module_custom_defaults = self::$custom_defaults_manager->get_module_custom_defaults( $module_slug );
+		$module_slug = self::$global_presets_manager->maybe_convert_module_type( $this->slug, $this->props );
+		$module_preset_settings = self::$global_presets_manager->get_module_presets_settings( $module_slug, $this->props );
 
 		foreach( $this->props as $shortcode_attr_key => $shortcode_attr_value ) {
 			$value = $shortcode_attr_value;
@@ -2895,10 +2948,10 @@ class ET_Builder_Element {
 				} else {
 					$is_equal_to_default          = isset( $fields[ $shortcode_attr_key ]['default'] ) && $value === $fields[ $shortcode_attr_key ]['default'];
 					$is_equal_to_default_on_front = isset( $fields[ $shortcode_attr_key ]['default_on_front'] ) && $value === $fields[ $shortcode_attr_key ]['default_on_front'];
-					$has_custom_default           = isset( $module_custom_defaults[ $shortcode_attr_key ] );
+					$has_custom_default           = isset( $module_preset_settings[ $shortcode_attr_key ] );
 
 					if ( $has_custom_default && isset( $atts[ $shortcode_attr_key ] ) ) {
-						$is_equal_to_custom_default = $has_custom_default && $atts[ $shortcode_attr_key ] === $module_custom_defaults[ $shortcode_attr_key ];
+						$is_equal_to_custom_default = $has_custom_default && $atts[ $shortcode_attr_key ] === $module_preset_settings[ $shortcode_attr_key ];
 						$value                      = $is_equal_to_custom_default ? '' : $atts[ $shortcode_attr_key ];
 					} else {
 						if ( $is_equal_to_default || $is_equal_to_default_on_front ) {
@@ -2908,7 +2961,9 @@ class ET_Builder_Element {
 				}
 
 			} else {
-				$value = '';
+				if ( $shortcode_attr_key !== '_module_preset' ) {
+					$value = '';
+				}
 			}
 
 			// generic override, disabled=off is an unspoken default
@@ -3180,7 +3235,7 @@ class ET_Builder_Element {
 	}
 
 	/**
-	 * Adds module custom defaults.
+	 * Adds Global Presets settings.
 	 *
 	 * @since 3.26
 	 *
@@ -3189,13 +3244,13 @@ class ET_Builder_Element {
 	 *
 	 * @return array
 	 */
-	protected function _maybe_add_custom_defaults( $attrs, $render_slug ) {
+	protected function _maybe_add_global_presets_settings( $attrs, $render_slug ) {
 		if ( ( et_fb_is_enabled() || et_builder_bfb_enabled() ) && ! self::is_theme_builder_layout() ) {
 			return $attrs;
 		}
 
-		$render_slug            = self::$custom_defaults_manager->maybe_convert_module_type( $render_slug, $attrs );
-		$module_custom_defaults = self::$custom_defaults_manager->get_module_custom_defaults( $render_slug );
+		$render_slug            = self::$global_presets_manager->maybe_convert_module_type( $render_slug, $attrs );
+		$module_preset_settings = self::$global_presets_manager->get_module_presets_settings( $render_slug, $attrs );
 
 		if ( is_array( $attrs ) ) {
 			// We need a special handler for social media child items module background color setting
@@ -3203,8 +3258,8 @@ class ET_Builder_Element {
 			if ( 'et_pb_social_media_follow_network' === $render_slug
 				&& ! empty( $attrs['social_network'] )
 				&& ! empty( $attrs['background_color'] )
-				&& ! empty( $module_custom_defaults['background_color'] )
-				&& $attrs['background_color'] !== $module_custom_defaults['background_color']
+				&& ! empty( $module_preset_settings['background_color'] )
+				&& $attrs['background_color'] !== $module_preset_settings['background_color']
 			) {
 				$background_color_definition = self::$_->array_get( $this->get_fields(), "social_network.options.{$attrs['social_network']}.data.color" );
 
@@ -3214,10 +3269,10 @@ class ET_Builder_Element {
 				}
 			}
 
-			return array_merge( $module_custom_defaults, $attrs );
+			return array_merge( $module_preset_settings, $attrs );
 		}
 
-		return $module_custom_defaults;
+		return $module_preset_settings;
 	}
 
 	/**
@@ -3303,9 +3358,56 @@ class ET_Builder_Element {
 			}
 		}
 
+		if ( function_exists( 'et_builder_definition_sort' ) ) {
+			et_builder_definition_sort( $additional_options );
+		}
+
 		$additional_options = et_pb_responsive_options()->create( $additional_options );
 
 		$this->_set_fields_unprocessed( $additional_options );
+	}
+
+	/**
+	 * Set i18n used by font fields.
+	 *
+	 * @since 4.4.9
+	 *
+	 * @return void
+	 */
+	protected function set_i18n_font() {
+
+		// Cache results so that translation/escaping only happens once.
+		$i18n =& self::$i18n;
+		if ( ! isset( $i18n['font'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['font'] = array(
+				'letter_spacing' => array(
+					'label'       => esc_html__( '%1$s Letter Spacing', 'et_builder' ),
+					'description' => esc_html__( 'Letter spacing adjusts the distance between each letter in the %1$s.', 'et_builder' ),
+				),
+				'size'           => array(
+					'label'       => esc_html__( '%1$s Text Size', 'et_builder' ),
+					'description' => esc_html__( 'Increase or decrease the size of the %1$s text.', 'et_builder' ),
+				),
+				'font'           => array(
+					'label'       => esc_html__( '%1$s Font', 'et_builder' ),
+					'description' => esc_html__( 'Choose a custom font to use for the %1$s. All Google web fonts are available, or you can upload your own custom font files.', 'et_builder' ),
+				),
+				'color'          => array(
+					'label'       => esc_html__( '%1$s Text Color', 'et_builder' ),
+					'description' => esc_html__( 'Pick a color to be used for the %1$s text.', 'et_builder' ),
+				),
+				'line_height'    => array(
+					'label'       => esc_html__( '%1$s Line Height', 'et_builder' ),
+					'description' => esc_html__( 'Line height adjusts the distance between each line of the %1$s text. This becomes noticeable if the %1$s is long and wraps onto multiple lines.', 'et_builder' ),
+				),
+				'text_align'     => array(
+					'label'       => esc_html__( '%1$s Text Alignment', 'et_builder' ),
+					'description' => esc_html__( 'Align the %1$s to the left, right, center or justify.', 'et_builder' ),
+				),
+			);
+			// phpcs:enable
+		}
 	}
 
 	/**
@@ -3344,6 +3446,9 @@ class ET_Builder_Element {
 		$defaults = array(
 			'all_caps' => 'off',
 		);
+
+		$this->set_i18n_font();
+		$i18n =& self::$i18n;
 
 		foreach ( $advanced_font_options as $option_name => $option_settings ) {
 			$advanced_font_options[ $option_name ]['defaults'] = $defaults;
@@ -3414,7 +3519,7 @@ class ET_Builder_Element {
 				// b. Link.
 				$link_element_selector = isset( $block_elements_css['link'] ) ? $block_elements_css['link'] : "{$block_elements_selector} a";
 				$advanced_font_options["{$option_name}_link"] = array_merge( $block_elements_default_settings, array(
-					'label'       => esc_html__( 'Link', 'et_builder' ),
+					'label'       => et_builder_i18n( 'Link' ),
 					'css'         => array(
 						'main' => $link_element_selector,
 					),
@@ -3487,7 +3592,7 @@ class ET_Builder_Element {
 				if ( ! isset( $option_settings['toggle_slug'] ) ) {
 					$font_toggle = array(
 						$option_name => array(
-							'title'    => sprintf( '%1$s %2$s', esc_html( $option_settings['label'] ), esc_html__( 'Text', 'et_builder' ) ),
+							'title'    => sprintf( '%1$s %2$s', esc_html( $option_settings['label'] ), et_builder_i18n( 'Text' ) ),
 							'priority' => 50 + $font_options_count,
 						),
 					);
@@ -3524,8 +3629,8 @@ class ET_Builder_Element {
 
 			if ( ! isset( $option_settings['hide_font'] ) || ! $option_settings['hide_font'] ) {
 				$additional_options["{$option_name}_font"] = wp_parse_args( $option_settings['font'], array(
-					'label'           => sprintf( esc_html__( '%1$s Font', 'et_builder' ), $option_settings['label'] ),
-					'description'     => sprintf( esc_html__( 'Choose a custom font to use for the %1$s. All Google web fonts are available, or you can upload your own custom font files.', 'et_builder' ), $option_settings['label'] ),
+					'label'           => sprintf( $i18n['font']['font']['label'], $option_settings['label'] ),
+					'description'     => sprintf( $i18n['font']['font']['description'], $option_settings['label'] ),
 					'type'            => 'font',
 					'group_label'     => et_core_esc_previously( $option_settings['label'] ),
 					'option_category' => 'font_option',
@@ -3558,8 +3663,8 @@ class ET_Builder_Element {
 
 			if ( ! isset( $option_settings['hide_text_align'] ) || ! $option_settings['hide_text_align'] ) {
 				$additional_options["{$option_name}_text_align"] = wp_parse_args( $option_settings['text_align'], array(
-					'label'            => sprintf( esc_html__( '%1$s Text Alignment', 'et_builder' ), $option_settings['label'] ),
-					'description'      => sprintf( esc_html__( 'Align the %1$s to the left, right, center or justify.', 'et_builder' ), $option_settings['label'] ),
+					'label'            => sprintf( $i18n['font']['text_align']['label'], $option_settings['label'] ),
+					'description'      => sprintf( $i18n['font']['text_align']['description'], $option_settings['label'] ),
 					'type'             => 'text_align',
 					'option_category'  => 'layout',
 					'options'          => et_builder_get_text_orientation_options( array( 'justified' ), array( 'justify' => 'Justified' ) ),
@@ -3579,11 +3684,11 @@ class ET_Builder_Element {
 			if ( ! isset( $option_settings['hide_text_color'] ) || ! $option_settings['hide_text_color'] ) {
 				$label = et_()->array_get( $option_settings, 'text_color.label', false )
 					? $option_settings['text_color']['label']
-					: sprintf( esc_html__( '%1$s Text Color', 'et_builder' ), $option_settings['label'] );
+					: sprintf( $i18n['font']['color']['label'], $option_settings['label'] );
 
 				$additional_options["{$option_name}_text_color"] = array(
 					'label'           => $label,
-					'description'     => sprintf( esc_html__( 'Pick a color to be used for the %1$s text.', 'et_builder' ), $option_settings['label'] ),
+					'description'     => sprintf( $i18n['font']['color']['description'], $option_settings['label'] ),
 					'type'            => 'color-alpha',
 					'option_category' => 'font_option',
 					'custom_color'    => true,
@@ -3617,8 +3722,8 @@ class ET_Builder_Element {
 
 			if ( ! isset( $option_settings['hide_font_size'] ) || ! $option_settings['hide_font_size'] ) {
 				$additional_options["{$option_name}_font_size"] = wp_parse_args( $option_settings['font_size'], array(
-					'label'           => sprintf( esc_html__( '%1$s Text Size', 'et_builder' ), $option_settings['label'] ),
-					'description'     => sprintf( esc_html__( 'Increase or decrease the size of the %1$s text.', 'et_builder' ), $option_settings['label'] ),
+					'label'           => sprintf( $i18n['font']['size']['label'], $option_settings['label'] ),
+					'description'     => sprintf( $i18n['font']['size']['description'], $option_settings['label'] ),
 					'type'            => 'range',
 					'option_category' => 'font_option',
 					'tab_slug'        => $tab_slug,
@@ -3665,8 +3770,8 @@ class ET_Builder_Element {
 
 			if ( ! isset( $option_settings['hide_letter_spacing'] ) || ! $option_settings['hide_letter_spacing'] ) {
 				$additional_options["{$option_name}_letter_spacing"] = wp_parse_args( $option_settings['letter_spacing'], array(
-					'label'           => sprintf( esc_html__( '%1$s Letter Spacing', 'et_builder' ), $option_settings['label'] ),
-					'description'     => sprintf( esc_html__( 'Letter spacing adjusts the distance between each letter in the %1$s.', 'et_builder' ), $option_settings['label'] ),
+					'label'           => sprintf( $i18n['font']['letter_spacing']['label'], $option_settings['label'] ),
+					'description'     => sprintf( $i18n['font']['letter_spacing']['description'], $option_settings['label'] ),
 					'type'            => 'range',
 					'mobile_options'  => true,
 					'option_category' => 'font_option',
@@ -3697,8 +3802,8 @@ class ET_Builder_Element {
 
 			if ( ! isset( $option_settings['hide_line_height'] ) || ! $option_settings['hide_line_height'] ) {
 				$default_option_line_height = array(
-					'label'            => sprintf( esc_html__( '%1$s Line Height', 'et_builder' ), $option_settings['label'] ),
-					'description'      => sprintf( esc_html__( 'Line height adjusts the distance between each line of the %1$s text. This becomes noticeable if the %1$s is long and wraps onto multiple lines.', 'et_builder' ), $option_settings['label'] ),
+					'label'            => sprintf( $i18n['font']['line_height']['label'], $option_settings['label'] ),
+					'description'      => sprintf( $i18n['font']['line_height']['description'], $option_settings['label'] ),
 					'type'             => 'range',
 					'mobile_options'   => true,
 					'option_category'  => 'font_option',
@@ -3825,10 +3930,10 @@ class ET_Builder_Element {
 					'type'             => 'select',
 					'option_category'  => 'configuration',
 					'options'          => array(
-						'disc'   => esc_html__( 'Disc', 'et_builder' ),
-						'circle' => esc_html__( 'Circle', 'et_builder' ),
-						'square' => esc_html__( 'Square', 'et_builder' ),
-						'none'   => esc_html__( 'None', 'et_builder' ),
+						'disc'   => et_builder_i18n( 'Disc' ),
+						'circle' => et_builder_i18n( 'Circle' ),
+						'square' => et_builder_i18n( 'Square' ),
+						'none'   => et_builder_i18n( 'None' ),
 					),
 					'priority'         => 80,
 					'default'          => 'disc',
@@ -3844,8 +3949,8 @@ class ET_Builder_Element {
 					'type'             => 'select',
 					'option_category'  => 'configuration',
 					'options'          => array(
-						'outside' => esc_html__( 'Outside', 'et_builder' ),
-						'inside'  => esc_html__( 'Inside', 'et_builder' ),
+						'outside' => et_builder_i18n( 'Outside' ),
+						'inside'  => et_builder_i18n( 'Inside' ),
 					),
 					'priority'         => 85,
 					'default'          => 'outside',
@@ -3916,8 +4021,8 @@ class ET_Builder_Element {
 					'type'             => 'select',
 					'option_category'  => 'configuration',
 					'options'          => array(
-						'inside'  => esc_html__( 'Inside', 'et_builder' ),
-						'outside' => esc_html__( 'Outside', 'et_builder' ),
+						'inside'  => et_builder_i18n( 'Inside' ),
+						'outside' => et_builder_i18n( 'Outside' ),
 					),
 					'priority'         => 85,
 					'default'          => 'inside',
@@ -4029,7 +4134,7 @@ class ET_Builder_Element {
 
 			$background_toggle = array(
 				'background' => array(
-					'title'    => esc_html__( 'Background', 'et_builder' ),
+					'title'    => et_builder_i18n( 'Background' ),
 					'priority' => 80,
 				),
 			);
@@ -4068,8 +4173,8 @@ class ET_Builder_Element {
 				'type'            => 'yes_no_button',
 				'option_category' => 'color_option',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'affects'        => array(
 					'background_color',
@@ -4156,7 +4261,7 @@ class ET_Builder_Element {
 
 		$this->_add_settings_modal_toggles( $tab_slug, array(
 			$toggle_slug => array(
-				'title'    => esc_html__( 'Text', 'et_builder' ),
+				'title'    => et_builder_i18n( 'Text' ),
 				'priority' => 49,
 			),
 		) );
@@ -4193,8 +4298,8 @@ class ET_Builder_Element {
 				'type'              => 'select',
 				'option_category'   => 'color_option',
 				'options'           => array(
-					'dark'  => esc_html__( 'Light', 'et_builder' ),
-					'light' => esc_html__( 'Dark', 'et_builder' ),
+					'dark'  => et_builder_i18n( 'Light' ),
+					'light' => et_builder_i18n( 'Dark' ),
 				),
 				'tab_slug'          => $tab_slug,
 				'toggle_slug'       => $toggle_slug,
@@ -4258,6 +4363,16 @@ class ET_Builder_Element {
 			return;
 		}
 
+		$i18n =& self::$i18n;
+
+		if ( ! isset( $i18n['border'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['border'] = array(
+				'title' => esc_html__( 'Border', 'et_builder' ),
+			);
+			// phpcs:enable
+		}
+
 		// Loop border settings, enable multiple border fields declaration in one place
 		foreach ( $borders_fields as $border_fields_name => $border_fields ) {
 
@@ -4281,7 +4396,7 @@ class ET_Builder_Element {
 				// Default border fields doesn't have toggle for itself, thus register new toggle
 				$this->_add_settings_modal_toggles( $border_fields['tab_slug'], array(
 					$border_fields['toggle_slug'] => array(
-						'title'    => esc_html__( 'Border', 'et_builder' ),
+						'title'    => $i18n['border']['title'],
 						'priority' => 95,
 					),
 				) );
@@ -4345,6 +4460,16 @@ class ET_Builder_Element {
 	}
 
 	protected function _add_transforms_fields() {
+		$i18n =& self::$i18n;
+
+		if ( ! isset( $i18n['transforms'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['transforms'] = array(
+				'title' => esc_html__( 'Transform', 'et_builder' ),
+			);
+			// phpcs:enable
+		}
+
 		$this->advanced_fields['transform'] = self::$_->array_get( $this->advanced_fields, 'transform', array() );
 
 		// Transforms Disabled
@@ -4358,7 +4483,7 @@ class ET_Builder_Element {
 		}
 
 		$this->settings_modal_toggles['advanced']['toggles']['transform'] = array(
-			'title'    => esc_html__( 'Transform', 'et_builder' ),
+			'title'    => $i18n['transforms']['title'],
 			'priority' => 109,
 		);
 
@@ -4398,7 +4523,7 @@ class ET_Builder_Element {
 				$prefix          = et_builder_add_prefix( $prefix, '' );
 				$tab_slug        = isset( $settings['tab_slug'] ) ? $settings['tab_slug'] : 'advanced';
 				$toggle_slug     = isset( $settings['toggle_slug'] ) ? $settings['toggle_slug'] : 'width';
-				$toggle_title    = isset( $settings['toggle_title'] ) ? $settings['toggle_title'] : esc_html__( 'Sizing', 'et_builder' );
+				$toggle_title    = isset( $settings['toggle_title'] ) ? $settings['toggle_title'] : et_builder_i18n( 'Sizing' );
 				$toggle_priority = isset( $settings['toggle_priority'] ) ? $settings['toggle_priority'] : 80;
 
 				$settings['prefix'] = $prefix;
@@ -4452,66 +4577,117 @@ class ET_Builder_Element {
 	}
 
 	public function get_scroll_effects_options() {
+		// cache translations.
 		$prefix = 'scroll_';
+
+		$i18n =& self::$i18n;
+		if ( ! isset( $i18n['motion'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['motion'] = array(
+				'vertical' => array(
+					'label'            => __( 'Vertical Motion', 'et_builder' ),
+					'description'      => __( 'Give this element vertical motion so that is moves faster or slower than the elements around it as the viewer scrolls through the page.', 'et_builder' ),
+					'startValueTitle'  => __( 'Starting Offset', 'et_builder' ),
+					'middleValueTitle' => __( 'Mid Offset', 'et_builder' ),
+					'endValueTitle'    => __( 'Ending Offset', 'et_builder' ),
+				),
+				'horizontal' => array(
+					'label'            => __( 'Horizontal Motion', 'et_builder' ),
+					'description'      => __( 'Give this element horizontal motion so that it slides left or right as the viewer scrolls through the page.', 'et_builder' ),
+					'startValueTitle'  => __( 'Starting Offset', 'et_builder' ),
+					'middleValueTitle' => __( 'Mid Offset', 'et_builder' ),
+					'endValueTitle'    => __( 'Ending Offset', 'et_builder' ),
+				),
+				'fade' => array(
+					'label'            => __( 'Fading In and Out', 'et_builder' ),
+					'description'      => __( 'Give this element an opacity effect so that it fades in and out as the viewer scrolls through the page.', 'et_builder' ),
+					'startValueTitle'  => __( 'Starting Opacity', 'et_builder' ),
+					'middleValueTitle' => __( 'Mid Opacity', 'et_builder' ),
+					'endValueTitle'    => __( 'Ending Opacity', 'et_builder' ),
+				),
+				'scaling' => array(
+					'label'            => __( 'Scaling Up and Down', 'et_builder' ),
+					'description'      => __( 'Give this element a scale effect so that it grows and shrinks as the viewer scrolls through the page.', 'et_builder' ),
+					'startValueTitle'  => __( 'Starting Scale', 'et_builder' ),
+					'middleValueTitle' => __( 'Mid Scale', 'et_builder' ),
+					'endValueTitle'    => __( 'Ending Scale', 'et_builder' ),
+				),
+				'rotating' => array(
+					'label'            => __( 'Rotating', 'et_builder' ),
+					'description'      => __( 'Give this element rotating motion so that it spins as the viewer scrolls through the page.', 'et_builder' ),
+					'startValueTitle'  => __( 'Starting Rotation', 'et_builder' ),
+					'middleValueTitle' => __( 'Mid Rotation', 'et_builder' ),
+					'endValueTitle'    => __( 'Ending Rotation', 'et_builder' ),
+				),
+				'blur' => array(
+					'label'            => __( 'Blur', 'et_builder' ),
+					'description'      => __( 'Give this element a blur effect so that it moves in and out of focus as the viewer scrolls through the page.', 'et_builder' ),
+					'startValueTitle'  => __( 'Starting Blur', 'et_builder' ),
+					'middleValueTitle' => __( 'Mid Blur', 'et_builder' ),
+					'endValueTitle'    => __( 'Ending Blur', 'et_builder' ),
+				),
+			);
+			// phpcs:enable
+		}
 
 		return array(
 			"${prefix}vertical_motion"   => array(
-				'label'            => __( 'Vertical Motion', 'et_builder' ),
+				'label'            => $i18n['motion']['vertical']['label'],
+				'description'      => $i18n['motion']['vertical']['description'],
+				'startValueTitle'  => $i18n['motion']['vertical']['startValueTitle'],
+				'middleValueTitle' => $i18n['motion']['vertical']['middleValueTitle'],
+				'endValueTitle'    => $i18n['motion']['vertical']['endValueTitle'],
 				'icon'             => 'vertical-motion',
-				'description'      => __( 'Give this element vertical motion so that is moves faster or slower than the elements around it as the viewer scrolls through the page.', 'et_builder' ),
-				'startValueTitle'  => __( 'Starting Offset', 'et_builder' ),
-				'middleValueTitle' => __( 'Mid Offset', 'et_builder' ),
-				'endValueTitle'    => __( 'Ending Offset', 'et_builder' ),
 				'resolver'         => 'translateY',
 				'default'          => '0|50|50|100|4|0|-4',
 			),
 			"{$prefix}horizontal_motion" => array(
-				'label'            => __( 'Horizontal Motion', 'et_builder' ),
+				'label'            => $i18n['motion']['horizontal']['label'],
+				'description'      => $i18n['motion']['horizontal']['description'],
+				'startValueTitle'  => $i18n['motion']['horizontal']['startValueTitle'],
+				'middleValueTitle' => $i18n['motion']['horizontal']['middleValueTitle'],
+				'endValueTitle'    => $i18n['motion']['horizontal']['endValueTitle'],
 				'icon'             => 'horizontal-motion',
-				'description'      => __( 'Give this element horizontal motion so that it slides left or right as the viewer scrolls through the page.', 'et_builder' ),
-				'startValueTitle'  => __( 'Starting Offset', 'et_builder' ),
-				'middleValueTitle' => __( 'Mid Offset', 'et_builder' ),
-				'endValueTitle'    => __( 'Ending Offset', 'et_builder' ),
 				'resolver'         => 'translateX',
 				'default'          => '0|50|50|100|4|0|-4',
 			),
 			"{$prefix}fade"              => array(
-				'label'            => __( 'Fading In and Out', 'et_builder' ),
+				'label'            => $i18n['motion']['fade']['label'],
+				'description'      => $i18n['motion']['fade']['description'],
+				'startValueTitle'  => $i18n['motion']['fade']['startValueTitle'],
+				'middleValueTitle' => $i18n['motion']['fade']['middleValueTitle'],
+				'endValueTitle'    => $i18n['motion']['fade']['endValueTitle'],
 				'icon'             => 'animation-fade',
-				'description'      => __( 'Give this element an opacity effect so that it fades in and out as the viewer scrolls through the page.', 'et_builder' ),
-				'startValueTitle'  => __( 'Starting Opacity', 'et_builder' ),
-				'middleValueTitle' => __( 'Mid Opacity', 'et_builder' ),
-				'endValueTitle'    => __( 'Ending Opacity', 'et_builder' ),
 				'resolver'         => 'opacity',
 				'default'          => '0|50|50|100|0|100|100',
 			),
 			"{$prefix}scaling"           => array(
-				'label'            => __( 'Scaling Up and Down', 'et_builder' ),
+				'label'            => $i18n['motion']['scaling']['label'],
+				'description'      => $i18n['motion']['scaling']['description'],
+				'startValueTitle'  => $i18n['motion']['scaling']['startValueTitle'],
+				'middleValueTitle' => $i18n['motion']['scaling']['middleValueTitle'],
+				'endValueTitle'    => $i18n['motion']['scaling']['endValueTitle'],
 				'icon'             => 'resize',
-				'description'      => __( 'Give this element a scale effect so that it grows and shrinks as the viewer scrolls through the page.', 'et_builder' ),
-				'startValueTitle'  => __( 'Starting Scale', 'et_builder' ),
-				'middleValueTitle' => __( 'Mid Scale', 'et_builder' ),
-				'endValueTitle'    => __( 'Ending Scale', 'et_builder' ),
 				'resolver'         => 'scale',
 				'default'          => '0|50|50|100|70|100|100',
 			),
 			"{$prefix}rotating"          => array(
-				'label'            => __( 'Rotating', 'et_builder' ),
+				'label'            => $i18n['motion']['rotating']['label'],
+				'description'      => $i18n['motion']['rotating']['description'],
+				'startValueTitle'  => $i18n['motion']['rotating']['startValueTitle'],
+				'middleValueTitle' => $i18n['motion']['rotating']['middleValueTitle'],
+				'endValueTitle'    => $i18n['motion']['rotating']['endValueTitle'],
 				'icon'             => 'rotate',
-				'description'      => __( 'Give this element rotating motion so that it spins as the viewer scrolls through the page.', 'et_builder' ),
-				'startValueTitle'  => __( 'Starting Rotation', 'et_builder' ),
-				'middleValueTitle' => __( 'Mid Rotation', 'et_builder' ),
-				'endValueTitle'    => __( 'Ending Rotation', 'et_builder' ),
 				'resolver'         => 'rotate',
 				'default'          => '0|50|50|100|90|0|0',
 			),
 			"{$prefix}blur"              => array(
-				'label'            => __( 'Blur', 'et_builder' ),
+				'label'            => $i18n['motion']['blur']['label'],
+				'description'      => $i18n['motion']['blur']['description'],
+				'startValueTitle'  => $i18n['motion']['blur']['startValueTitle'],
+				'middleValueTitle' => $i18n['motion']['blur']['middleValueTitle'],
+				'endValueTitle'    => $i18n['motion']['blur']['endValueTitle'],
 				'icon'             => 'blur',
-				'description'      => __( 'Give this element a blur effect so that it moves in and out of focus as the viewer scrolls through the page.', 'et_builder' ),
-				'startValueTitle'  => __( 'Starting Blur', 'et_builder' ),
-				'middleValueTitle' => __( 'Mid Blur', 'et_builder' ),
-				'endValueTitle'    => __( 'Ending Blur', 'et_builder' ),
 				'resolver'         => 'blur',
 				'default'          => '0|40|60|100|10|0|0',
 			),
@@ -4563,10 +4739,30 @@ class ET_Builder_Element {
 		$toggle_disabled = isset( $this->advanced_fields['margin_padding']['disable_toggle'] ) && $this->advanced_fields['margin_padding']['disable_toggle'];
 		$toggle_slug = isset( $this->advanced_fields['margin_padding']['toggle_slug'] ) ? $this->advanced_fields['margin_padding']['toggle_slug'] : 'margin_padding';
 
+		$i18n =& self::$i18n;
+
+		if ( ! isset( $i18n['margin'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['margin'] = array(
+				'toggle'  => array(
+					'title' => esc_html__( 'Spacing', 'et_builder' ),
+				),
+				'margin'  => array(
+					'label'       => esc_html__( 'Margin', 'et_builder' ),
+					'description' => esc_html__( 'Margin adds extra space to the outside of the element, increasing the distance between the element and other items on the page.', 'et_builder' ),
+				),
+				'padding' => array(
+					'label'       => esc_html__( 'Padding', 'et_builder' ),
+					'description' => esc_html__( 'Padding adds extra space to the inside of the element, increasing the distance between the edge of the element and its inner contents.', 'et_builder' ),
+				),
+			);
+			// phpcs:enable
+		}
+
 		if ( ! $toggle_disabled ) {
 			$margin_toggle = array(
 				$toggle_slug => array(
-					'title'    => esc_html__( 'Spacing', 'et_builder' ),
+					'title'    => $i18n['margin']['toggle']['title'],
 					'priority' => 90,
 				),
 			);
@@ -4576,8 +4772,8 @@ class ET_Builder_Element {
 
 		if ( $this->advanced_fields['margin_padding']['use_margin'] ) {
 			$additional_options['custom_margin'] = array(
-				'label'           => esc_html__( 'Margin', 'et_builder' ),
-				'description'     => esc_html__( 'Margin adds extra space to the outside of the element, increasing the distance between the element and other items on the page.', 'et_builder' ),
+				'label'           => $i18n['margin']['margin']['label'],
+				'description'     => $i18n['margin']['margin']['description'],
 				'type'            => 'custom_margin',
 				'mobile_options'  => true,
 				'option_category' => 'layout',
@@ -4634,8 +4830,8 @@ class ET_Builder_Element {
 
 		if ( $this->advanced_fields['margin_padding']['use_padding'] ) {
 			$additional_options['custom_padding'] = array(
-				'label'           => esc_html__( 'Padding', 'et_builder' ),
-				'description'     => esc_html__( 'Padding adds extra space to the inside of the element, increasing the distance between the edge of the element and its inner contents.', 'et_builder' ),
+				'label'           => $i18n['margin']['padding']['label'],
+				'description'     => $i18n['margin']['padding']['description'],
 				'type'            => 'custom_padding',
 				'mobile_options'  => true,
 				'option_category' => 'layout',
@@ -4688,6 +4884,9 @@ class ET_Builder_Element {
 			return;
 		}
 
+		$this->set_i18n_font();
+		$i18n =& self::$i18n;
+
 		// Auto-add attributes toggle
 		$toggles_custom_css_tab = isset( $this->settings_modal_toggles['custom_css'] ) ? $this->settings_modal_toggles['custom_css'] : array();
 		if ( ! isset( $toggles_custom_css_tab['toggles'] ) || ! isset( $toggles_custom_css_tab['toggles']['attributes'] ) ) {
@@ -4730,8 +4929,8 @@ class ET_Builder_Element {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'button',
 				'options'           => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'affects'           => array(
 					"{$option_name}_text_color",
@@ -4758,7 +4957,7 @@ class ET_Builder_Element {
 			);
 
 			$additional_options["{$option_name}_text_size"] = array(
-				'label'           => sprintf( esc_html__( '%1$s Text Size', 'et_builder' ), $option_settings['label'] ),
+				'label'           => sprintf( $i18n['font']['size']['label'], $option_settings['label'] ),
 				'description'     => esc_html__( 'Increase or decrease the size of the button text.', 'et_builder' ),
 				'type'            => 'range',
 				'range_settings'  => array(
@@ -4778,7 +4977,7 @@ class ET_Builder_Element {
 			);
 
 			$additional_options["{$option_name}_text_color"] = array(
-				'label'             => sprintf( esc_html__( '%1$s Text Color', 'et_builder' ), $option_settings['label'] ),
+				'label'             => sprintf( $i18n['font']['color']['label'], $option_settings['label'] ),
 				'description'       => esc_html__( 'Pick a color to be used for the button text.', 'et_builder' ),
 				'type'              => 'color-alpha',
 				'option_category'   => 'button',
@@ -4860,7 +5059,7 @@ class ET_Builder_Element {
 			);
 
 			$additional_options["{$option_name}_letter_spacing"] = array(
-				'label'             => sprintf( esc_html__( '%1$s Letter Spacing', 'et_builder' ), $option_settings['label'] ),
+				'label'             => sprintf( $i18n['font']['letter_spacing']['label'], $option_settings['label'] ),
 				'description'       => esc_html__( 'Letter spacing adjusts the distance between each letter in the button.', 'et_builder' ),
 				'type'              => 'range',
 				'option_category'   => 'button',
@@ -4875,7 +5074,7 @@ class ET_Builder_Element {
 			);
 
 			$additional_options["{$option_name}_font"] = array(
-				'label'           => sprintf( esc_html__( '%1$s Font', 'et_builder' ), $option_settings['label'] ),
+				'label'           => sprintf( $i18n['font']['font']['label'], $option_settings['label'] ),
 				'description'     => esc_html__( 'Choose a custom font to use for the button. All Google web fonts are available, or you can upload your own custom font files.', 'et_builder' ),
 				'group_label'     => esc_html__( $option_settings['label'] ),
 				'type'            => 'font',
@@ -4896,8 +5095,8 @@ class ET_Builder_Element {
 					'option_category' => 'button',
 					'default'         => 'on',
 					'options'         => array(
-						'on'      => esc_html__( 'Yes', 'et_builder' ),
-						'off'     => esc_html__( 'No', 'et_builder' ),
+						'on'      => et_builder_i18n( 'Yes' ),
+						'off'     => et_builder_i18n( 'No' ),
 					),
 					'affects'         => array(
 						"{$option_name}_icon_color",
@@ -4943,8 +5142,8 @@ class ET_Builder_Element {
 					'type'                => 'select',
 					'option_category'     => 'button',
 					'options'             => array(
-						'right' => esc_html__( 'Right', 'et_builder' ),
-						'left'  => esc_html__( 'Left', 'et_builder' ),
+						'right' => et_builder_i18n( 'Right' ),
+						'left'  => et_builder_i18n( 'Left' ),
 					),
 					'default'             => 'right',
 					'tab_slug'            => $tab_slug,
@@ -4960,8 +5159,8 @@ class ET_Builder_Element {
 					'option_category'     => 'button',
 					'default'             => 'on',
 					'options'             => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'tab_slug'            => $tab_slug,
 					'toggle_slug'         => $toggle_slug,
@@ -5073,6 +5272,7 @@ class ET_Builder_Element {
 	 *           to the bottom of animation settings.
 	 */
 	protected function _add_animation_fields() {
+
 		// Animation fields are added by default on all module
 		$this->advanced_fields['animation'] = self::$_->array_get( $this->advanced_fields, 'animation', array() );
 
@@ -5088,8 +5288,69 @@ class ET_Builder_Element {
 			return;
 		}
 
+		// Cache results so that translation/escaping only happens once.
+		$i18n =& self::$i18n;
+		if ( ! isset( $i18n['animation'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['animation'] = array(
+				'toggle'    => array(
+					'title' => esc_html__( 'Animation', 'et_builder' ),
+				),
+				'style'     => array(
+					'label'       => esc_html__( 'Animation Style', 'et_builder' ),
+					'description' => esc_html__( 'Pick an animation style to enable animations for this element. Once enabled, you will be able to customize your animation style further. To disable animations, choose the None option.', 'et_builder' ),
+					'options'     => array(
+						'fade'   => et_builder_i18n( 'Fade' ),
+						'slide'  => et_builder_i18n( 'Slide' ),
+						'bounce' => esc_html__( 'Bounce', 'et_builder' ),
+						'zoom'   => esc_html__( 'Zoom', 'et_builder' ),
+						'flip'   => et_builder_i18n( 'Flip' ),
+						'fold'   => esc_html__( 'Fold', 'et_builder' ),
+						'roll'   => esc_html__( 'Roll', 'et_builder' ),
+					),
+				),
+				'direction' => array(
+					'label'       => esc_html__( 'Animation Direction', 'et_builder' ),
+					'description' => esc_html__( 'Pick from up to five different animation directions, each of which will adjust the starting and ending position of your animated element.', 'et_builder' ),
+				),
+				'duration'  => array(
+					'label'       => esc_html__( 'Animation Duration', 'et_builder' ),
+					'description' => esc_html__( 'Speed up or slow down your animation by adjusting the animation duration. Units are in milliseconds and the default animation duration is one second.', 'et_builder' ),
+				),
+				'delay'     => array(
+					'label'       => esc_html__( 'Animation Delay', 'et_builder' ),
+					'description' => esc_html__( 'If you would like to add a delay before your animation runs you can designate that delay here in milliseconds. This can be useful when using multiple animated modules together.', 'et_builder' ),
+				),
+				'opacity'   => array(
+					'label'       => esc_html__( 'Animation Starting Opacity', 'et_builder' ),
+					'description' => esc_html__( 'By increasing the starting opacity, you can reduce or remove the fade effect that is applied to all animation styles.', 'et_builder' ),
+				),
+				'speed'     => array(
+					'label'       => esc_html__( 'Animation Speed Curve', 'et_builder' ),
+					'description' => esc_html__( 'Here you can adjust the easing method of your animation. Easing your animation in and out will create a smoother effect when compared to a linear speed curve.', 'et_builder' ),
+				),
+				'repeat'    => array(
+					'label'       => esc_html__( 'Animation Repeat', 'et_builder' ),
+					'description' => esc_html__( 'By default, animations will only play once. If you would like to loop your animation continuously you can choose the Loop option here.', 'et_builder' ),
+					'options'     => array(
+						'once' => esc_html__( 'Once', 'et_builder' ),
+						'loop' => esc_html__( 'Loop', 'et_builder' ),
+					),
+				),
+				'menu'      => array(
+					'label'       => esc_html__( 'Dropdown Menu Animation', 'et_builder' ),
+					'description' => esc_html__( 'Select an animation to be used when dropdown menus appear. Dropdown menus appear when hovering over links with sub items.', 'et_builder' ),
+				),
+				'intensity' => array(
+					'label'       => esc_html__( 'Animation Intensity', 'et_builder' ),
+					'description' => esc_html__( 'Intensity effects how subtle or aggressive your animation will be. Lowering the intensity will create a smoother and more subtle animation while increasing the intensity will create a snappier more aggressive animation.', 'et_builder' ),
+				),
+			);
+			// phpcs:enable
+		}
+
 		$this->settings_modal_toggles['advanced']['toggles']['animation'] = array(
-			'title'    => esc_html__( 'Animation', 'et_builder' ),
+			'title'    => $i18n['animation']['toggle']['title'],
 			'priority' => 110,
 		);
 
@@ -5103,20 +5364,20 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['animation_style'] = array(
-			'label'           => esc_html__( 'Animation Style', 'et_builder' ),
+			'label'           => $i18n['animation']['style']['label'],
+			'description'     => $i18n['animation']['style']['description'],
 			'type'            => 'select_animation',
 			'option_category' => 'configuration',
 			'default'         => 'none',
-			'description'     => esc_html__( 'Pick an animation style to enable animations for this element. Once enabled, you will be able to customize your animation style further. To disable animations, choose the None option.', 'et_builder' ),
 			'options'         => array(
-				'none'   => esc_html__( 'None', 'et_builder' ),
-				'fade'   => esc_html__( 'Fade', 'et_builder' ),
-				'slide'  => esc_html__( 'Slide', 'et_builder' ),
-				'bounce' => esc_html__( 'Bounce', 'et_builder' ),
-				'zoom'   => esc_html__( 'Zoom', 'et_builder' ),
-				'flip'   => esc_html__( 'Flip', 'et_builder' ),
-				'fold'   => esc_html__( 'Fold', 'et_builder' ),
-				'roll'   => esc_html__( 'Roll', 'et_builder' ),
+				'none'   => et_builder_i18n( 'None' ),
+				'fade'   => $i18n['animation']['style']['options']['fade'],
+				'slide'  => $i18n['animation']['style']['options']['slide'],
+				'bounce' => $i18n['animation']['style']['options']['bounce'],
+				'zoom'   => $i18n['animation']['style']['options']['zoom'],
+				'flip'   => $i18n['animation']['style']['options']['flip'],
+				'fold'   => $i18n['animation']['style']['options']['fold'],
+				'roll'   => $i18n['animation']['style']['options']['roll'],
 			),
 			'tab_slug'    => 'advanced',
 			'toggle_slug' => 'animation',
@@ -5131,17 +5392,17 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['animation_direction'] = array(
-			'label'           => esc_html__( 'Animation Direction', 'et_builder' ),
+			'label'           => $i18n['animation']['direction']['label'],
+			'description'     => $i18n['animation']['direction']['description'],
 			'type'            => 'select',
 			'option_category' => 'configuration',
 			'default'         => 'center',
-			'description'     => esc_html__( 'Pick from up to five different animation directions, each of which will adjust the starting and ending position of your animated element.', 'et_builder' ),
 			'options'         => array(
-				'center' => esc_html__( 'Center', 'et_builder' ),
-				'left'   => esc_html__( 'Right', 'et_builder' ),
-				'right'  => esc_html__( 'Left', 'et_builder' ),
-				'bottom' => esc_html__( 'Up', 'et_builder' ),
-				'top'    => esc_html__( 'Down', 'et_builder' ),
+				'center' => et_builder_i18n( 'Center' ),
+				'left'   => et_builder_i18n( 'Right' ),
+				'right'  => et_builder_i18n( 'Left' ),
+				'bottom' => et_builder_i18n( 'Up' ),
+				'top'    => et_builder_i18n( 'Down' ),
 			),
 			'tab_slug'            => 'advanced',
 			'toggle_slug'         => 'animation',
@@ -5150,7 +5411,8 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['animation_duration'] = array(
-			'label'             => esc_html__( 'Animation Duration', 'et_builder' ),
+			'label'             => $i18n['animation']['duration']['label'],
+			'description'       => $i18n['animation']['duration']['description'],
 			'type'              => 'range',
 			'option_category'   => 'configuration',
 			'range_settings'    => array(
@@ -5159,7 +5421,6 @@ class ET_Builder_Element {
 				'step' => 50,
 			),
 			'default'             => '1000ms',
-			'description'         => esc_html__( 'Speed up or slow down your animation by adjusting the animation duration. Units are in milliseconds and the default animation duration is one second.', 'et_builder' ),
 			'validate_unit'       => true,
 			'fixed_unit'          => 'ms',
 			'fixed_range'         => true,
@@ -5171,7 +5432,8 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['animation_delay'] = array(
-			'label'           => esc_html__( 'Animation Delay', 'et_builder' ),
+			'label'           => $i18n['animation']['delay']['label'],
+			'description'     => $i18n['animation']['delay']['description'],
 			'type'            => 'range',
 			'option_category' => 'configuration',
 			'range_settings'  => array(
@@ -5180,7 +5442,6 @@ class ET_Builder_Element {
 				'step' => 50,
 			),
 			'default'             => '0ms',
-			'description'         => esc_html__( 'If you would like to add a delay before your animation runs you can designate that delay here in milliseconds. This can be useful when using multiple animated modules together.', 'et_builder' ),
 			'validate_unit'       => true,
 			'fixed_unit'          => 'ms',
 			'fixed_range'         => true,
@@ -5195,7 +5456,8 @@ class ET_Builder_Element {
 			$animation_style = str_replace( 'animation_intensity_', '', $animations_intensity_field );
 
 			$additional_options[ $animations_intensity_field ] = array(
-				'label'           => esc_html__( 'Animation Intensity', 'et_builder' ),
+				'label'           => $i18n['animation']['intensity']['label'],
+				'description'     => $i18n['animation']['intensity']['description'],
 				'type'            => 'range',
 				'option_category' => 'configuration',
 				'range_settings'  => array(
@@ -5204,7 +5466,6 @@ class ET_Builder_Element {
 					'step' => 1,
 				),
 				'default'         => '50%',
-				'description'     => esc_html__( 'Intensity effects how subtle or aggressive your animation will be. Lowering the intensity will create a smoother and more subtle animation while increasing the intensity will create a snappier more aggressive animation.', 'et_builder' ),
 				'validate_unit'   => true,
 				'fixed_unit'      => '%',
 				'fixed_range'     => true,
@@ -5217,7 +5478,8 @@ class ET_Builder_Element {
 		}
 
 		$additional_options['animation_starting_opacity'] = array(
-			'label'           => esc_html__( 'Animation Starting Opacity', 'et_builder' ),
+			'label'           => $i18n['animation']['opacity']['label'],
+			'description'     => $i18n['animation']['opacity']['description'],
 			'type'            => 'range',
 			'option_category' => 'configuration',
 			'range_settings'  => array(
@@ -5228,7 +5490,6 @@ class ET_Builder_Element {
 				'max_limit' => 100,
 			),
 			'default'             => '0%',
-			'description'         => esc_html__( 'By increasing the starting opacity, you can reduce or remove the fade effect that is applied to all animation styles.', 'et_builder' ),
 			'validate_unit'       => true,
 			'fixed_unit'          => '%',
 			'fixed_range'         => true,
@@ -5240,17 +5501,17 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['animation_speed_curve'] = array(
-			'label'             => esc_html__( 'Animation Speed Curve', 'et_builder' ),
+			'label'             => $i18n['animation']['speed']['label'],
+			'description'       => $i18n['animation']['speed']['description'],
 			'type'              => 'select',
 			'option_category'   => 'configuration',
 			'default'           => 'ease-in-out',
-			'description'       => esc_html__( 'Here you can adjust the easing method of your animation. Easing your animation in and out will create a smoother effect when compared to a linear speed curve.', 'et_builder' ),
 			'options'         => array(
-				'ease-in-out' => esc_html__( 'Ease-In-Out', 'et_builder' ),
-				'ease'        => esc_html__( 'Ease', 'et_builder' ),
-				'ease-in'     => esc_html__( 'Ease-In', 'et_builder' ),
-				'ease-out'    => esc_html__( 'Ease-Out', 'et_builder' ),
-				'linear'      => esc_html__( 'Linear', 'et_builder' ),
+				'ease-in-out' => et_builder_i18n( 'Ease-In-Out' ),
+				'ease'        => et_builder_i18n( 'Ease' ),
+				'ease-in'     => et_builder_i18n( 'Ease-In' ),
+				'ease-out'    => et_builder_i18n( 'Ease-Out' ),
+				'linear'      => et_builder_i18n( 'Linear' ),
 			),
 			'tab_slug'            => 'advanced',
 			'toggle_slug'         => 'animation',
@@ -5259,14 +5520,14 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['animation_repeat'] = array(
-			'label'               => esc_html__( 'Animation Repeat', 'et_builder' ),
+			'label'               => $i18n['animation']['repeat']['label'],
+			'description'         => $i18n['animation']['repeat']['description'],
 			'type'                => 'select',
 			'option_category'     => 'configuration',
 			'default'             => 'once',
-			'description'         => esc_html__( 'By default, animations will only play once. If you would like to loop your animation continuously you can choose the Loop option here.', 'et_builder' ),
 			'options'             => array(
-				'once' => esc_html__( 'Once', 'et_builder' ),
-				'loop' => esc_html__( 'Loop', 'et_builder' ),
+				'once' => $i18n['animation']['repeat']['options']['once'],
+				'loop' => $i18n['animation']['repeat']['options']['loop'],
 			),
 			'tab_slug'            => 'advanced',
 			'toggle_slug'         => 'animation',
@@ -5276,15 +5537,15 @@ class ET_Builder_Element {
 
 		if ( isset( $this->slug ) && in_array( $this->slug, array( 'et_pb_menu', 'et_pb_fullwidth_menu' ), true ) ) {
 			$additional_options['dropdown_menu_animation'] = array(
-				'label'           => esc_html__( 'Dropdown Menu Animation', 'et_builder' ),
-				'description'     => esc_html__( 'Select an animation to be used when dropdown menus appear. Dropdown menus appear when hovering over links with sub items.', 'et_builder' ),
+				'label'           => $i18n['animation']['menu']['label'],
+				'description'     => $i18n['animation']['menu']['description'],
 				'type'            => 'select',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'fade'   => esc_html__( 'Fade', 'et_builder' ),
-					'expand' => esc_html__( 'Expand', 'et_builder' ),
-					'slide'  => esc_html__( 'Slide', 'et_builder' ),
-					'flip'   => esc_html__( 'Flip', 'et_builder' ),
+					'fade'   => et_builder_i18n( 'Fade' ),
+					'expand' => et_builder_i18n( 'Expand' ),
+					'slide'  => et_builder_i18n( 'Slide' ),
+					'flip'   => et_builder_i18n( 'Flip' ),
 				),
 				'tab_slug'     => 'advanced',
 				'toggle_slug'  => 'animation',
@@ -5296,11 +5557,12 @@ class ET_Builder_Element {
 		if ( isset( $this->slug ) && 'et_pb_fullwidth_portfolio' === $this->slug ) {
 			$additional_options['auto'] = array(
 				'label'           => esc_html__( 'Automatic Carousel Rotation', 'et_builder' ),
+				'description'     => esc_html__( 'If you the carousel layout option is chosen and you would like the carousel to slide automatically, without the visitor having to click the next button, enable this option and then adjust the rotation speed below if desired.', 'et_builder' ),
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'affects' => array(
 					'auto_speed',
@@ -5308,7 +5570,6 @@ class ET_Builder_Element {
 				'depends_show_if' => 'on',
 				'tab_slug'        => 'advanced',
 				'toggle_slug'     => 'animation',
-				'description'     => esc_html__( 'If you the carousel layout option is chosen and you would like the carousel to slide automatically, without the visitor having to click the next button, enable this option and then adjust the rotation speed below if desired.', 'et_builder' ),
 				'default'         => 'off',
 			);
 
@@ -5330,8 +5591,8 @@ class ET_Builder_Element {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'affects' => array(
 					'auto_speed',
@@ -5360,8 +5621,8 @@ class ET_Builder_Element {
 				'option_category' => 'configuration',
 				'depends_show_if' => 'on',
 				'options' => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'tab_slug'    => 'advanced',
 				'toggle_slug' => 'animation',
@@ -5376,8 +5637,8 @@ class ET_Builder_Element {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'affects' => array(
 					'auto_speed',
@@ -5406,8 +5667,8 @@ class ET_Builder_Element {
 				'option_category' => 'configuration',
 				'depends_show_if' => 'on',
 				'options'         => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'tab_slug'    => 'advanced',
 				'toggle_slug' => 'animation',
@@ -5422,8 +5683,8 @@ class ET_Builder_Element {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'affects' => array(
 					'auto_speed',
@@ -5476,8 +5737,8 @@ class ET_Builder_Element {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'affects' => array(
 					'auto_speed',
@@ -5506,8 +5767,8 @@ class ET_Builder_Element {
 				'option_category' => 'configuration',
 				'depends_show_if' => 'on',
 				'options'         => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'tab_slug'    => 'advanced',
 				'toggle_slug' => 'animation',
@@ -5522,8 +5783,8 @@ class ET_Builder_Element {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'affects' => array(
 					'auto_speed',
@@ -5552,8 +5813,8 @@ class ET_Builder_Element {
 				'option_category' => 'configuration',
 				'depends_show_if' => 'on',
 				'options'         => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'tab_slug'    => 'advanced',
 				'toggle_slug' => 'animation',
@@ -5586,15 +5847,41 @@ class ET_Builder_Element {
 	}
 
 	private function _add_additional_transition_fields() {
+
+		$i18n =& self::$i18n;
+
+		if ( ! isset( $i18n['transition'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['transition'] = array(
+				'toggle'   => array(
+					'title' => esc_html__( 'Transitions', 'et_builder' ),
+				),
+				'duration' => array(
+					'label'       => esc_html__( 'Transition Duration', 'et_builder' ),
+					'description' => esc_html__( 'This controls the transition duration of the hover animation.', 'et_builder' ),
+				),
+				'delay'    => array(
+					'label'       => esc_html__( 'Transition Delay', 'et_builder' ),
+					'description' => esc_html__( 'This controls the transition delay of the hover animation.', 'et_builder' ),
+				),
+				'curve'    => array(
+					'label'       => esc_html__( 'Transition Speed Curve', 'et_builder' ),
+					'description' => esc_html__( 'This controls the transition speed curve of the hover animation.', 'et_builder' ),
+				),
+			);
+			// phpcs:enable
+		}
+
 		$this->settings_modal_toggles['custom_css']['toggles']['hover_transitions'] = array(
-			'title'    => esc_html__( 'Transitions', 'et_builder' ),
+			'title'    => $i18n['transition']['toggle']['title'],
 			'priority' => 120,
 		);
 
 		$additional_options = array();
 
 		$additional_options['hover_transition_duration'] = array(
-			'label'            => esc_html__( 'Transition Duration', 'et_builder' ),
+			'label'            => $i18n['transition']['duration']['label'],
+			'description'      => $i18n['transition']['duration']['description'],
 			'type'             => 'range',
 			'option_category'  => 'layout',
 			'range_settings'   => array(
@@ -5610,12 +5897,12 @@ class ET_Builder_Element {
 			'tab_slug'         => 'custom_css',
 			'toggle_slug'      => 'hover_transitions',
 			'depends_default'  => null,
-			'description'      => esc_html__( 'This controls the transition duration of the hover animation.', 'et_builder' ),
 			'mobile_options'   => true,
 		);
 
 		$additional_options['hover_transition_delay'] = array(
-			'label'            => esc_html__( 'Transition Delay', 'et_builder' ),
+			'label'            => $i18n['transition']['delay']['label'],
+			'description'      => $i18n['transition']['delay']['description'],
 			'type'             => 'range',
 			'option_category'  => 'layout',
 			'range_settings'   => array(
@@ -5631,23 +5918,22 @@ class ET_Builder_Element {
 			'tab_slug'         => 'custom_css',
 			'toggle_slug'      => 'hover_transitions',
 			'depends_default'  => null,
-			'description'      => esc_html__( 'This controls the transition delay of the hover animation.', 'et_builder' ),
 			'mobile_options'   => true,
 		);
 
 		$additional_options['hover_transition_speed_curve'] = array(
-			'label'            => esc_html__( 'Transition Speed Curve', 'et_builder' ),
+			'label'            => $i18n['transition']['curve']['label'],
+			'description'      => $i18n['transition']['curve']['description'],
 			'type'             => 'select',
 			'option_category'  => 'layout',
 			'default'          => 'ease',
 			'default_on_child' => true,
-			'description'      => esc_html__( 'This controls the transition speed curve of the hover animation.', 'et_builder' ),
 			'options'          => array(
-				'ease-in-out' => esc_html__( 'Ease-In-Out', 'et_builder' ),
-				'ease'        => esc_html__( 'Ease', 'et_builder' ),
-				'ease-in'     => esc_html__( 'Ease-In', 'et_builder' ),
-				'ease-out'    => esc_html__( 'Ease-Out', 'et_builder' ),
-				'linear'      => esc_html__( 'Linear', 'et_builder' ),
+				'ease-in-out' => et_builder_i18n( 'Ease-In-Out' ),
+				'ease'        => et_builder_i18n( 'Ease' ),
+				'ease-in'     => et_builder_i18n( 'Ease-In' ),
+				'ease-out'    => et_builder_i18n( 'Ease-Out' ),
+				'linear'      => et_builder_i18n( 'Linear' ),
 			),
 			'tab_slug'         => 'custom_css',
 			'toggle_slug'      => 'hover_transitions',
@@ -5678,7 +5964,7 @@ class ET_Builder_Element {
 		}
 
 		$this->settings_modal_toggles[ $class::TAB_SLUG ]['toggles'][ $class::TOGGLE_SLUG ] = array(
-			'title'    => esc_html__( 'Position', 'et_builder' ),
+			'title'    => et_builder_i18n( 'Position' ),
 			'priority' => 190,
 		);
 
@@ -5722,10 +6008,55 @@ class ET_Builder_Element {
 			return;
 		}
 
+		$i18n =& self::$i18n;
+
+		if ( ! isset( $i18n['filter'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['filter'] = array(
+				'toggle'     => array(
+					'title' => esc_html__( 'Filters', 'et_builder' ),
+				),
+				'hue'        => array(
+					'description' => esc_html__( 'Shift all colors by this amount.', 'et_builder' ),
+				),
+				'saturate'   => array(
+					'description' => esc_html__( 'Define how intense the color saturation should be.', 'et_builder' ),
+				),
+				'brightness' => array(
+					'label'       => esc_html__( 'Brightness', 'et_builder' ),
+					'description' => esc_html__( 'Define how bright the colors should be.', 'et_builder' ),
+				),
+				'contrast'   => array(
+					'label'       => esc_html__( 'Contrast', 'et_builder' ),
+					'description' => esc_html__( 'Define how distinct bright and dark areas should be.', 'et_builder' ),
+				),
+				'invert'     => array(
+					'label'       => esc_html__( 'Invert', 'et_builder' ),
+					'description' => esc_html__( 'Invert the hue, saturation, and brightness by this amount.', 'et_builder' ),
+				),
+				'sepia'      => array(
+					'label'       => esc_html__( 'Sepia', 'et_builder' ),
+					'description' => esc_html__( 'Travel back in time by this amount.', 'et_builder' ),
+				),
+				'opacity'    => array(
+					'label'       => esc_html__( 'Opacity', 'et_builder' ),
+					'description' => esc_html__( 'Define how transparent or opaque this should be.', 'et_builder' ),
+				),
+				'blur'       => array(
+					'description' => esc_html__( 'Blur by this amount.', 'et_builder' ),
+				),
+				'blend'      => array(
+					'label'       => esc_html__( 'Blend Mode', 'et_builder' ),
+					'description' => esc_html__( 'Modify how this element blends with any layers beneath it. To reset, choose the "Normal" option.', 'et_builder' ),
+				),
+			);
+			// phpcs:enable
+		}
+
 		$filter_settings = self::$_->array_get( $this->advanced_fields, 'filters' );
 		$tab_slug        = self::$_->array_get( $filter_settings, 'tab_slug', 'advanced' );
 		$toggle_slug     = self::$_->array_get( $filter_settings, 'toggle_slug','filters' );
-		$toggle_name     = self::$_->array_get( $filter_settings, 'toggle_name', esc_html__( 'Filters', 'et_builder' ) );
+		$toggle_name     = self::$_->array_get( $filter_settings, 'toggle_name', $i18n['filter']['toggle']['title'] );
 
 		$this->_add_settings_modal_toggles( $tab_slug, array(
 			$toggle_slug => array(
@@ -5737,7 +6068,8 @@ class ET_Builder_Element {
 		$additional_options = array();
 
 		$additional_options['filter_hue_rotate'] = array(
-			'label'            => esc_html__( 'Hue', 'et_builder' ),
+			'label'            => et_builder_i18n( 'Hue' ),
+			'description'      => $i18n['filter']['hue']['description'],
 			'type'             => 'range',
 			'option_category'  => 'layout',
 			'range_settings'   => array(
@@ -5747,7 +6079,6 @@ class ET_Builder_Element {
 			),
 			'default'          => '0deg',
 			'default_on_child' => true,
-			'description'      => esc_html__( 'Shift all colors by this amount.', 'et_builder' ),
 			'validate_unit'    => true,
 			'fixed_unit'       => 'deg',
 			'fixed_range'      => true,
@@ -5759,7 +6090,8 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['filter_saturate'] = array(
-			'label'            => esc_html__( 'Saturation', 'et_builder' ),
+			'label'            => et_builder_i18n( 'Saturation' ),
+			'description'      => $i18n['filter']['saturate']['description'],
 			'type'             => 'range',
 			'option_category'  => 'layout',
 			'range_settings'   => array(
@@ -5769,7 +6101,6 @@ class ET_Builder_Element {
 			),
 			'default'          => '100%',
 			'default_on_child' => true,
-			'description'      => esc_html__( 'Define how intense the color saturation should be.', 'et_builder' ),
 			'validate_unit'    => true,
 			'fixed_unit'       => '%',
 			'fixed_range'      => true,
@@ -5781,7 +6112,8 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['filter_brightness'] = array(
-			'label'            => esc_html__( 'Brightness', 'et_builder' ),
+			'label'            => $i18n['filter']['brightness']['label'],
+			'description'      => $i18n['filter']['brightness']['description'],
 			'type'             => 'range',
 			'option_category'  => 'layout',
 			'range_settings'   => array(
@@ -5791,7 +6123,6 @@ class ET_Builder_Element {
 			),
 			'default'          => '100%',
 			'default_on_child' => true,
-			'description'      => esc_html__( 'Define how bright the colors should be.', 'et_builder' ),
 			'validate_unit'    => true,
 			'fixed_unit'       => '%',
 			'fixed_range'      => true,
@@ -5803,7 +6134,8 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['filter_contrast'] = array(
-			'label'            => esc_html__( 'Contrast', 'et_builder' ),
+			'label'            => $i18n['filter']['contrast']['label'],
+			'description'      => $i18n['filter']['contrast']['description'],
 			'type'             => 'range',
 			'option_category'  => 'layout',
 			'range_settings'   => array(
@@ -5813,7 +6145,6 @@ class ET_Builder_Element {
 			),
 			'default'          => '100%',
 			'default_on_child' => true,
-			'description'      => esc_html__( 'Define how distinct bright and dark areas should be.', 'et_builder' ),
 			'validate_unit'    => true,
 			'fixed_unit'       => '%',
 			'fixed_range'      => true,
@@ -5825,7 +6156,8 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['filter_invert'] = array(
-			'label'            => esc_html__( 'Invert', 'et_builder' ),
+			'label'            => $i18n['filter']['invert']['label'],
+			'description'      => $i18n['filter']['invert']['description'],
 			'type'             => 'range',
 			'option_category'  => 'layout',
 			'range_settings'   => array(
@@ -5835,7 +6167,6 @@ class ET_Builder_Element {
 			),
 			'default'          => '0%',
 			'default_on_child' => true,
-			'description'      => esc_html__( 'Invert the hue, saturation, and brightness by this amount.', 'et_builder' ),
 			'validate_unit'    => true,
 			'fixed_unit'       => '%',
 			'fixed_range'      => true,
@@ -5847,7 +6178,8 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['filter_sepia'] = array(
-			'label'            => esc_html__( 'Sepia', 'et_builder' ),
+			'label'            => $i18n['filter']['sepia']['label'],
+			'description'      => $i18n['filter']['sepia']['description'],
 			'type'             => 'range',
 			'option_category'  => 'layout',
 			'range_settings'   => array(
@@ -5857,7 +6189,6 @@ class ET_Builder_Element {
 			),
 			'default'          => '0%',
 			'default_on_child' => true,
-			'description'      => esc_html__( 'Travel back in time by this amount.', 'et_builder' ),
 			'validate_unit'    => true,
 			'fixed_unit'       => '%',
 			'fixed_range'      => true,
@@ -5869,7 +6200,8 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['filter_opacity'] = array(
-			'label'            => esc_html__( 'Opacity', 'et_builder' ),
+			'label'            => $i18n['filter']['opacity']['label'],
+			'description'      => $i18n['filter']['opacity']['description'],
 			'type'             => 'range',
 			'option_category'  => 'layout',
 			'range_settings'   => array(
@@ -5881,7 +6213,6 @@ class ET_Builder_Element {
 			),
 			'default'          => '100%',
 			'default_on_child' => true,
-			'description'      => esc_html__( 'Define how transparent or opaque this should be.', 'et_builder' ),
 			'validate_unit'    => true,
 			'fixed_unit'       => '%',
 			'fixed_range'      => true,
@@ -5893,7 +6224,8 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['filter_blur'] = array(
-			'label'            => esc_html__( 'Blur', 'et_builder' ),
+			'label'            => et_builder_i18n( 'Blur' ),
+			'description'      => $i18n['filter']['blur']['description'],
 			'type'             => 'range',
 			'option_category'  => 'layout',
 			'range_settings'   => array(
@@ -5904,7 +6236,6 @@ class ET_Builder_Element {
 			'default'          => '0px',
 			'default_unit'     => 'px',
 			'default_on_child' => true,
-			'description'      => esc_html__( 'Blur by this amount.', 'et_builder' ),
 			'validate_unit'    => true,
 			'allowed_units'    => array( 'em', 'rem', 'px', 'cm', 'mm', 'in', 'pt', 'pc', 'ex', 'vh', 'vw' ),
 			'default_unit'     => 'px',
@@ -5917,29 +6248,29 @@ class ET_Builder_Element {
 		);
 
 		$additional_options['mix_blend_mode'] = array(
-			'label'            => esc_html__( 'Blend Mode', 'et_builder' ),
+			'label'            => $i18n['filter']['blend']['label'],
+			'description'      => $i18n['filter']['blend']['description'],
 			'type'             => 'select',
 			'option_category'  => 'layout',
 			'default'          => 'normal',
 			'default_on_child' => true,
-			'description'      => esc_html__( 'Modify how this element blends with any layers beneath it. To reset, choose the "Normal" option.', 'et_builder' ),
 			'options'          => array(
-				'normal'      => esc_html__( 'Normal', 'et_builder' ),
-				'multiply'    => esc_html__( 'Multiply', 'et_builder' ),
-				'screen'      => esc_html__( 'Screen', 'et_builder' ),
-				'overlay'     => esc_html__( 'Overlay', 'et_builder' ),
-				'darken'      => esc_html__( 'Darken', 'et_builder' ),
-				'lighten'     => esc_html__( 'Lighten', 'et_builder' ),
-				'color-dodge' => esc_html__( 'Color Dodge', 'et_builder' ),
-				'color-burn'  => esc_html__( 'Color Burn', 'et_builder' ),
-				'hard-light'  => esc_html__( 'Hard Light', 'et_builder' ),
-				'soft-light'  => esc_html__( 'Soft Light', 'et_builder' ),
-				'difference'  => esc_html__( 'Difference', 'et_builder' ),
-				'exclusion'   => esc_html__( 'Exclusion', 'et_builder' ),
-				'hue'         => esc_html__( 'Hue', 'et_builder' ),
-				'saturation'  => esc_html__( 'Saturation', 'et_builder' ),
-				'color'       => esc_html__( 'Color', 'et_builder' ),
-				'luminosity'  => esc_html__( 'Luminosity', 'et_builder' ),
+				'normal'      => et_builder_i18n( 'Normal' ),
+				'multiply'    => et_builder_i18n( 'Multiply' ),
+				'screen'      => et_builder_i18n( 'Screen' ),
+				'overlay'     => et_builder_i18n( 'Overlay' ),
+				'darken'      => et_builder_i18n( 'Darken' ),
+				'lighten'     => et_builder_i18n( 'Lighten' ),
+				'color-dodge' => et_builder_i18n( 'Color Dodge' ),
+				'color-burn'  => et_builder_i18n( 'Color Burn' ),
+				'hard-light'  => et_builder_i18n( 'Hard Light' ),
+				'soft-light'  => et_builder_i18n( 'Soft Light' ),
+				'difference'  => et_builder_i18n( 'Difference' ),
+				'exclusion'   => et_builder_i18n( 'Exclusion' ),
+				'hue'         => et_builder_i18n( 'Hue' ),
+				'saturation'  => et_builder_i18n( 'Saturation' ),
+				'color'       => et_builder_i18n( 'Color' ),
+				'luminosity'  => et_builder_i18n( 'Luminosity' ),
 			),
 			'tab_slug'         => $tab_slug,
 			'toggle_slug'      => $toggle_slug,
@@ -5957,11 +6288,12 @@ class ET_Builder_Element {
 		$child_filter = $this->advanced_fields['filters']['child_filters_target'];
 
 		// Allow to modify child filter options label. Default is Image.
-		$child_filter_label = isset( $child_filter['label'] ) ? $child_filter['label'] : esc_html__( 'Image', 'et_builder' );
+		$child_filter_label = isset( $child_filter['label'] ) ? $child_filter['label'] : et_builder_i18n( 'Image' );
 
 		$additional_child_options = array(
 			'child_filter_hue_rotate' => array(
-				'label'            => $child_filter_label . ' ' . esc_html__( 'Hue', 'et_builder' ),
+				'label'            => $child_filter_label . ' ' . et_builder_i18n( 'Hue' ),
+				'description'      => $i18n['filter']['hue']['description'],
 				'type'             => 'range',
 				'option_category'  => 'layout',
 				'range_settings'   => array(
@@ -5971,7 +6303,6 @@ class ET_Builder_Element {
 				),
 				'default'          => '0deg',
 				'default_on_child' => true,
-				'description'      => esc_html__( 'Shift all colors by this amount.', 'et_builder' ),
 				'validate_unit'    => true,
 				'fixed_unit'       => 'deg',
 				'fixed_range'      => true,
@@ -5982,7 +6313,8 @@ class ET_Builder_Element {
 				'mobile_options'   => true,
 			),
 			'child_filter_saturate'   => array(
-				'label'            => $child_filter_label . ' ' . esc_html__( 'Saturation', 'et_builder' ),
+				'label'            => $child_filter_label . ' ' . et_builder_i18n( 'Saturation' ),
+				'description'      => $i18n['filter']['saturate']['description'],
 				'type'             => 'range',
 				'option_category'  => 'layout',
 				'range_settings'   => array(
@@ -5992,7 +6324,6 @@ class ET_Builder_Element {
 				),
 				'default'          => '100%',
 				'default_on_child' => true,
-				'description'      => esc_html__( 'Define how intense the color saturation should be.', 'et_builder' ),
 				'validate_unit'    => true,
 				'fixed_unit'       => '%',
 				'fixed_range'      => true,
@@ -6003,7 +6334,8 @@ class ET_Builder_Element {
 				'mobile_options'   => true,
 			),
 			'child_filter_brightness' => array(
-				'label'            => $child_filter_label . ' ' . esc_html__( 'Brightness', 'et_builder' ),
+				'label'            => $child_filter_label . ' ' . $i18n['filter']['brightness']['label'],
+				'description'      => $i18n['filter']['brightness']['description'],
 				'type'             => 'range',
 				'option_category'  => 'layout',
 				'range_settings'   => array(
@@ -6013,7 +6345,6 @@ class ET_Builder_Element {
 				),
 				'default'          => '100%',
 				'default_on_child' => true,
-				'description'      => esc_html__( 'Define how bright the colors should be.', 'et_builder' ),
 				'validate_unit'    => true,
 				'fixed_unit'       => '%',
 				'fixed_range'      => true,
@@ -6024,7 +6355,8 @@ class ET_Builder_Element {
 				'mobile_options'   => true,
 			),
 			'child_filter_contrast'   => array(
-				'label'            => $child_filter_label . ' ' . esc_html__( 'Contrast', 'et_builder' ),
+				'label'            => $child_filter_label . ' ' . $i18n['filter']['contrast']['label'],
+				'description'      => $i18n['filter']['contrast']['description'],
 				'type'             => 'range',
 				'option_category'  => 'layout',
 				'range_settings'   => array(
@@ -6034,7 +6366,6 @@ class ET_Builder_Element {
 				),
 				'default'          => '100%',
 				'default_on_child' => true,
-				'description'      => esc_html__( 'Define how distinct bright and dark areas should be.', 'et_builder' ),
 				'validate_unit'    => true,
 				'fixed_unit'       => '%',
 				'fixed_range'      => true,
@@ -6045,7 +6376,8 @@ class ET_Builder_Element {
 				'mobile_options'   => true,
 			),
 			'child_filter_invert'     => array(
-				'label'            => $child_filter_label . ' ' . esc_html__( 'Invert', 'et_builder' ),
+				'label'            => $child_filter_label . ' ' . $i18n['filter']['invert']['label'],
+				'description'      => $i18n['filter']['invert']['description'],
 				'type'             => 'range',
 				'option_category'  => 'layout',
 				'range_settings'   => array(
@@ -6055,7 +6387,6 @@ class ET_Builder_Element {
 				),
 				'default'          => '0%',
 				'default_on_child' => true,
-				'description'      => esc_html__( 'Invert the hue, saturation, and brightness by this amount.', 'et_builder' ),
 				'validate_unit'    => true,
 				'fixed_unit'       => '%',
 				'fixed_range'      => true,
@@ -6066,7 +6397,8 @@ class ET_Builder_Element {
 				'mobile_options'   => true,
 			),
 			'child_filter_sepia'      => array(
-				'label'            => $child_filter_label . ' ' . esc_html__( 'Sepia', 'et_builder' ),
+				'label'            => $child_filter_label . ' ' . $i18n['filter']['sepia']['label'],
+				'description'      => $i18n['filter']['sepia']['description'],
 				'type'             => 'range',
 				'option_category'  => 'layout',
 				'range_settings'   => array(
@@ -6076,7 +6408,6 @@ class ET_Builder_Element {
 				),
 				'default'          => '0%',
 				'default_on_child' => true,
-				'description'      => esc_html__( 'Travel back in time by this amount.', 'et_builder' ),
 				'validate_unit'    => true,
 				'fixed_unit'       => '%',
 				'fixed_range'      => true,
@@ -6087,7 +6418,8 @@ class ET_Builder_Element {
 				'mobile_options'   => true,
 			),
 			'child_filter_opacity'    => array(
-				'label'            => $child_filter_label . ' ' . esc_html__( 'Opacity', 'et_builder' ),
+				'label'            => $child_filter_label . ' ' . $i18n['filter']['opacity']['label'],
+				'description'      => $i18n['filter']['opacity']['description'],
 				'type'             => 'range',
 				'option_category'  => 'layout',
 				'range_settings'   => array(
@@ -6099,7 +6431,6 @@ class ET_Builder_Element {
 				),
 				'default'          => '100%',
 				'default_on_child' => true,
-				'description'      => esc_html__( 'Define how transparent or opaque this should be.', 'et_builder' ),
 				'validate_unit'    => true,
 				'fixed_unit'       => '%',
 				'fixed_range'      => true,
@@ -6110,7 +6441,8 @@ class ET_Builder_Element {
 				'mobile_options'   => true,
 			),
 			'child_filter_blur'       => array(
-				'label'            => $child_filter_label . ' ' . esc_html__( 'Blur', 'et_builder' ),
+				'label'            => $child_filter_label . ' ' . et_builder_i18n( 'Blur' ),
+				'description'      => $i18n['filter']['blur']['description'],
 				'type'             => 'range',
 				'option_category'  => 'layout',
 				'range_settings'   => array(
@@ -6120,7 +6452,6 @@ class ET_Builder_Element {
 				),
 				'default'          => '0px',
 				'default_on_child' => true,
-				'description'      => esc_html__( 'Blur by this amount.', 'et_builder' ),
 				'validate_unit'    => true,
 				'allowed_units'    => array( 'em', 'rem', 'px', 'cm', 'mm', 'in', 'pt', 'pc', 'ex', 'vh', 'vw' ),
 				'default_unit'     => 'px',
@@ -6132,29 +6463,29 @@ class ET_Builder_Element {
 				'mobile_options'   => true,
 			),
 			'child_mix_blend_mode'    => array(
-				'label'            => $child_filter_label . ' ' . esc_html__( 'Blend Mode', 'et_builder' ),
+				'label'            => $child_filter_label . ' ' . $i18n['filter']['blend']['label'],
+				'description'      => $i18n['filter']['blend']['description'],
 				'type'             => 'select',
 				'option_category'  => 'layout',
 				'default'          => 'normal',
 				'default_on_child' => true,
-				'description'      => esc_html__( 'Modify how this element blends with any layers beneath it. To reset, choose the "Normal" option.' ),
 				'options'          => array(
-					'normal'      => esc_html__( 'Normal', 'et_builder' ),
-					'multiply'    => esc_html__( 'Multiply', 'et_builder' ),
-					'screen'      => esc_html__( 'Screen', 'et_builder' ),
-					'overlay'     => esc_html__( 'Overlay', 'et_builder' ),
-					'darken'      => esc_html__( 'Darken', 'et_builder' ),
-					'lighten'     => esc_html__( 'Lighten', 'et_builder' ),
-					'color-dodge' => esc_html__( 'Color Dodge', 'et_builder' ),
-					'color-burn'  => esc_html__( 'Color Burn', 'et_builder' ),
-					'hard-light'  => esc_html__( 'Hard Light', 'et_builder' ),
-					'soft-light'  => esc_html__( 'Soft Light', 'et_builder' ),
-					'difference'  => esc_html__( 'Difference', 'et_builder' ),
-					'exclusion'   => esc_html__( 'Exclusion', 'et_builder' ),
-					'hue'         => esc_html__( 'Hue', 'et_builder' ),
-					'saturation'  => esc_html__( 'Saturation', 'et_builder' ),
-					'color'       => esc_html__( 'Color', 'et_builder' ),
-					'luminosity'  => esc_html__( 'Luminosity', 'et_builder' ),
+					'normal'      => et_builder_i18n( 'Normal' ),
+					'multiply'    => et_builder_i18n( 'Multiply' ),
+					'screen'      => et_builder_i18n( 'Screen' ),
+					'overlay'     => et_builder_i18n( 'Overlay' ),
+					'darken'      => et_builder_i18n( 'Darken' ),
+					'lighten'     => et_builder_i18n( 'Lighten' ),
+					'color-dodge' => et_builder_i18n( 'Color Dodge' ),
+					'color-burn'  => et_builder_i18n( 'Color Burn' ),
+					'hard-light'  => et_builder_i18n( 'Hard Light' ),
+					'soft-light'  => et_builder_i18n( 'Soft Light' ),
+					'difference'  => et_builder_i18n( 'Difference' ),
+					'exclusion'   => et_builder_i18n( 'Exclusion' ),
+					'hue'         => et_builder_i18n( 'Hue' ),
+					'saturation'  => et_builder_i18n( 'Saturation' ),
+					'color'       => et_builder_i18n( 'Color' ),
+					'luminosity'  => et_builder_i18n( 'Luminosity' ),
 				),
 				'tab_slug'         => $child_filter['tab_slug'],
 				'toggle_slug'      => $child_filter['toggle_slug'],
@@ -6254,7 +6585,7 @@ class ET_Builder_Element {
 	 * @since 3.1
 	 */
 	protected function _add_box_shadow_fields() {
-		// Box shadow fields are added by default to all modules
+		// BOX shadow fields are added by default to all modules
 		$this->advanced_fields['box_shadow'] = self::$_->array_get( $this->advanced_fields, 'box_shadow', array(
 			'default' => array(),
 		) );
@@ -6262,6 +6593,16 @@ class ET_Builder_Element {
 		// Box shadow settings have to be array
 		if ( ! is_array( $this->advanced_fields['box_shadow'] ) ) {
 			return;
+		}
+
+		$i18n =& self::$i18n;
+
+		if ( ! isset( $i18n['box_shadow'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['box_shadow'] = array(
+				'title' => esc_html__( 'Box Shadow', 'et_builder' ),
+			);
+			// phpcs:enable
 		}
 
 		// Loop box shadow settings
@@ -6276,7 +6617,7 @@ class ET_Builder_Element {
 			// Add Box Shadow toggle for default Box Shadow fields
 			if ( $is_box_shadow_default ) {
 				$this->settings_modal_toggles['advanced']['toggles']['box_shadow'] = array(
-					'title'    => esc_html__( 'Box Shadow', 'et_builder' ),
+					'title'    => $i18n['box_shadow']['title'],
 					'priority' => 100,
 				);
 			}
@@ -6318,6 +6659,9 @@ class ET_Builder_Element {
 		$additional_options = array();
 		$hover = et_pb_hover_options();
 
+		$this->set_i18n_font();
+		$i18n =& self::$i18n;
+
 		// Fetch the form field.
 		foreach( $this->advanced_fields['form_field'] as $option_name => $option_settings ) {
 			$toggle_slug     = '';
@@ -6358,7 +6702,7 @@ class ET_Builder_Element {
 
 			// Text Color.
 			$additional_options["{$option_name}_text_color"] = array(
-				'label'           => sprintf( esc_html__( '%1$s Text Color', 'et_builder' ), $option_settings['label'] ),
+				'label'           => sprintf( $i18n['font']['color']['label'], $option_settings['label'] ),
 				'description'     => esc_html__( 'Pick a color to be used for the text written inside input fields.', 'et_builder' ),
 				'type'            => 'color-alpha',
 				'option_category' => 'field',
@@ -6454,8 +6798,8 @@ class ET_Builder_Element {
 							'type'             => 'yes_no_button',
 							'option_category'  => 'color_option',
 							'options'          => array(
-								'off' => esc_html__( 'No', 'et_builder' ),
-								'on'  => esc_html__( 'Yes', 'et_builder' ),
+								'off' => et_builder_i18n( 'No' ),
+								'on'  => et_builder_i18n( 'Yes' ),
 							),
 							'affects'          => array(
 								"border_radii_{$toggle_slug}_focus",
@@ -6853,11 +7197,32 @@ class ET_Builder_Element {
 		}
 
 		$this->settings_modal_toggles['general']['toggles']['link_options'] = array(
-			'title'    => esc_html__( 'Link', 'et_builder' ),
+			'title'    => et_builder_i18n( 'Link' ),
 			'priority' => 70,
 		);
 
 		$additional_options = array();
+
+		$i18n =& self::$i18n;
+
+		if ( ! isset( $i18n['link'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['link'] = array(
+				'url'    => array(
+					'label'       => esc_html__( 'Module Link URL', 'et_builder' ),
+					'description' => esc_html__( 'When clicked the module will link to this URL.', 'et_builder' ),
+				),
+				'target' => array(
+					'label'       => esc_html__( 'Module Link Target', 'et_builder' ),
+					'description' => esc_html__( 'Here you can choose whether or not your link opens in a new window', 'et_builder' ),
+					'options'     => array(
+						'off' => esc_html__( 'In The Same Window', 'et_builder' ),
+						'on'  => esc_html__( 'In The New Tab', 'et_builder' ),
+					),
+				),
+			);
+			// phpcs:enable
+		}
 
 		// Translate the whole label as a phrase instead of replacing placeholder with section / row / module translation
 		// Less error prone for translator and the translation. Phrase might be structured differently in some language
@@ -6878,30 +7243,30 @@ class ET_Builder_Element {
 				$target_label = esc_html__( 'Column Link Target', 'et_builder' );
 				break;
 			default:
-				$url_label    = esc_html__( 'Module Link URL', 'et_builder' );
-				$target_label = esc_html__( 'Module Link Target', 'et_builder' );
+				$url_label    = $i18n['link']['url']['label'];
+				$target_label = $i18n['link']['target']['label'];
 				break;
 		}
 
 		$additional_options['link_option_url'] = array(
 			'label'           => $url_label,
+			'description'     => $i18n['link']['url']['description'],
 			'type'            => 'text',
 			'option_category' => 'configuration',
 			'toggle_slug'     => 'link_options',
-			'description'     => esc_html__( 'When clicked the module will link to this URL.', 'et_builder' ),
 			'dynamic_content' => 'url',
 		);
 
 		$additional_options['link_option_url_new_window'] = array(
 			'label'            => $target_label,
+			'description'      => $i18n['link']['target']['description'],
 			'type'             => 'select',
 			'option_category'  => 'configuration',
 			'options'          => array(
-				'off' => esc_html__( 'In The Same Window', 'et_builder' ),
-				'on'  => esc_html__( 'In The New Tab', 'et_builder' ),
+				'off' => $i18n['link']['target']['options']['off'],
+				'on'  => $i18n['link']['target']['options']['on'],
 			),
 			'toggle_slug'      => 'link_options',
-			'description'      => esc_html__( 'Here you can choose whether or not your link opens in a new window', 'et_builder' ),
 			'default_on_front' => 'off',
 		);
 
@@ -7023,15 +7388,15 @@ class ET_Builder_Element {
 
 		$custom_css_default_options = array(
 			'before' => array(
-				'label'    => esc_html__( 'Before', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Before' ),
 				'selector' => ':before',
 				'no_space_before_selector' => true,
 			),
 			'main_element' => array(
-				'label'    => esc_html__( 'Main Element', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Main Element' ),
 			),
 			'after' => array(
-				'label'    => esc_html__( 'After', 'et_builder' ),
+				'label'    => et_builder_i18n( 'After' ),
 				'selector' => ':after',
 				'no_space_before_selector' => true,
 			),
@@ -7082,9 +7447,19 @@ class ET_Builder_Element {
 			$this->fields_unprocessed = array_merge( $this->fields_unprocessed, $custom_css_fields_processed );
 		}
 
+		$i18n =& self::$i18n;
+
+		if ( ! isset( $i18n['css'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['css'] = array(
+				'classes' => esc_html__( 'CSS ID &amp; Classes', 'et_builder' ),
+			);
+			// phpcs:enable
+		}
+
 		$default_custom_css_toggles = array(
-			'classes'    => esc_html__( 'CSS ID &amp; Classes', 'et_builder' ),
-			'custom_css' => esc_html__( 'Custom CSS', 'et_builder' ),
+			'classes'    => $i18n['css']['classes'],
+			'custom_css' => et_builder_i18n( 'Custom CSS' ),
 		);
 
 		$this->_add_settings_modal_toggles( 'custom_css', $default_custom_css_toggles );
@@ -7294,27 +7669,55 @@ class ET_Builder_Element {
 
 		// Add general fields for modules including Columns.
 		if ( ( ! isset( $this->type ) || 'child' !== $this->type ) || in_array( $this->slug, array( 'et_pb_column', 'et_pb_column_inner' ) ) ) {
+			$i18n =& self::$i18n;
+
+			if ( ! isset( $i18n['complete'] ) ) {
+				// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+				$i18n['complete'] = array(
+					'section'  => esc_html__( 'section', 'et_builder' ),
+					'row'      => esc_html__( 'row', 'et_builder' ),
+					'module'   => esc_html__( 'module', 'et_builder' ),
+					'disabled' => array(
+						'label'       => esc_html__( 'Disable on', 'et_builder' ),
+						'description' => esc_html__( 'This will disable the %1$s on selected devices', 'et_builder' ),
+					),
+					'admin'    => array(
+						'description' => esc_html__( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+					),
+					'id'       => array(
+						'label'       => esc_html__( 'CSS ID', 'et_builder' ),
+						'description' => esc_html__( "Assign a unique CSS ID to the element which can be used to assign custom CSS styles from within your child theme or from within Divi's custom CSS inputs.", 'et_builder' ),
+					),
+					'class'    => array(
+						'label'       => esc_html__( 'CSS Class', 'et_builder' ),
+						'description' => esc_html__( "Assign any number of CSS Classes to the element, separated by spaces, which can be used to assign custom CSS styles from within your child theme or from within Divi's custom CSS inputs.", 'et_builder' ),
+					),
+					''         => array(),
+				);
+				// phpcs:enable
+			}
+
 			$disabled_on_fields = array();
 
 			$slug_labels = array(
-				'et_pb_section' => esc_html__( 'section', 'et_builder' ),
-				'et_pb_row'     => esc_html__( 'row', 'et_builder' ),
+				'et_pb_section' => $i18n['complete']['section'],
+				'et_pb_row'     => $i18n['complete']['row'],
 			);
 
-			$disable_label = isset( $slug_labels[ $this->slug ] ) ? $slug_labels[ $this->slug ] : esc_html__( 'module', 'et_builder' );
+			$disable_label = isset( $slug_labels[ $this->slug ] ) ? $slug_labels[ $this->slug ] : $i18n['complete']['module'];
 
 			$disabled_on_fields = array(
 				'disabled_on' => array(
-					'label'           => esc_html__( 'Disable on', 'et_builder' ),
+					'label'           => $i18n['complete']['disabled']['label'],
+					'description'     => sprintf( $i18n['complete']['disabled']['description'], $disable_label ),
 					'type'            => 'multiple_checkboxes',
 					'options'         => array(
-						'phone'   => esc_html__( 'Phone', 'et_builder' ),
-						'tablet'  => esc_html__( 'Tablet', 'et_builder' ),
-						'desktop' => esc_html__( 'Desktop', 'et_builder' ),
+						'phone'   => et_builder_i18n( 'Phone' ),
+						'tablet'  => et_builder_i18n( 'Tablet' ),
+						'desktop' => et_builder_i18n( 'Desktop' ),
 					),
 					'additional_att'  => 'disable_on',
 					'option_category' => 'configuration',
-					'description'     => sprintf( esc_html__( 'This will disable the %1$s on selected devices', 'et_builder' ), $disable_label ),
 					'tab_slug'        => 'custom_css',
 					'toggle_slug'     => 'visibility',
 				),
@@ -7322,15 +7725,15 @@ class ET_Builder_Element {
 
 			$common_general_fields = array(
 				'admin_label'  => array(
-					'label'           => esc_html__( 'Admin Label', 'et_builder' ),
+					'label'           => et_builder_i18n( 'Admin Label' ),
+					'description'     => $i18n['complete']['admin']['description'],
 					'type'            => 'text',
 					'option_category' => 'configuration',
-					'description'     => esc_html__( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
 					'toggle_slug'     => 'admin_label',
 				),
 				'module_id'    => array(
-					'label'           => esc_html__( 'CSS ID', 'et_builder' ),
-					'description'     => esc_html__( "Assign a unique CSS ID to the element which can be used to assign custom CSS styles from within your child theme or from within Divi's custom CSS inputs.", 'et_builder' ),
+					'label'           => $i18n['complete']['id']['label'],
+					'description'     => $i18n['complete']['id']['description'],
 					'type'            => 'text',
 					'option_category' => 'configuration',
 					'tab_slug'        => 'custom_css',
@@ -7338,8 +7741,8 @@ class ET_Builder_Element {
 					'option_class'    => 'et_pb_custom_css_regular',
 				),
 				'module_class' => array(
-					'label'           => esc_html__( 'CSS Class', 'et_builder' ),
-					'description'     => esc_html__( "Assign any number of CSS Classes to the element, separated by spaces, which can be used to assign custom CSS styles from within your child theme or from within Divi's custom CSS inputs.", 'et_builder' ),
+					'label'           => $i18n['complete']['class']['label'],
+					'description'     => $i18n['complete']['class']['description'],
 					'type'            => 'text',
 					'option_category' => 'configuration',
 					'tab_slug'        => 'custom_css',
@@ -7379,10 +7782,10 @@ class ET_Builder_Element {
 	}
 
 	/**
-	 * Returns modules custom defaults settings
+	 * Returns Global Presets settings
 	 */
-	public static function get_custom_defaults() {
-		return self::$custom_defaults_manager->get_custom_defaults();
+	public static function get_global_presets() {
+		return self::$global_presets_manager->get_global_presets();
 	}
 
 	/**
@@ -7931,10 +8334,130 @@ class ET_Builder_Element {
 		$baseless_prefix = 'background' === $base_name ? '' : "{$base_name}_";
 		$options         = array();
 
+		$i18n =& self::$i18n;
+
+		if ( ! isset( $i18n['background'] ) ) {
+			// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+			$i18n['background'] = array(
+				'color'                     => array(
+					'label' => esc_html__( 'Background Color', 'et_builder' ),
+				),
+				'gradient'                  => array(
+					'label' => esc_html__( 'Use Background Color Gradient', 'et_builder' ),
+				),
+				'gradient_start'            => array(
+					'label' => esc_html__( 'Gradient Start', 'et_builder' ),
+				),
+				'gradient_end'              => array(
+					'label' => esc_html__( 'Gradient End', 'et_builder' ),
+				),
+				'gradient_type'             => array(
+					'label'       => esc_html__( 'Gradient Type', 'et_builder' ),
+					'description' => esc_html__( 'Linear gradients radiate in a single direction across one axis. Radial gradients radiate from the center of the background in the shape of a circle.', 'et_builder' ),
+				),
+				'gradient_direction'        => array(
+					'label'       => esc_html__( 'Gradient Direction', 'et_builder' ),
+					'description' => esc_html__( 'Change the direction of the gradient by choosing a starting position within a 360 degree range.', 'et_builder' ),
+				),
+				'gradient_direction_radial' => array(
+					'label'       => esc_html__( 'Radial Direction', 'et_builder' ),
+					'description' => esc_html__( 'Change the direction of the gradient by choosing a starting position within a 360 degree range.', 'et_builder' ),
+				),
+				'gradient_start_position'   => array(
+					'label'       => esc_html__( 'Start Position', 'et_builder' ),
+					'description' => esc_html__( 'By adjusting the starting position of the gradient, you can control how quickly or slowly each color transitions, and where the transition begins.', 'et_builder' ),
+				),
+				'gradient_end_position'     => array(
+					'label'       => esc_html__( 'End Position', 'et_builder' ),
+					'description' => esc_html__( 'By adjusting the ending position of the gradient, you can control how quickly or slowly each color transitions, and where the transition begins.', 'et_builder' ),
+				),
+				'gradient_overlay'          => array(
+					'label'       => esc_html__( 'Place Gradient Above Background Image', 'et_builder' ),
+					'description' => esc_html__( 'If enabled, gradient will be positioned on top of background-image', 'et_builder' ),
+				),
+				'image'                     => array(
+					'label'       => esc_html__( 'Background Image', 'et_builder' ),
+					'choose_text' => esc_attr__( 'Choose a Background Image', 'et_builder' ),
+					'update_text' => esc_attr__( 'Set As Background', 'et_builder' ),
+				),
+				'parallax'                  => array(
+					'label'       => esc_html__( 'Use Parallax Effect', 'et_builder' ),
+					'description' => esc_html__( 'If enabled, your background image will stay fixed as your scroll, creating a fun parallax-like effect.', 'et_builder' ),
+				),
+				'parallax_method'           => array(
+					'label'       => esc_html__( 'Parallax Method', 'et_builder' ),
+					'description' => esc_html__( 'Define the method, used for the parallax effect.', 'et_builder' ),
+					'options'     => array(
+						'on'  => esc_html__( 'True Parallax', 'et_builder' ),
+						'off' => esc_html__( 'CSS', 'et_builder' ),
+					),
+				),
+				'size'                      => array(
+					'label'       => esc_html__( 'Background Image Size', 'et_builder' ),
+					'description' => esc_html__( 'Choosing "Cover" will force the image to fill the entire background area, clipping the image when necessary. Choosing "Fit" will ensure that the entire image is always visible, but can result in blank spaces around the image. When set to "Actual Size," the image will not be resized at all.', 'et_builder' ),
+					'options'     => array(
+						'cover'   => esc_html__( 'Cover', 'et_builder' ),
+						'contain' => esc_html__( 'Fit', 'et_builder' ),
+						'initial' => esc_html__( 'Actual Size', 'et_builder' ),
+					),
+				),
+				'position'                  => array(
+					'label'       => esc_html__( 'Background Image Position', 'et_builder' ),
+					'description' => esc_html__( "Choose where you would like the background image to be positioned within this element. You may want to position the background based on the the image's focus point.", 'et_builder' ),
+				),
+				'repeat'                    => array(
+					'label'       => esc_html__( 'Background Image Repeat', 'et_builder' ),
+					'description' => esc_html__( 'If the background image is smaller than the size of the element, you may want the image to repeat. This result will result in a background image pattern.', 'et_builder' ),
+					'options'     => array(
+						'no-repeat' => esc_html__( 'No Repeat', 'et_builder' ),
+						'repeat'    => esc_html__( 'Repeat', 'et_builder' ),
+						'repeat-x'  => esc_html__( 'Repeat X (horizontal)', 'et_builder' ),
+						'repeat-y'  => esc_html__( 'Repeat Y (vertical)', 'et_builder' ),
+						'round'     => esc_html__( 'Round', 'et_builder' ),
+					),
+				),
+				'blend'                     => array(
+					'label'       => esc_html__( 'Background Image Blend', 'et_builder' ),
+					'description' => esc_html__( 'Background images can be blended with the background color, merging the two and creating unique effects.', 'et_builder' ),
+				),
+				'mp4'                       => array(
+					'label'              => esc_html__( 'Background Video MP4', 'et_builder' ),
+					'description'        => esc_html__( 'All videos should be uploaded in both .MP4 .WEBM formats to ensure maximum compatibility in all browsers. Upload the .MP4 version here.', 'et_builder' ),
+					'upload_button_text' => esc_attr__( 'Upload a video', 'et_builder' ),
+					'choose_text'        => esc_attr__( 'Choose a Background Video MP4 File', 'et_builder' ),
+					'update_text'        => esc_attr__( 'Set As Background Video', 'et_builder' ),
+				),
+				'webm'                      => array(
+					'label'              => esc_html__( 'Background Video Webm', 'et_builder' ),
+					'description'        => esc_html__( 'All videos should be uploaded in both .MP4 .WEBM formats to ensure maximum compatibility in all browsers. Upload the .WEBM version here.', 'et_builder' ),
+					'upload_button_text' => esc_attr__( 'Upload a video', 'et_builder' ),
+					'choose_text'        => esc_attr__( 'Choose a Background Video WEBM File', 'et_builder' ),
+					'update_text'        => esc_attr__( 'Set As Background Video', 'et_builder' ),
+				),
+				'video_width'               => array(
+					'label'       => esc_html__( 'Background Video Width', 'et_builder' ),
+					'description' => esc_html__( 'In order for videos to be sized correctly, you must input the exact width (in pixels) of your video here.', 'et_builder' ),
+				),
+				'video_height'              => array(
+					'label'       => esc_html__( 'Background Video Height', 'et_builder' ),
+					'description' => esc_html__( 'In order for videos to be sized correctly, you must input the exact height (in pixels) of your video here.', 'et_builder' ),
+				),
+				'pause'                     => array(
+					'label'       => esc_html__( 'Pause Video When Another Video Plays', 'et_builder' ),
+					'description' => esc_html__( 'Allow video to be paused by other players when they begin playing', 'et_builder' ),
+				),
+				'viewport'                  => array(
+					'label'       => esc_html__( 'Pause Video While Not In View', 'et_builder' ),
+					'description' => esc_html__( 'Allow video to be paused while it is not in the visible area.', 'et_builder' ),
+				),
+			);
+			// phpcs:enable
+		}
+
 		// Not included on skip background tab because background-field is expected to be registered under "background_color" field
 		if ( in_array( $background_tab, array( 'all', 'button', 'color' ) ) ) {
 			$options["{$base_name}_color"] = array(
-				'label'           => esc_html__( 'Background Color', 'et_builder' ),
+				'label'           => $i18n['background']['color']['label'],
 				'type'            => 'color-alpha',
 				'option_category' => 'configuration',
 				'custom_color'    => true,
@@ -7964,12 +8487,13 @@ class ET_Builder_Element {
 			$use_background_color_gradient_name = 'background' === $base_name ? 'use_background_color_gradient' : "{$base_name}_use_color_gradient";
 
 			$options[ $use_background_color_gradient_name ] = array(
-				'label'             => esc_html__( 'Use Background Color Gradient', 'et_builder' ),
+				'label'             => $i18n['background']['gradient']['label'],
+				'description'       => '',
 				'type'              => 'skip' === $background_tab ? 'skip' : 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default'           => 'off',
 				'default_on_child'  => true,
@@ -7981,7 +8505,6 @@ class ET_Builder_Element {
 					"{$base_name}_color_gradient_type",
 					"{$base_name}_color_gradient_overlays_image",
 				),
-				'description'       => '',
 				'tab_slug'          => $tab_slug,
 				'toggle_slug'       => $toggle_slug,
 				'field_template'    => 'use_color_gradient',
@@ -7990,10 +8513,10 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_color_gradient_start"] = array(
-				'label'             => esc_html__( 'Gradient Start', 'et_builder' ),
+				'label'             => $i18n['background']['gradient_start']['label'],
+				'description'       => '',
 				'type'              => 'skip' === $background_tab ? 'skip' : 'color-alpha',
 				'option_category'   => 'configuration',
-				'description'       => '',
 				'depends_show_if'   => 'on',
 				'default'           => ET_Global_Settings::get_value( 'all_background_gradient_start' ),
 				'default_on_child'  => true,
@@ -8005,10 +8528,10 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_color_gradient_end"] = array(
-				'label'             => esc_html__( 'Gradient End', 'et_builder' ),
+				'label'             => $i18n['background']['gradient_end']['label'],
+				'description'       => '',
 				'type'              => 'skip' === $background_tab ? 'skip' : 'color-alpha',
 				'option_category'   => 'configuration',
-				'description'       => '',
 				'depends_show_if'   => 'on',
 				'default'           => ET_Global_Settings::get_value( 'all_background_gradient_end' ),
 				'default_on_child'  => true,
@@ -8020,13 +8543,13 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_color_gradient_type"] = array(
-				'label'             => esc_html__( 'Gradient Type', 'et_builder' ),
-				'description'       => esc_html__( 'Linear gradients radiate in a single direction across one axis. Radial gradients radiate from the center of the background in the shape of a circle.', 'et_builder' ),
+				'label'             => $i18n['background']['gradient_type']['label'],
+				'description'       => $i18n['background']['gradient_type']['description'],
 				'type'              => 'skip' === $background_tab ? 'skip' : 'select',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'linear' => esc_html__( 'Linear', 'et_builder' ),
-					'radial' => esc_html__( 'Radial', 'et_builder' ),
+					'linear' => et_builder_i18n( 'Linear' ),
+					'radial' => et_builder_i18n( 'Radial' ),
 				),
 				'affects'           => array(
 					"{$base_name}_color_gradient_direction",
@@ -8044,8 +8567,8 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_color_gradient_direction"] = array(
-				'label'             => esc_html__( 'Gradient Direction', 'et_builder' ),
-				'description'       => esc_html__( 'Change the direction of the gradient by choosing a starting position within a 360 degree range.', 'et_builder' ),
+				'label'             => $i18n['background']['gradient_direction']['label'],
+				'description'       => $i18n['background']['gradient_direction']['description'],
 				'type'              => 'skip' === $background_tab ? 'skip' : 'range',
 				'option_category'   => 'configuration',
 				'range_settings'    => array(
@@ -8067,20 +8590,20 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_color_gradient_direction_radial"] = array(
-				'label'             => esc_html__( 'Radial Direction', 'et_builder' ),
-				'description'       => esc_html__( 'Change the direction of the gradient by choosing a starting position within a 360 degree range.', 'et_builder' ),
+				'label'             => $i18n['background']['gradient_direction_radial']['label'],
+				'description'       => $i18n['background']['gradient_direction_radial']['description'],
 				'type'              => 'skip' === $background_tab ? 'skip' : 'select',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'center'       => esc_html__( 'Center', 'et_builder' ),
-					'top left'     => esc_html__( 'Top Left', 'et_builder' ),
-					'top'          => esc_html__( 'Top', 'et_builder' ),
-					'top right'    => esc_html__( 'Top Right', 'et_builder' ),
-					'right'        => esc_html__( 'Right', 'et_builder' ),
-					'bottom right' => esc_html__( 'Bottom Right', 'et_builder' ),
-					'bottom'       => esc_html__( 'Bottom', 'et_builder' ),
-					'bottom left'  => esc_html__( 'Bottom Left', 'et_builder' ),
-					'left'         => esc_html__( 'Left', 'et_builder' ),
+					'center'       => et_builder_i18n( 'Center' ),
+					'top left'     => et_builder_i18n( 'Top Left' ),
+					'top'          => et_builder_i18n( 'Top' ),
+					'top right'    => et_builder_i18n( 'Top Right' ),
+					'right'        => et_builder_i18n( 'Right' ),
+					'bottom right' => et_builder_i18n( 'Bottom Right' ),
+					'bottom'       => et_builder_i18n( 'Bottom' ),
+					'bottom left'  => et_builder_i18n( 'Bottom Left' ),
+					'left'         => et_builder_i18n( 'Left' ),
 				),
 				'default'           => ET_Global_Settings::get_value( 'all_background_gradient_direction_radial' ),
 				'default_on_child'  => true,
@@ -8094,8 +8617,8 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_color_gradient_start_position"] = array(
-				'label'             => esc_html__( 'Start Position', 'et_builder' ),
-				'description'       => esc_html__( 'By adjusting the starting position of the gradient, you can control how quickly or slowly each color transitions, and where the transition begins.', 'et_builder' ),
+				'label'             => $i18n['background']['gradient_start_position']['label'],
+				'description'       => $i18n['background']['gradient_start_position']['description'],
 				'type'              => 'skip' === $background_tab ? 'skip' : 'range',
 				'option_category'   => 'configuration',
 				'range_settings'    => array(
@@ -8118,8 +8641,8 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_color_gradient_end_position"] = array(
-				'label'             => esc_html__( 'End Position', 'et_builder' ),
-				'description'       => esc_html__( 'By adjusting the ending position of the gradient, you can control how quickly or slowly each color transitions, and where the transition begins.', 'et_builder' ),
+				'label'             => $i18n['background']['gradient_end_position']['label'],
+				'description'       => $i18n['background']['gradient_end_position']['description'],
 				'type'              => 'skip' === $background_tab ? 'skip' : 'range',
 				'option_category'   => 'configuration',
 				'range_settings'    => array(
@@ -8142,16 +8665,16 @@ class ET_Builder_Element {
 			);
 
 			$options["${base_name}_color_gradient_overlays_image"] = array(
-				'label'             => esc_html__( 'Place Gradient Above Background Image', 'et_builder' ),
+				'label'             => $i18n['background']['gradient_overlay']['label'],
+				'description'       => $i18n['background']['gradient_overlay']['description'],
 				'type'              => 'skip' === $background_tab ? 'skip' : 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default'           => ET_Global_Settings::get_value( 'all_background_gradient_overlays_image' ),
 				'default_on_child'  => true,
-				'description'       => esc_html__( 'If enabled, gradient will be positioned on top of background-image', 'et_builder' ),
 				'depends_show_if'   => 'on',
 				'tab_slug'          => $tab_slug,
 				'toggle_slug'       => $toggle_slug,
@@ -8163,12 +8686,12 @@ class ET_Builder_Element {
 
 		if ( in_array( $background_tab, array( 'all', 'button', 'skip', 'image' ) ) ) {
 			$options["{$base_name}_image"] = array(
-				'label'              => esc_html__( 'Background Image', 'et_builder' ),
+				'label'              => $i18n['background']['image']['label'],
+				'choose_text'        => $i18n['background']['image']['choose_text'],
+				'update_text'        => $i18n['background']['image']['update_text'],
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'type'               => 'skip' === $background_tab ? 'skip' : 'upload',
 				'option_category'    => 'configuration',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
-				'choose_text'        => esc_attr__( 'Choose a Background Image', 'et_builder' ),
-				'update_text'        => esc_attr__( 'Set As Background', 'et_builder' ),
 				'tab_slug'           => $tab_slug,
 				'toggle_slug'        => $toggle_slug,
 				'field_template'     => 'image',
@@ -8190,12 +8713,13 @@ class ET_Builder_Element {
 
 			if ( 'button' !== $background_tab ) {
 				$options["${baseless_prefix}parallax"] = array(
-					'label'             => esc_html__( 'Use Parallax Effect', 'et_builder' ),
+					'label'             => $i18n['background']['parallax']['label'],
+					'description'       => $i18n['background']['parallax']['description'],
 					'type'              => 'skip' === $background_tab ? 'skip' : 'yes_no_button',
 					'option_category'   => 'configuration',
 					'options'           => array(
-						'off' => esc_html__( 'No', 'et_builder' ),
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
+						'off' => et_builder_i18n( 'No' ),
+						'on'  => et_builder_i18n( 'Yes' ),
 					),
 					'default'           => 'off',
 					'default_on_child'  => true,
@@ -8206,7 +8730,6 @@ class ET_Builder_Element {
 						"{$base_name}_repeat",
 						"{$base_name}_blend",
 					),
-					'description'       => esc_html__( 'If enabled, your background image will stay fixed as your scroll, creating a fun parallax-like effect.', 'et_builder' ),
 					'tab_slug'          => $tab_slug,
 					'toggle_slug'       => $toggle_slug,
 					'field_template'    => 'parallax',
@@ -8215,17 +8738,17 @@ class ET_Builder_Element {
 				);
 
 				$options["${baseless_prefix}parallax_method"] = array(
-					'label'             => esc_html__( 'Parallax Method', 'et_builder' ),
+					'label'             => $i18n['background']['parallax_method']['label'],
+					'description'       => $i18n['background']['parallax_method']['description'],
 					'type'              => 'skip' === $background_tab ? 'skip' : 'select',
 					'option_category'   => 'configuration',
 					'options'           => array(
-						'on'  => esc_html__( 'True Parallax', 'et_builder' ),
-						'off' => esc_html__( 'CSS', 'et_builder' ),
+						'on'  => $i18n['background']['parallax_method']['options']['on'],
+						'off' => $i18n['background']['parallax_method']['options']['off'],
 					),
 					'default'           => self::$_->array_get( $this->advanced_fields, "background.options.{$baseless_prefix}parallax_method.default", 'on' ),
 					'default_on_child'  => true,
 					'depends_show_if'   => 'on',
-					'description'       => esc_html__( 'Define the method, used for the parallax effect.', 'et_builder' ),
 					'tab_slug'          => $tab_slug,
 					'toggle_slug'       => $toggle_slug,
 					'field_template'    => 'parallax_method',
@@ -8235,14 +8758,14 @@ class ET_Builder_Element {
 			}
 
 			$options["{$base_name}_size"] = array(
-				'label'           => esc_html__( 'Background Image Size', 'et_builder' ),
-				'description'     => esc_html__( 'Choosing "Cover" will force the image to fill the entire background area, clipping the image when necessary. Choosing "Fit" will ensure that the entire image is always visible, but can result in blank spaces around the image. When set to "Actual Size," the image will not be resized at all.', 'et_builder' ),
+				'label'           => $i18n['background']['size']['label'],
+				'description'     => $i18n['background']['size']['description'],
 				'type'            => 'skip' === $background_tab ? 'skip' : 'select',
 				'option_category' => 'layout',
 				'options'         => array(
-					'cover'   => esc_html__( 'Cover', 'et_builder' ),
-					'contain' => esc_html__( 'Fit', 'et_builder' ),
-					'initial' => esc_html__( 'Actual Size', 'et_builder' ),
+					'cover'   => $i18n['background']['size']['options']['cover'],
+					'contain' => $i18n['background']['size']['options']['contain'],
+					'initial' => $i18n['background']['size']['options']['initial'],
 				),
 				'default'         => 'cover',
 				'default_on_child'=> true,
@@ -8255,20 +8778,20 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_position"] = array(
-				'label'           => esc_html__( 'Background Image Position', 'et_builder' ),
-				'description'     => esc_html__( "Choose where you would like the background image to be positioned within this element. You may want to position the background based on the the image's focus point.", 'et_builder' ),
+				'label'           => $i18n['background']['position']['label'],
+				'description'     => $i18n['background']['position']['description'],
 				'type'            => 'skip' === $background_tab ? 'skip' : 'select',
 				'option_category' => 'layout',
 				'options' => array(
-					'top_left'      => esc_html__( 'Top Left', 'et_builder' ),
-					'top_center'    => esc_html__( 'Top Center', 'et_builder' ),
-					'top_right'     => esc_html__( 'Top Right', 'et_builder' ),
-					'center_left'   => esc_html__( 'Center Left', 'et_builder' ),
-					'center'        => esc_html__( 'Center', 'et_builder' ),
-					'center_right'  => esc_html__( 'Center Right', 'et_builder' ),
-					'bottom_left'   => esc_html__( 'Bottom Left', 'et_builder' ),
-					'bottom_center' => esc_html__( 'Bottom Center', 'et_builder' ),
-					'bottom_right'  => esc_html__( 'Bottom Right', 'et_builder' ),
+					'top_left'      => et_builder_i18n( 'Top Left' ),
+					'top_center'    => et_builder_i18n( 'Top Center' ),
+					'top_right'     => et_builder_i18n( 'Top Right' ),
+					'center_left'   => et_builder_i18n( 'Center Left' ),
+					'center'        => et_builder_i18n( 'Center' ),
+					'center_right'  => et_builder_i18n( 'Center Right' ),
+					'bottom_left'   => et_builder_i18n( 'Bottom Left' ),
+					'bottom_center' => et_builder_i18n( 'Bottom Center' ),
+					'bottom_right'  => et_builder_i18n( 'Bottom Right' ),
 				),
 				'default'           => 'center',
 				'default_on_child'  => true,
@@ -8281,17 +8804,17 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_repeat"] = array(
-				'label'           => esc_html__( 'Background Image Repeat', 'et_builder' ),
-				'description'     => esc_html__( 'If the background image is smaller than the size of the element, you may want the image to repeat. This result will result in a background image pattern.', 'et_builder' ),
+				'label'           => $i18n['background']['repeat']['label'],
+				'description'     => $i18n['background']['repeat']['description'],
 				'type'            => 'skip' === $background_tab ? 'skip' : 'select',
 				'option_category' => 'layout',
 				'options' => array(
-					'no-repeat' => esc_html__( 'No Repeat', 'et_builder' ),
-					'repeat'    => esc_html__( 'Repeat', 'et_builder' ),
-					'repeat-x'  => esc_html__( 'Repeat X (horizontal)', 'et_builder' ),
-					'repeat-y'  => esc_html__( 'Repeat Y (vertical)', 'et_builder' ),
-					'space'     => esc_html__( 'Space', 'et_builder' ),
-					'round'     => esc_html__( 'Round', 'et_builder' ),
+					'no-repeat' => $i18n['background']['repeat']['options']['no-repeat'],
+					'repeat'    => $i18n['background']['repeat']['options']['repeat'],
+					'repeat-x'  => $i18n['background']['repeat']['options']['repeat-x'],
+					'repeat-y'  => $i18n['background']['repeat']['options']['repeat-y'],
+					'space'     => et_builder_i18n( 'Space' ),
+					'round'     => $i18n['background']['repeat']['options']['round'],
 				),
 				'default'          => 'no-repeat',
 				'default_on_child' => true,
@@ -8304,27 +8827,27 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_blend"] = array(
-				'label'            => esc_html__( 'Background Image Blend', 'et_builder' ),
-				'description'      => esc_html__( 'Background images can be blended with the background color, merging the two and creating unique effects.', 'et_builder' ),
+				'label'           => $i18n['background']['blend']['label'],
+				'description'     => $i18n['background']['blend']['description'],
 				'type'             => 'skip' === $background_tab ? 'skip' : 'select',
 				'option_category'  => 'layout',
 				'options'          => array(
-					'normal'      => esc_html__( 'Normal', 'et_builder' ),
-					'multiply'    => esc_html__( 'Multiply', 'et_builder' ),
-					'screen'      => esc_html__( 'Screen', 'et_builder' ),
-					'overlay'     => esc_html__( 'Overlay', 'et_builder' ),
-					'darken'      => esc_html__( 'Darken', 'et_builder' ),
-					'lighten'     => esc_html__( 'Lighten', 'et_builder' ),
-					'color-dodge' => esc_html__( 'Color Dodge', 'et_builder' ),
-					'color-burn'  => esc_html__( 'Color Burn', 'et_builder' ),
-					'hard-light'  => esc_html__( 'Hard Light', 'et_builder' ),
-					'soft-light'  => esc_html__( 'Soft Light', 'et_builder' ),
-					'difference'  => esc_html__( 'Difference', 'et_builder' ),
-					'exclusion'   => esc_html__( 'Exclusion', 'et_builder' ),
-					'hue'         => esc_html__( 'Hue', 'et_builder' ),
-					'saturation'  => esc_html__( 'Saturation', 'et_builder' ),
-					'color'       => esc_html__( 'Color', 'et_builder' ),
-					'luminosity'  => esc_html__( 'Luminosity', 'et_builder' ),
+					'normal'      => et_builder_i18n( 'Normal' ),
+					'multiply'    => et_builder_i18n( 'Multiply' ),
+					'screen'      => et_builder_i18n( 'Screen' ),
+					'overlay'     => et_builder_i18n( 'Overlay' ),
+					'darken'      => et_builder_i18n( 'Darken' ),
+					'lighten'     => et_builder_i18n( 'Lighten' ),
+					'color-dodge' => et_builder_i18n( 'Color Dodge' ),
+					'color-burn'  => et_builder_i18n( 'Color Burn' ),
+					'hard-light'  => et_builder_i18n( 'Hard Light' ),
+					'soft-light'  => et_builder_i18n( 'Soft Light' ),
+					'difference'  => et_builder_i18n( 'Difference' ),
+					'exclusion'   => et_builder_i18n( 'Exclusion' ),
+					'hue'         => et_builder_i18n( 'Hue' ),
+					'saturation'  => et_builder_i18n( 'Saturation' ),
+					'color'       => et_builder_i18n( 'Color' ),
+					'luminosity'  => et_builder_i18n( 'Luminosity' ),
 				),
 				'default'          => 'normal',
 				'default_on_child' => true,
@@ -8339,14 +8862,14 @@ class ET_Builder_Element {
 
 		if ( in_array( $background_tab, array( 'all', 'skip', 'video' ) ) ) {
 			$options["{$base_name}_video_mp4"] = array(
-				'label'              => esc_html__( 'Background Video MP4', 'et_builder' ),
+				'label'              => $i18n['background']['mp4']['label'],
+				'description'        => $i18n['background']['mp4']['description'],
+				'upload_button_text' => $i18n['background']['mp4']['upload_button_text'],
+				'choose_text'        => $i18n['background']['mp4']['choose_text'],
+				'update_text'        => $i18n['background']['mp4']['update_text'],
 				'type'               => 'skip' === $background_tab ? 'skip' : 'upload',
 				'option_category'    => 'configuration',
 				'data_type'          => 'video',
-				'upload_button_text' => esc_attr__( 'Upload a video', 'et_builder' ),
-				'choose_text'        => esc_attr__( 'Choose a Background Video MP4 File', 'et_builder' ),
-				'update_text'        => esc_attr__( 'Set As Background Video', 'et_builder' ),
-				'description'        => et_get_safe_localization( __( 'All videos should be uploaded in both .MP4 .WEBM formats to ensure maximum compatibility in all browsers. Upload the .MP4 version here.', 'et_builder' ) ),
 				'tab_slug'           => $tab_slug,
 				'toggle_slug'        => $toggle_slug,
 				'computed_affects'   => array(
@@ -8371,14 +8894,14 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_video_webm"] = array(
-				'label'              => esc_html__( 'Background Video Webm', 'et_builder' ),
+				'label'              => $i18n['background']['webm']['label'],
+				'description'        => $i18n['background']['webm']['description'],
+				'upload_button_text' => $i18n['background']['webm']['upload_button_text'],
+				'choose_text'        => $i18n['background']['webm']['choose_text'],
+				'update_text'        => $i18n['background']['webm']['update_text'],
 				'type'               => 'skip' === $background_tab ? 'skip' : 'upload',
 				'option_category'    => 'configuration',
 				'data_type'          => 'video',
-				'upload_button_text' => esc_attr__( 'Upload a video', 'et_builder' ),
-				'choose_text'        => esc_attr__( 'Choose a Background Video WEBM File', 'et_builder' ),
-				'update_text'        => esc_attr__( 'Set As Background Video', 'et_builder' ),
-				'description'        => et_get_safe_localization( __( 'All videos should be uploaded in both .MP4 .WEBM formats to ensure maximum compatibility in all browsers. Upload the .WEBM version here.', 'et_builder' ) ),
 				'tab_slug'           => $tab_slug,
 				'toggle_slug'        => $toggle_slug,
 				'computed_affects'   => array(
@@ -8403,10 +8926,10 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_video_width"] = array(
-				'label'            => esc_html__( 'Background Video Width', 'et_builder' ),
+				'label'            => $i18n['background']['video_width']['label'],
+				'description'      => $i18n['background']['video_width']['description'],
 				'type'             => 'skip' === $background_tab ? 'skip' : 'text',
 				'option_category'  => 'configuration',
-				'description'      => esc_html__( 'In order for videos to be sized correctly, you must input the exact width (in pixels) of your video here.', 'et_builder' ),
 				'tab_slug'         => $tab_slug,
 				'toggle_slug'      => $toggle_slug,
 				'computed_affects' => array(
@@ -8419,10 +8942,10 @@ class ET_Builder_Element {
 			);
 
 			$options["{$base_name}_video_height"] = array(
-				'label'            => esc_html__( 'Background Video Height', 'et_builder' ),
+				'label'            => $i18n['background']['video_height']['label'],
+				'description'      => $i18n['background']['video_height']['description'],
 				'type'             => 'skip' === $background_tab ? 'skip' : 'text',
 				'option_category'  => 'configuration',
-				'description'      => esc_html__( 'In order for videos to be sized correctly, you must input the exact height (in pixels) of your video here.', 'et_builder' ),
 				'tab_slug'         => $tab_slug,
 				'toggle_slug'      => $toggle_slug,
 				'computed_affects' => array(
@@ -8435,16 +8958,16 @@ class ET_Builder_Element {
 			);
 
 			$options["${baseless_prefix}allow_player_pause"] = array(
-				'label'            => esc_html__( 'Pause Video When Another Video Plays', 'et_builder' ),
+				'label'            => $i18n['background']['pause']['label'],
+				'description'      => $i18n['background']['pause']['description'],
 				'type'             => 'skip' === $background_tab ? 'skip' : 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default'          => 'off',
 				'default_on_child' => true,
-				'description'      => esc_html__( 'Allow video to be paused by other players when they begin playing', 'et_builder' ),
 				'tab_slug'         => $tab_slug,
 				'toggle_slug'      => $toggle_slug,
 				'field_template'   => 'allow_player_pause',
@@ -8453,16 +8976,16 @@ class ET_Builder_Element {
 			);
 
 			$options["${base_name}_video_pause_outside_viewport"] = array(
-				'label'            => esc_html__( 'Pause Video While Not In View', 'et_builder' ),
+				'label'            => $i18n['background']['viewport']['label'],
+				'description'      => $i18n['background']['viewport']['description'],
 				'type'             => 'skip' === $background_tab ? 'skip' : 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default'          => 'on',
 				'default_on_child' => true,
-				'description'      => esc_html__( 'Allow video to be paused while it is not in the visible area.', 'et_builder' ),
 				'tab_slug'         => $tab_slug,
 				'toggle_slug'      => $toggle_slug,
 				'field_template'   => 'video_pause_outside_viewport',
@@ -9381,28 +9904,28 @@ class ET_Builder_Element {
 						sprintf( '<%%= window.et_builder.options_template_output("padding",%1$s) %%>',
 							wp_json_encode( array_merge( $single_fields_settings, array(
 								'side' => 'top',
-								'label' => esc_html__( 'Top', 'et_builder' ),
+								'label' => et_builder_i18n( 'Top' ),
 							) ) )
 						) : '',
 					! isset( $field['sides'] ) || ( ! empty( $field['sides'] ) && in_array( 'right', $field['sides'] ) ) ?
 						sprintf( '<%%= window.et_builder.options_template_output("padding",%1$s) %%>',
 							wp_json_encode( array_merge( $single_fields_settings, array(
 								'side' => 'right',
-								'label' => esc_html__( 'Right', 'et_builder' ),
+								'label' => et_builder_i18n( 'Right' ),
 							) ) )
 						) : '',
 					! isset( $field['sides'] ) || ( ! empty( $field['sides'] ) && in_array( 'bottom', $field['sides'] ) ) ?
 						sprintf( '<%%= window.et_builder.options_template_output("padding",%1$s) %%>',
 							wp_json_encode( array_merge( $single_fields_settings, array(
 								'side' => 'bottom',
-								'label' => esc_html__( 'Bottom', 'et_builder' ),
+								'label' => et_builder_i18n( 'Bottom' ),
 							) ) )
 						) : '',
 					! isset( $field['sides'] ) || ( ! empty( $field['sides'] ) && in_array( 'left', $field['sides'] ) ) ?
 						sprintf( '<%%= window.et_builder.options_template_output("padding",%1$s) %%>',
 							wp_json_encode( array_merge( $single_fields_settings, array(
 								'side' => 'left',
-								'label' => esc_html__( 'Left', 'et_builder' ),
+								'label' => et_builder_i18n( 'Left' ),
 							) ) )
 						) : '',
 					$need_mobile_options ?
@@ -9780,9 +10303,9 @@ class ET_Builder_Element {
 	 */
 	function get_main_tabs() {
 		$tabs = array(
-			'general'    => esc_html__( 'Content', 'et_builder' ),
-			'advanced'   => esc_html__( 'Design', 'et_builder' ),
-			'custom_css' => esc_html__( 'Advanced', 'et_builder' ),
+			'general'    => et_builder_i18n( 'Content' ),
+			'advanced'   => et_builder_i18n( 'Design' ),
+			'custom_css' => et_builder_i18n( 'Advanced' ),
 		);
 
 		return apply_filters( 'et_builder_main_tabs', $tabs );
@@ -10101,7 +10624,7 @@ class ET_Builder_Element {
 			</div>%5$s',
 			esc_attr( $this->child_slug ),
 			! in_array( $this->child_slug, array( 'et_pb_column', 'et_pb_column_inner' ) ) ? sprintf( '<a href="#" class="et-pb-add-sortable-option"><span>%1$s</span></a>', esc_html( $this->add_new_child_text() ) ) : '',
-			esc_html__( 'Content', 'et_builder' ),
+			et_builder_i18n( 'Content' ),
 			esc_html__( 'Here you can define the content that will be placed within the current tab.', 'et_builder' ),
 			"\n\n",
 			"\t",
@@ -10988,6 +11511,8 @@ class ET_Builder_Element {
 								'declaration' => rtrim( $style ),
 								'priority'    => $this->_style_priority,
 							) );
+
+							$this->maybe_push_element_to_letter_spacing_fix_list( $selector, array( 'body.safari ', 'body.iphone ', 'body.uiwebview ' ), rtrim( $style ), $default_letter_spacing );
 						}
 					} else {
 						if ( $is_hover ) {
@@ -10999,6 +11524,8 @@ class ET_Builder_Element {
 							'declaration' => rtrim( $style ),
 							'priority'    => $this->_style_priority,
 						) );
+
+						$this->maybe_push_element_to_letter_spacing_fix_list( $css_element, array( 'body.safari ', 'body.iphone ', 'body.uiwebview ' ), rtrim( $style ), $default_letter_spacing );
 
 						if ( $is_placeholder ) {
 							self::set_style( $function_name, array(
@@ -11118,6 +11645,18 @@ class ET_Builder_Element {
 							'priority'    => $this->_style_priority,
 							'media_query' => ET_Builder_Element::get_media_query( $current_media_query ),
 						) );
+
+						if( ! empty( $selector ) &&  in_array( $mobile_option, array( 'letter_spacing_phone', 'letter_spacing_tablet' ) ) ) {
+							switch( $mobile_option ) {
+								case 'letter_spacing_phone':
+									$css_prefix = 'body.iphone ';
+								break;
+								case 'letter_spacing_tablet':
+									$css_prefix = 'body.uiwebview ';
+								break;
+							}
+							$this->maybe_push_element_to_letter_spacing_fix_list( $selector, $css_prefix, $declaration, $default_letter_spacing );
+						}
 
 						if ( $is_placeholder ) {
 							self::set_style( $function_name, array(
@@ -11251,6 +11790,77 @@ class ET_Builder_Element {
 								esc_html( $important )
 							),
 						) );
+					}
+				}
+			}
+		}
+		// sets ligatures disabling for all selectors
+		// from the list $this->letter_spacing_fix_selectors
+		foreach ($this->letter_spacing_fix_selectors as $selector_with_prefix) {
+			self::set_style( $function_name, array(
+				'selector'    => $selector_with_prefix,
+				'declaration' => 'font-variant-ligatures: no-common-ligatures;',
+				'priority'    => $this->_style_priority
+			) );
+		}
+	}
+
+	/**
+	 * Maybe push element to the letter spacing fix list
+	 *
+	 * @since 4.4.7 Checks a element for the having of the letter-spacing property,
+	 * adds a prefix to all its selectors, push prefixed selector
+	 * to the array ($this->letter_spacing_fix_selectors) of elements
+	 * that need to have ligature fix (same elements will be overridden).
+	 *
+	 * @param string $selector CSS selector of the current element.
+	 * @param array  $css_prefixes array or string of CSS prefixes which will be added to the current element selector.
+	 * @param string $declaration CSS declaration of the current element.
+	 * @param string $default_letter_spacing default letter-spacing value at the current element.
+	 */
+	function maybe_push_element_to_letter_spacing_fix_list( $selector, $css_prefixes, $declaration, $default_letter_spacing ) {
+		if ( false === strpos( trim( $declaration ), 'letter-spacing' ) || empty( $css_prefixes ) || empty( $selector ) ) {
+			return;
+		}
+
+		$selectors = ! is_array( $selector ) ? array( $selector ) : $selector;
+
+		foreach ( $selectors as $selector ) {
+			if ( empty( $selector ) ) {
+				continue;
+			}
+
+			$css_value = str_replace( 'letter-spacing', '', $declaration );
+			$css_value = preg_replace( '/[^a-zA-Z0-9]/', '', $css_value );
+
+			if ( ! is_array( $css_prefixes ) ) {
+				$css_prefixes = array( $css_prefixes );
+			}
+
+			foreach ( $css_prefixes as $css_prefix ) {
+				$selector_with_prefix = '';
+				$selector_elements    = explode( ',', $selector );
+
+				if ( is_array( $selector_elements ) && count( $selector_elements ) > 0 ) {
+					$selector_with_prefix = implode( ',', preg_filter( '/^/', $css_prefix, $selector_elements ) );
+				}
+
+				if ( ! empty( $selector_with_prefix ) ) {
+					$hash_id_for_fix_selectors = crc32( $selector_with_prefix );
+
+					// Checking: if the current value of the sector is the default,
+					// given that the default value can be set in a different css-unit
+					// (px, em, rem... etc) than the current value
+					// (for example, the predefined default value can be '0px', while  the current selector value is  '0em')
+					$maybe_selector_has_default_value = 0 === intval( $default_letter_spacing ) &&  0 === intval( $css_value ) || ( $css_value === $default_letter_spacing );
+
+					if ( ! ( $maybe_selector_has_default_value ) ) {
+						$this->letter_spacing_fix_selectors[ $hash_id_for_fix_selectors ] = $selector_with_prefix;
+					} elseif ( isset ( $this->letter_spacing_fix_selectors[ $hash_id_for_fix_selectors ] ) ) {
+						// If the selector has a default value, should delete it from
+						// array of selectors ($this->letter_spacing_fix_selectors) that need to be fixed,
+						// if it was added earlier.
+						unset( $this->letter_spacing_fix_selectors[ $hash_id_for_fix_selectors ] );
 					}
 				}
 			}
@@ -14843,6 +15453,11 @@ class ET_Builder_Element {
 			return $modules['post'];
 		}
 
+		// If Divi Builder is disabled for all post types use layout modules as fallback
+		if ( isset( $modules['et_pb_layout'] ) ) {
+			return $modules['et_pb_layout'];
+		}
+
 		// If all else fail, use all modules
 		return self::get_modules();
 	}
@@ -15228,9 +15843,9 @@ class ET_Builder_Element {
 				$module_fields[ $_module_slug ][ $field_key ] = $field;
 			}
 
-			// Some module types must be separated for the Custom Defaults.
-			// For example we keep all section types as `et_pb_section` however they need separate Custom Defaults.
-			$additional_slugs = self::$custom_defaults_manager->get_module_additional_slugs( $_module_slug );
+			// Some module types must be separated for the Global Presets.
+			// For example we keep all section types as `et_pb_section` however they need different Global Presets.
+			$additional_slugs = self::$global_presets_manager->get_module_additional_slugs( $_module_slug );
 			foreach ( $additional_slugs as $alias ) {
 				$module_fields[ $alias ] = $module_fields[ $_module_slug ];
 			}
@@ -15363,9 +15978,9 @@ class ET_Builder_Element {
 				}
 			}
 
-			// Some module types must be separated for the Custom Defaults.
-			// For example we keep all section types as `et_pb_section` however they need separate Custom Defaults.
-			$additional_slugs = self::$custom_defaults_manager->get_module_additional_slugs( $_module_slug );
+			// Some module types must be separated for the Global Presets.
+			// For example we keep all section types as `et_pb_section` however they need different Global Presets.
+			$additional_slugs = self::$global_presets_manager->get_module_additional_slugs( $_module_slug );
 			foreach ( $additional_slugs as $alias ) {
 				$module_fields[ $alias ] = $module_fields[ $_module_slug ];
 			}
@@ -15428,9 +16043,9 @@ class ET_Builder_Element {
 				}
 			}
 
-			// Some module types must be separated for the Custom Defaults.
-			// For example we keep all section types as `et_pb_section` however they need separate Custom Defaults.
-			$additional_slugs = self::$custom_defaults_manager->get_module_additional_slugs( $_module_slug );
+			// Some module types must be separated for the Global Presets.
+			// For example we keep all section types as `et_pb_section` however they need different Global Presets.
+			$additional_slugs = self::$global_presets_manager->get_module_additional_slugs( $_module_slug );
 			foreach ( $additional_slugs as $alias ) {
 				$module_fields[ $alias ] = $module_fields[ $_module_slug ];
 			}
@@ -15669,7 +16284,7 @@ class ET_Builder_Element {
 
 	/**
 	 * Intended to be used for unit testing
-	 * 
+	 *
 	 * @intendedForTesting
 	 */
 	static function reset_styles() {
@@ -16370,17 +16985,8 @@ class ET_Builder_Element {
 					esc_url( $background_image )
 				);
 
-				// Update '.et_parallax_bg_wrap' border-radius
-				$border_radius_values = et_pb_responsive_options()->get_property_values( $this->props, 'border_radii' );
-
-				foreach ( et_pb_responsive_options()->get_modes() as $device ) {
-					$radius_values = explode( '|', $border_radius_values[$device] );
-					array_shift( $radius_values );
-
-					$border_radius_values[$device] = implode( ' ', $radius_values );
-				}
-
-				et_pb_responsive_options()->generate_responsive_css( $border_radius_values, $this->main_css_element . ' .et_parallax_bg_wrap', 'border-radius', $this->slug, '', 'border' );
+				// set `.et_parallax_bg_wrap` border-radius.
+				et_set_parallax_bg_wrap_border_radius( $this->props, $this->slug, $this->main_css_element );
 			}
 
 			// C.3. Hover parallax class.
@@ -18026,9 +18632,9 @@ class ET_Builder_Structure_Element extends ET_Builder_Element {
 					</a>
 				</li>
 			</ul>',
-			esc_html__( 'Color', 'et_builder' ),
+			et_builder_i18n( 'Color' ),
 			esc_html__( 'Gradient', 'et_builder' ),
-			esc_html__( 'Image', 'et_builder' ),
+			et_builder_i18n( 'Image' ),
 			esc_html__( 'Video', 'et_builder' ),
 			$this->get_icon( 'background-color' ),
 			$this->get_icon( 'background-gradient' ),
@@ -18183,25 +18789,25 @@ class ET_Builder_Structure_Element extends ET_Builder_Element {
 			$this->get_icon( 'swap' ),
 			$this->get_icon( 'delete' ),
 			esc_html__( 'Background Gradient', 'et_builder' ),
-			esc_html__( 'On', 'et_builder' ), // #5
-			esc_html__( 'Off', 'et_builder' ),
+			et_builder_i18n( 'On' ), // #5
+			et_builder_i18n( 'Off' ),
 			esc_html__( 'Gradient Start', 'et_builder' ),
 			esc_html__( 'Hex Value', 'et_builder' ),
 			esc_html__( 'Gradient End', 'et_builder' ),
 			esc_html__( 'Gradient Type', 'et_builder' ), // #10
-			esc_html__( 'Linear', 'et_builder' ),
-			esc_html__( 'Radial', 'et_builder' ),
+			et_builder_i18n( 'Linear' ),
+			et_builder_i18n( 'Radial' ),
 			esc_html__( 'Gradient Direction', 'et_builder' ),
 			esc_html__( 'Radial Direction', 'et_builder' ),
-			esc_html__( 'Center', 'et_builder' ), // #15
-			esc_html__( 'Top Left', 'et_builder' ),
-			esc_html__( 'Top', 'et_builder' ),
-			esc_html__( 'Top Right', 'et_builder' ),
-			esc_html__( 'Right', 'et_builder' ),
-			esc_html__( 'Bottom Right', 'et_builder' ), // #20
-			esc_html__( 'Bottom', 'et_builder' ),
-			esc_html__( 'Bottom Left', 'et_builder' ),
-			esc_html__( 'Left', 'et_builder' ),
+			et_builder_i18n( 'Center' ), // #15
+			et_builder_i18n( 'Top Left' ),
+			et_builder_i18n( 'Top' ),
+			et_builder_i18n( 'Top Right' ),
+			et_builder_i18n( 'Right' ),
+			et_builder_i18n( 'Bottom Right' ), // #20
+			et_builder_i18n( 'Bottom' ),
+			et_builder_i18n( 'Bottom Left' ),
+			et_builder_i18n( 'Left' ),
 			esc_html__( 'Start Position', 'et_builder' ),
 			esc_html__( 'End Position', 'et_builder' ), // #25
 			esc_attr( ET_Global_Settings::get_value( 'all_background_gradient_start' ) ),
@@ -18239,15 +18845,15 @@ class ET_Builder_Structure_Element extends ET_Builder_Element {
 				<option value="bottom_center"<%%= current_background_position_bottomcenter %%>>%8$s</option>
 				<option value="bottom_right"<%%= current_background_position_bottomright %%>>%9$s</option>
 			</select>',
-			esc_html__( 'Top Left', 'et_builder' ),
-			esc_html__( 'Top Center', 'et_builder' ),
-			esc_html__( 'Top Right', 'et_builder' ),
-			esc_html__( 'Center Left', 'et_builder' ),
-			esc_html__( 'Center', 'et_builder' ),
-			esc_html__( 'Center Right', 'et_builder' ),
-			esc_html__( 'Bottom Left', 'et_builder' ),
-			esc_html__( 'Bottom Center', 'et_builder' ),
-			esc_html__( 'Bottom Right', 'et_builder' )
+			et_builder_i18n( 'Top Left' ),
+			et_builder_i18n( 'Top Center' ),
+			et_builder_i18n( 'Top Right' ),
+			et_builder_i18n( 'Center Left' ),
+			et_builder_i18n( 'Center' ),
+			et_builder_i18n( 'Center Right' ),
+			et_builder_i18n( 'Bottom Left' ),
+			et_builder_i18n( 'Bottom Center' ),
+			et_builder_i18n( 'Bottom Right' )
 		);
 
 		$select_background_repeat = sprintf(
@@ -18263,7 +18869,7 @@ class ET_Builder_Structure_Element extends ET_Builder_Element {
 			esc_html__( 'Repeat', 'et_builder' ),
 			esc_html__( 'Repeat X (horizontal)', 'et_builder' ),
 			esc_html__( 'Repeat Y (vertical)', 'et_builder' ),
-			esc_html__( 'Space', 'et_builder' ),
+			et_builder_i18n( 'Space' ),
 			esc_html__( 'Round', 'et_builder' )
 		);
 
@@ -18286,22 +18892,22 @@ class ET_Builder_Structure_Element extends ET_Builder_Element {
 				<option value="color"<%%= current_background_blend_color %%>>%15$s</option>
 				<option value="luminosity"<%%= current_background_blend_luminosity %%>>%16$s</option>
 			</select>',
-			esc_html__( 'Normal', 'et_builder' ),
-			esc_html__( 'Multiply', 'et_builder' ),
-			esc_html__( 'Screen', 'et_builder' ),
-			esc_html__( 'Overlay', 'et_builder' ),
-			esc_html__( 'Darken', 'et_builder' ),
-			esc_html__( 'Lighten', 'et_builder' ),
-			esc_html__( 'Color Dodge', 'et_builder' ),
-			esc_html__( 'Color Burn', 'et_builder' ),
-			esc_html__( 'Hard Light', 'et_builder' ),
-			esc_html__( 'Soft Light', 'et_builder' ),
-			esc_html__( 'Difference', 'et_builder' ),
-			esc_html__( 'Exclusion', 'et_builder' ),
-			esc_html__( 'Hue', 'et_builder' ),
-			esc_html__( 'Saturation', 'et_builder' ),
-			esc_html__( 'Color', 'et_builder' ),
-			esc_html__( 'Luminosity', 'et_builder' )
+			et_builder_i18n( 'Normal' ),
+			et_builder_i18n( 'Multiply' ),
+			et_builder_i18n( 'Screen' ),
+			et_builder_i18n( 'Overlay' ),
+			et_builder_i18n( 'Darken' ),
+			et_builder_i18n( 'Lighten' ),
+			et_builder_i18n( 'Color Dodge' ),
+			et_builder_i18n( 'Color Burn' ),
+			et_builder_i18n( 'Hard Light' ),
+			et_builder_i18n( 'Soft Light' ),
+			et_builder_i18n( 'Difference' ),
+			et_builder_i18n( 'Exclusion' ),
+			et_builder_i18n( 'Hue' ),
+			et_builder_i18n( 'Saturation' ),
+			et_builder_i18n( 'Color' ),
+			et_builder_i18n( 'Luminosity' )
 		);
 
 		$tab_image = sprintf(
@@ -18380,12 +18986,12 @@ class ET_Builder_Structure_Element extends ET_Builder_Element {
 			$this->get_icon( 'add' ),
 			$this->get_icon( 'setting' ),
 			$this->get_icon( 'delete' ),
-			esc_html__( 'Upload an image', 'et_builder' ), // #5
+			et_builder_i18n( 'Upload an image' ), // #5
 			esc_html__( 'Choose a Background Image', 'et_builder' ),
 			esc_html__( 'Set As Background', 'et_builder' ),
 			esc_html__( 'Use Parallax Effect', 'et_builder' ),
-			esc_html__( 'On', 'et_builder' ),
-			esc_html__( 'Off', 'et_builder' ), // #10
+			et_builder_i18n( 'On' ),
+			et_builder_i18n( 'Off' ), // #10
 			esc_html__( 'Parallax Method', 'et_builder' ),
 			esc_html__( 'True Parallax', 'et_builder' ),
 			esc_html__( 'CSS', 'et_builder' ),
@@ -18498,8 +19104,8 @@ class ET_Builder_Structure_Element extends ET_Builder_Element {
 			esc_html__( 'Background Video Width', 'et_builder' ), // #10
 			esc_html__( 'Background Video Height', 'et_builder' ),
 			esc_html__( 'Pause Video When Another Video Plays', 'et_builder' ),
-			esc_html__( 'On', 'et_builder' ),
-			esc_html__( 'Off', 'et_builder' ),
+			et_builder_i18n( 'On' ),
+			et_builder_i18n( 'Off' ),
 			esc_html__( 'Pause Video While Not In View', 'et_builder' ) // #15
 		);
 
@@ -18531,7 +19137,7 @@ class ET_Builder_Structure_Element extends ET_Builder_Element {
 			<%% counter++;
 			}); %%>',
 			esc_html__( 'Column', 'et_builder' ),
-			esc_html__( 'Background', 'et_builder' ),
+			et_builder_i18n( 'Background' ),
 			$tab_navs,
 			$tab_color,
 			$tab_gradient, // #5
@@ -18615,10 +19221,10 @@ class ET_Builder_Structure_Element extends ET_Builder_Element {
 			}); %%>',
 			esc_html__( 'Column', 'et_builder' ),
 			esc_html__( 'Padding', 'et_builder' ),
-			esc_html__( 'Top', 'et_builder' ),
-			esc_html__( 'Right', 'et_builder' ),
-			esc_html__( 'Bottom', 'et_builder' ), // #5
-			esc_html__( 'Left', 'et_builder' ),
+			et_builder_i18n( 'Top' ),
+			et_builder_i18n( 'Right' ),
+			et_builder_i18n( 'Bottom' ), // #5
+			et_builder_i18n( 'Left' ),
 			et_pb_generate_mobile_settings_tabs() // #7
 		);
 
@@ -18690,9 +19296,9 @@ class ET_Builder_Structure_Element extends ET_Builder_Element {
 			}); %%>',
 			$this->generate_column_vars_css(),
 			esc_html__( 'Column', 'et_builder' ),
-			esc_html__( 'Before', 'et_builder' ),
-			esc_html__( 'Main Element', 'et_builder' ),
-			esc_html__( 'After', 'et_builder' )
+			et_builder_i18n( 'Before' ),
+			et_builder_i18n( 'Main Element' ),
+			et_builder_i18n( 'After' )
 		);
 
 		return $output;

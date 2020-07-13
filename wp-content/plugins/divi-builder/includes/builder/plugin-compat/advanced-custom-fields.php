@@ -149,13 +149,13 @@ class ET_Builder_Plugin_Compat_Advanced_Custom_Fields extends ET_Builder_Plugin_
 					'type'   => 'any',
 					'fields' => array(
 						'before' => array(
-							'label'   => esc_html__( 'Before', 'et_builder' ),
+							'label'   => et_builder_i18n( 'Before' ),
 							'type'    => 'text',
 							'default' => '',
 							'show_on' => 'text',
 						),
 						'after'  => array(
-							'label'   => esc_html__( 'After', 'et_builder' ),
+							'label'   => et_builder_i18n( 'After' ),
 							'type'    => 'text',
 							'default' => '',
 							'show_on' => 'text',
@@ -171,8 +171,8 @@ class ET_Builder_Plugin_Compat_Advanced_Custom_Fields extends ET_Builder_Plugin_
 						'label'   => esc_html__( 'Enable raw HTML', 'et_builder' ),
 						'type'    => 'yes_no_button',
 						'options' => array(
-							'on'  => esc_html__( 'Yes', 'et_builder' ),
-							'off' => esc_html__( 'No', 'et_builder' ),
+							'on'  => et_builder_i18n( 'Yes' ),
+							'off' => et_builder_i18n( 'No' ),
 						),
 						// Set enable_html default to `on` for taxonomy fields so builder
 						// automatically renders taxonomy list properly as unescaped HTML.
@@ -267,7 +267,7 @@ class ET_Builder_Plugin_Compat_Advanced_Custom_Fields extends ET_Builder_Plugin_
 				break;
 
 			case 'true_false':
-				$value = $value ? __( 'Yes', 'et_builder' ) : esc_html__( 'No', 'et_builder' );
+				$value = et_builder_i18n( $value ? 'Yes' : 'No' );
 				break;
 
 			case 'taxonomy':

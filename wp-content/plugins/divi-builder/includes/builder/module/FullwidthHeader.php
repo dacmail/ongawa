@@ -12,24 +12,24 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 					'images'       => esc_html__( 'Images', 'et_builder' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'layout'        => esc_html__( 'Layout', 'et_builder' ),
+					'layout'        => et_builder_i18n( 'Layout' ),
 					'scroll_down'   => esc_html__( 'Scroll Down Icon', 'et_builder' ),
 					'image'         => array(
-						'title' => esc_html__( 'Image', 'et_builder' ),
+						'title' => et_builder_i18n( 'Image' ),
 					),
-					'overlay'       => esc_html__( 'Overlay', 'et_builder' ),
+					'overlay'       => et_builder_i18n( 'Overlay' ),
 					'text'          => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 					'width'       => array(
-						'title'    => esc_html__( 'Sizing', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Sizing' ),
 						'priority' => 80,
 					),
 				),
@@ -47,7 +47,7 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'      => array(
 				'title' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => '%%order_class%%.et_pb_fullwidth_header .header-content h1, %%order_class%%.et_pb_fullwidth_header .header-content h2.et_pb_module_header, %%order_class%%.et_pb_fullwidth_header .header-content h3.et_pb_module_header, %%order_class%%.et_pb_fullwidth_header .header-content h4.et_pb_module_header, %%order_class%%.et_pb_fullwidth_header .header-content h5.et_pb_module_header, %%order_class%%.et_pb_fullwidth_header .header-content h6.et_pb_module_header',
 					),
@@ -65,7 +65,7 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 					),
 				),
 				'content' => array(
-					'label'          => esc_html__( 'Body', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Body' ),
 					'css'            => array(
 						'main' => '%%order_class%%.et_pb_fullwidth_header .et_pb_header_content_wrapper',
 					),
@@ -196,7 +196,7 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 							'border_styles' => '%%order_class%%.et_pb_fullwidth_header .header-logo, %%order_class%%.et_pb_fullwidth_header .header-image-container img',
 						)
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'     => 'advanced',
 					'toggle_slug'  => 'image',
 				),
@@ -236,11 +236,11 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'selector' => '.header-content img.header-logo',
 			),
 			'title' => array(
-				'label'    => esc_html__( 'Title', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Title' ),
 				'selector' => '%%order_class%% .header-content h1,%%order_class%% .header-content .et_pb_module_header',
 			),
 			'content' => array(
-				'label'    => esc_html__( 'Body', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Body' ),
 				'selector' => '%%order_class%%.et_pb_fullwidth_header .et_pb_header_content_wrapper',
 			),
 			'subtitle' => array(
@@ -263,7 +263,7 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'llLBZCNCEGk' ),
+				'id'   => 'llLBZCNCEGk',
 				'name' => esc_html__( 'An introduction to the Fullwidth Header module', 'et_builder' ),
 			),
 		);
@@ -272,7 +272,7 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'title' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Enter your page title here.', 'et_builder' ),
@@ -307,8 +307,8 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'affects'           => array(
@@ -323,8 +323,8 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'affects'           => array(
@@ -425,7 +425,7 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'label'              => esc_html__( 'Logo Image', 'et_builder' ),
 				'type'               => 'upload',
 				'option_category'    => 'basic_option',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'choose_text'        => esc_attr__( 'Choose an Image', 'et_builder' ),
 				'update_text'        => esc_attr__( 'Set As Image', 'et_builder' ),
 				'affects'            => array(
@@ -469,8 +469,8 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'type'            => 'select',
 				'option_category' => 'layout',
 				'options'         => array(
-					'center'  => esc_html__( 'Center', 'et_builder' ),
-					'bottom' => esc_html__( 'Bottom', 'et_builder' ),
+					'center'  => et_builder_i18n( 'Center' ),
+					'bottom' => et_builder_i18n( 'Bottom' ),
 				),
 				'default_on_front' => 'center',
 				'tab_slug'        => 'advanced',
@@ -483,7 +483,7 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'label'              => esc_html__( 'Header Image', 'et_builder' ),
 				'type'               => 'upload',
 				'option_category'    => 'basic_option',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'choose_text'        => esc_attr__( 'Choose an Image', 'et_builder' ),
 				'update_text'        => esc_attr__( 'Set As Image', 'et_builder' ),
 				'description'        => esc_html__( 'Upload your desired image, or type in the URL to the image you would like to display.', 'et_builder' ),
@@ -528,7 +528,7 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'option_category' => 'layout',
 				'options'         => array(
 					'center'  => esc_html__( 'Vertically Centered', 'et_builder' ),
-					'bottom' => esc_html__( 'Bottom', 'et_builder' ),
+					'bottom' => et_builder_i18n( 'Bottom' ),
 				),
 				'default_on_front' => 'center',
 				'tab_slug'        => 'advanced',
@@ -536,7 +536,7 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'description'     => esc_html__( 'This controls the orientation of the image within the module.', 'et_builder' ),
 			),
 			'content' => array(
-				'label'           => esc_html__( 'Body', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Body' ),
 				'type'            => 'tiny_mce',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Content entered here will appear below the subheading text.', 'et_builder' ),

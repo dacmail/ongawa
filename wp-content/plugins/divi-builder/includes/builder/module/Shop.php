@@ -16,14 +16,14 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Content', 'et_builder' ),
-					'elements' => esc_html__( 'Elements', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Content' ),
+					'elements' => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'overlay' => esc_html__( 'Overlay', 'et_builder' ),
-					'image'   => esc_html__( 'Image', 'et_builder' ),
+					'overlay' => et_builder_i18n( 'Overlay' ),
+					'image'   => et_builder_i18n( 'Image' ),
 					'star'    => esc_html__( 'Star Rating', 'et_builder' ),
 				),
 			),
@@ -32,7 +32,7 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'title' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => "{$this->main_css_element} .woocommerce ul.products li.product h3, {$this->main_css_element} .woocommerce ul.products li.product h1, {$this->main_css_element} .woocommerce ul.products li.product h2, {$this->main_css_element} .woocommerce ul.products li.product h4, {$this->main_css_element} .woocommerce ul.products li.product h5, {$this->main_css_element} .woocommerce ul.products li.product h6",
 						'hover' => "{$this->main_css_element} .woocommerce ul.products li.product h3:hover, {$this->main_css_element} .woocommerce ul.products li.product h1:hover, {$this->main_css_element} .woocommerce ul.products li.product h2:hover, {$this->main_css_element} .woocommerce ul.products li.product h4:hover, {$this->main_css_element} .woocommerce ul.products li.product h5:hover, {$this->main_css_element} .woocommerce ul.products li.product h6:hover, {$this->main_css_element} .woocommerce ul.products li.product h1.hover, {$this->main_css_element} .woocommerce ul.products li.product h2.hover, {$this->main_css_element} .woocommerce ul.products li.product h3.hover, {$this->main_css_element} .woocommerce ul.products li.product h4.hover, {$this->main_css_element} .woocommerce ul.products li.product h5.hover, {$this->main_css_element} .woocommerce ul.products li.product h6.hover",
@@ -126,7 +126,7 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 						),
 						'important' => 'all',
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'     => 'advanced',
 					'toggle_slug'  => 'image',
 				),
@@ -199,15 +199,15 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 				'selector' => 'li.product .onsale',
 			),
 			'image' => array(
-				'label'    => esc_html__( 'Image', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Image' ),
 				'selector' => '.et_shop_image',
 			),
 			'overlay' => array(
-				'label'    => esc_html__( 'Overlay', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Overlay' ),
 				'selector' => '.et_overlay',
 			),
 			'title' => array(
-				'label'    => esc_html__( 'Title', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Title' ),
 				'selector' => $this->get_title_selector(),
 			),
 			'rating' => array(
@@ -226,7 +226,7 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'O5RCEYP-qKI' ),
+				'id'   => 'O5RCEYP-qKI',
 				'name' => esc_html__( 'An introduction to the Shop module', 'et_builder' ),
 			),
 		);
@@ -239,14 +239,15 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 				'type'             => 'select',
 				'option_category'  => 'basic_option',
 				'options'          => array(
-					'recent'           => esc_html__( 'Recent Products', 'et_builder' ),
+					'default'          => esc_html__( 'Default (Menu ordering + name)', 'et_builder' ),
+					'latest'           => esc_html__( 'Latest Products', 'et_builder' ),
 					'featured'         => esc_html__( 'Featured Products', 'et_builder' ),
 					'sale'             => esc_html__( 'Sale Products', 'et_builder' ),
 					'best_selling'     => esc_html__( 'Best Selling Products', 'et_builder' ),
 					'top_rated'        => esc_html__( 'Top Rated Products', 'et_builder' ),
 					'product_category' => esc_html__( 'Product Category', 'et_builder' ),
 				),
-				'default_on_front' => 'recent',
+				'default_on_front' => 'default',
 				'affects'          => array(
 					'include_categories',
 				),
@@ -261,14 +262,17 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'description'      => esc_html__( 'Only include products for the current page. Useful on archive and index pages. For example let\'s say you used this module on a Theme Builder layout that is enabled for product categories. Selecting the "Sale Products" view type above and enabling this option would show only products that are on sale when viewing product categories.', 'et_builder' ),
 				'toggle_slug'      => 'main_content',
 				'default'          => 'off',
 				'show_if'          => array(
 					'function.isTBLayout' => 'on',
+				),
+				'show_if_not'      => array(
+					'type' => 'product_category',
 				),
 				'computed_affects' => array(
 					'__shop',
@@ -290,8 +294,8 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default'          => 'off',
 				'description'      => esc_html__( 'Turn pagination on and off.', 'et_builder' ),
@@ -362,7 +366,7 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 				),
 				'toggle_slug'      => 'main_content',
 				'show_if_not'      => array(
-					'type' => 'recent',
+					'type' => 'latest',
 				),
 			),
 			'sale_badge_color'    => array(
@@ -481,8 +485,8 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 		$post_id            = isset( $current_page['id'] ) ? (int) $current_page['id'] : 0;
 		$type               = $this->props['type'];
 		$posts_number       = $this->props['posts_number'];
-		$orderby            = 'recent' === $type ? 'id' : $this->props['orderby'];
-		$order              = 'recent' === $type ? 'DESC' : 'ASC';
+		$orderby            = 'default' === $type ? 'id' : $this->props['orderby'];
+		$order              = 'default' === $type ? 'DESC' : 'ASC';
 		$columns            = $this->props['columns_number'];
 		$pagination         = 'on' === $this->prop( 'show_pagination', 'off' );
 		$product_categories = array();
@@ -531,9 +535,14 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 			}
 		}
 
-		if ( 'default' === $orderby && 'recent' !== $type ) {
+		// Recent was the default option in Divi once, so it is added here for the websites created before the change
+		if ( 'default' === $orderby && ( 'default' === $type || 'recent' === $type ) ) {
 			// Leave the attribute empty to allow WooCommerce to take over and use the default sorting.
 			$orderby = '';
+		}
+
+		if ( 'latest' === $type ) {
+			$orderby = 'date-desc';
 		}
 
 		if ( in_array( $orderby, array( 'price-desc', 'date-desc' ) ) ) {
@@ -719,7 +728,7 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 		if ( '0' === $columns ) {
 			$this->add_classname( 'et_pb_shop_grid' );
 		}
-		
+
 		$shop_order = self::_get_index( array( self::INDEX_MODULE_ORDER, $render_slug ) );
 
 		$output = sprintf(

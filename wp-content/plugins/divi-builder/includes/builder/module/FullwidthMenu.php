@@ -20,15 +20,15 @@ class ET_Builder_Module_Fullwidth_Menu extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Content', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Content' ),
 					'image'        => esc_html__( 'Logo', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'layout'         => array(
-						'title'    => esc_html__( 'Layout', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Layout' ),
 						'priority' => 19,
 					),
 					'menu'           => array(
@@ -192,7 +192,7 @@ class ET_Builder_Module_Fullwidth_Menu extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'Q2heZC2GbNg' ),
+				'id'   => 'Q2heZC2GbNg',
 				'name' => esc_html__( 'An introduction to the Fullwidth Menu module', 'et_builder' ),
 			),
 		);
@@ -253,8 +253,8 @@ class ET_Builder_Module_Fullwidth_Menu extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'tab_slug'        => 'advanced',
 				'toggle_slug'     => 'layout',
@@ -338,7 +338,7 @@ class ET_Builder_Module_Fullwidth_Menu extends ET_Builder_Module {
 				'label'              => esc_html__( 'Logo', 'et_builder' ),
 				'type'               => 'upload',
 				'option_category'    => 'basic_option',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'choose_text'        => esc_attr__( 'Choose an Image', 'et_builder' ),
 				'update_text'        => esc_attr__( 'Set As Logo', 'et_builder' ),
 				'description'        => esc_html__( 'Upload an image to display beside your menu.', 'et_builder' ),
@@ -421,8 +421,8 @@ class ET_Builder_Module_Fullwidth_Menu extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default'         => 'off',
 				'toggle_slug'     => 'elements',
@@ -435,8 +435,8 @@ class ET_Builder_Module_Fullwidth_Menu extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default'         => 'off',
 				'toggle_slug'     => 'elements',

@@ -1,10 +1,10 @@
 <?php
 /* THIS IS A GENERATED FILE. DO NOT EDIT DIRECTLY. */
-$sg_cachepress_strings = array(
-__( "Top 3 Optimization Opportunities", "sg-cachepress" ), // src-js/components/cards/optimizations.tsx:16
+$sg_cachepress_i18n_strings = array(
 __( "Test URLs for Cache Status", "sg-cachepress" ), // src-js/components/cache-tester/index.tsx:56
 __( "Check if the Dynamic Cache is working on a certain URL. Especially useful to make sure your Exclude list is working the way it should.", "sg-cachepress" ), // src-js/components/cache-tester/index.tsx:59
 __( "Test", "sg-cachepress" ), // src-js/components/cache-tester/index.tsx:87
+__( "Top 3 Optimization Opportunities", "sg-cachepress" ), // src-js/components/cards/optimizations.tsx:16
 __( "Confirm", "sg-cachepress" ), // src-js/components/dialogs/async-dialog.tsx:18
 __( "Defering render-blocking JavaScript may cause issues with scripts that require certain order of execution. This is why we advise you to check the frontend of your website after you enable this optimization.", "sg-cachepress" ), // src-js/components/dialogs/async-dialog.tsx:29
 __( "If you notice issues with certain functionality, use the Exclude functionality to keep those scripts loading in a render-blocking manner.", "sg-cachepress" ), // src-js/components/dialogs/async-dialog.tsx:39
@@ -45,16 +45,38 @@ __( "Please be patient, this process may take some time", "sg-cachepress" ), // 
 __( "Generated %(optimized)s of %(total)s webp copies", "sg-cachepress" ), // src-js/components/loaders/webp-loader.tsx:31
 __( "Pause", "sg-cachepress" ), // src-js/components/loaders/webp-loader.tsx:55
 __( "WebP settings have been changed, please, {{link}}re-generate{{/link}} your images!.", "sg-cachepress" ), // src-js/components/slider/quality-slider.tsx:75
-__( "Generate WebP Copies of New Images", "sg-cachepress" ), // src-js/components/webp/webp.tsx:160
-__( "WebP is a next generation image format supported by modern browers which greatly reduces the size of your images.", "sg-cachepress" ), // src-js/components/webp/webp.tsx:165
-__( "Optimization Level", "sg-cachepress" ), // src-js/components/webp/webp.tsx:170
-__( "Chose the quality of WebP copies created by us. Higher quality means higher image size.", "sg-cachepress" ), // src-js/components/webp/webp.tsx:171
-__( "Optimization Type", "sg-cachepress" ), // src-js/components/webp/webp.tsx:184
-__( "Manage WebP Copies for Existing Images", "sg-cachepress" ), // src-js/components/webp/webp.tsx:209
-__( "Generate or delete a WebP copy of your existing media library.", "sg-cachepress" ), // src-js/components/webp/webp.tsx:212
-__( "Delete all WebP Files", "sg-cachepress" ), // src-js/components/webp/webp.tsx:231
-__( "Bulk Generate WebP Files", "sg-cachepress" ), // src-js/components/webp/webp.tsx:248
-__( "All WebP copies of your files have been generated successfully! Force {{link}}re-generation{{/link}} of your images.", "sg-cachepress" ), // src-js/components/webp/webp.tsx:264
+__( "Generate WebP Copies of New Images", "sg-cachepress" ), // src-js/components/webp/webp.tsx:168
+__( "WebP is a next generation image format supported by modern browers which greatly reduces the size of your images.", "sg-cachepress" ), // src-js/components/webp/webp.tsx:173
+__( "Optimization Level", "sg-cachepress" ), // src-js/components/webp/webp.tsx:178
+__( "Chose the quality of WebP copies created by us. Higher quality means higher image size.", "sg-cachepress" ), // src-js/components/webp/webp.tsx:179
+__( "Optimization Type", "sg-cachepress" ), // src-js/components/webp/webp.tsx:192
+__( "Manage WebP Copies for Existing Images", "sg-cachepress" ), // src-js/components/webp/webp.tsx:217
+__( "Generate or delete a WebP copy of your existing media library.", "sg-cachepress" ), // src-js/components/webp/webp.tsx:220
+__( "Delete all WebP Files", "sg-cachepress" ), // src-js/components/webp/webp.tsx:239
+__( "Bulk Generate WebP Files", "sg-cachepress" ), // src-js/components/webp/webp.tsx:256
+__( "All WebP copies of your files have been generated successfully! Force {{link}}re-generation{{/link}} of your images.", "sg-cachepress" ), // src-js/components/webp/webp.tsx:272
+__( "Old PHP Version", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:171
+__( "You are using our Managed PHP service, which means that SiteGround will automatically update your PHP once we are sure there is a newer stable one, which comes with the latest security and performance enhancements. Alternatively, you can choose to manually set your PHP version, in which case the system will hardcode that version to your WordPress instance until you manually change it again.", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:195
+__( "Your site will keep using that version until you manually change it from this interface or until you switch to \"Managed PHP\" service. If you choose to take advantage of our Managed PHP service, SiteGround will automatically update your PHP once we are sure there is a newer stable one, which comes with the latest security and performance enhancements.", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:200
+__( "As a SiteGround client you may change your PHP version per site manually. However, we strongly recommend you to take advantage of our Managed PHP service, which means that SiteGround will automatically update your PHP once we are sure there is a newer, stable and safe version, which will give you the latest security and performance enhancements. Alternatively, if you choose to manually set your PHP version, the system will hardcode that version to your WordPress instance until you manually change it again.", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:205
+__( "Set your PHP version", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:228
+__( "You are currently running on PHP %(version)s.", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:233
+__( "PHP Management Method", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:245
+__( "Please select method", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:246
+__( "Please select management type", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:251
+__( "PHP Version", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:261
+__( "Please select PHP version", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:262
+__( "Please select PHP version", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:267
+__( "Save", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:290
+__( "We currently recommend you to use PHP %(version)s. You can check the compatibility with the recommended version before you switch. {{link}}Check Compatibility{{/link}}", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:306
+__( "All your plugins are compatible with PHP %(version)s.  You may safely switch to “Managed PHP” service and we’ll upgrade it automatically, or set it manually. {{link}}Check Again{{/link}}", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:330
+__( "Checking PHP 7.1 Compatibility...", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:351
+__( "Unfortunately some of your plugins or theme are not compatible with our recommended version. {{link}}Check Again{{/link}}", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:372
+__( "We've detected that the WordPress cronjob functionality is not working. Please, enable it following the instructions in {{link}}this article{{/link}} and refresh this page. If you’re using a real cron job, you can {{link2}}ignore this message{{/link2}} at your own risk. Note, that in this case, those operations may take longer than usual to complete.", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:400
+__( "https://www.siteground.com/kb/disable-enable-wordpress-cron/", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:404
+__( "Thanks for using SG Optimizer to make your site faster!", "sg-cachepress" ), // src-js/containers/rating/index.tsx:61
+__( "Help more people optimize their sites by rating our plugin.", "sg-cachepress" ), // src-js/containers/rating/index.tsx:68
+__( "Don’t Show This Again", "sg-cachepress" ), // src-js/containers/rating/index.tsx:78
 __( "Browser Caching", "sg-cachepress" ), // src-js/components/modules/browser-cache/index.tsx:12
 __( "Adds rules to store in your visitors browser cache to keep static content longer for better site performance.", "sg-cachepress" ), // src-js/components/modules/browser-cache/index.tsx:16
 __( "Browser Caching", "sg-cachepress" ), // src-js/components/modules/browser-cache/index.tsx:33
@@ -203,27 +225,5 @@ __( "Lazy Load Responsive Images", "sg-cachepress" ), // src-js/components/tabs/
 __( "Certain plugins and themes generate multiple images from a single upload to work better on different devices. Enable if you want to lazy-load these too.", "sg-cachepress" ), // src-js/components/tabs/sites-control/index.tsx:757
 __( "Lazy Load Widgets", "sg-cachepress" ), // src-js/components/tabs/sites-control/index.tsx:789
 __( "Enable this option if you want the images in your widget areas to load only when users reach them. ", "sg-cachepress" ), // src-js/components/tabs/sites-control/index.tsx:792
-__( "Old PHP Version", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:171
-__( "You are using our Managed PHP service, which means that SiteGround will automatically update your PHP once we are sure there is a newer stable one, which comes with the latest security and performance enhancements. Alternatively, you can choose to manually set your PHP version, in which case the system will hardcode that version to your WordPress instance until you manually change it again.", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:195
-__( "Your site will keep using that version until you manually change it from this interface or until you switch to \"Managed PHP\" service. If you choose to take advantage of our Managed PHP service, SiteGround will automatically update your PHP once we are sure there is a newer stable one, which comes with the latest security and performance enhancements.", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:200
-__( "As a SiteGround client you may change your PHP version per site manually. However, we strongly recommend you to take advantage of our Managed PHP service, which means that SiteGround will automatically update your PHP once we are sure there is a newer, stable and safe version, which will give you the latest security and performance enhancements. Alternatively, if you choose to manually set your PHP version, the system will hardcode that version to your WordPress instance until you manually change it again.", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:205
-__( "Set your PHP version", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:228
-__( "You are currently running on PHP %(version)s.", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:233
-__( "PHP Management Method", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:245
-__( "Please select method", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:246
-__( "Please select management type", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:251
-__( "PHP Version", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:261
-__( "Please select PHP version", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:262
-__( "Please select PHP version", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:267
-__( "Save", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:290
-__( "We currently recommend you to use PHP %(version)s. You can check the compatibility with the recommended version before you switch. {{link}}Check Compatibility{{/link}}", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:306
-__( "All your plugins are compatible with PHP %(version)s.  You may safely switch to “Managed PHP” service and we’ll upgrade it automatically, or set it manually. {{link}}Check Again{{/link}}", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:330
-__( "Checking PHP 7.1 Compatibility...", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:351
-__( "Unfortunately some of your plugins or theme are not compatible with our recommended version. {{link}}Check Again{{/link}}", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:372
-__( "We've detected that the WordPress cronjob functionality is not working. Please, enable it following the instructions in {{link}}this article{{/link}} and refresh this page. If you’re using a real cron job, you can {{link2}}ignore this message{{/link2}} at your own risk. Note, that in this case, those operations may take longer than usual to complete.", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:400
-__( "https://www.siteground.com/kb/disable-enable-wordpress-cron/", "sg-cachepress" ), // src-js/containers/php-checker/index.tsx:404
-__( "Thanks for using SG Optimizer to make your site faster!", "sg-cachepress" ), // src-js/containers/rating/index.tsx:61
-__( "Help more people optimize their sites by rating our plugin.", "sg-cachepress" ), // src-js/containers/rating/index.tsx:68
-__( "Don’t Show This Again", "sg-cachepress" ), // src-js/containers/rating/index.tsx:78
 );
 /* THIS IS THE END OF THE GENERATED FILE */

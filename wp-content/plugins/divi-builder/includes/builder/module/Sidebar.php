@@ -12,14 +12,14 @@ class ET_Builder_Module_Sidebar extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Content', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Content' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'layout'     => esc_html__( 'Layout', 'et_builder' ),
+					'layout'     => et_builder_i18n( 'Layout' ),
 					'text'       => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 				),
@@ -29,13 +29,13 @@ class ET_Builder_Module_Sidebar extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'header' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => "{$this->main_css_element} h3:first-of-type, {$this->main_css_element} h4:first-of-type, {$this->main_css_element} h5:first-of-type, {$this->main_css_element} h6:first-of-type, {$this->main_css_element} h2:first-of-type, {$this->main_css_element} h1:first-of-type, {$this->main_css_element} .widget-title, {$this->main_css_element} .widgettitle",
 					),
 				),
 				'body'   => array(
-					'label'    => esc_html__( 'Body', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Body' ),
 					'css'      => array(
 						'main'        => "{$this->main_css_element}, {$this->main_css_element} li, {$this->main_css_element} li:before, {$this->main_css_element} a",
 						'line_height' => "{$this->main_css_element} p",
@@ -68,14 +68,14 @@ class ET_Builder_Module_Sidebar extends ET_Builder_Module {
 				'selector' => '.et_pb_widget',
 			),
 			'title' => array(
-				'label'    => esc_html__( 'Title', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Title' ),
 				'selector' => 'h4.widgettitle',
 			),
 		);
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '468VROeyKq4' ),
+				'id'   => '468VROeyKq4',
 				'name' => esc_html__( 'An introduction to the Sidebar module', 'et_builder' ),
 			),
 		);
@@ -88,8 +88,8 @@ class ET_Builder_Module_Sidebar extends ET_Builder_Module {
 				'type'              => 'select',
 				'option_category'   => 'layout',
 				'options'           => array(
-					'left'  => esc_html__( 'Left', 'et_builder' ),
-					'right' => esc_html__( 'Right', 'et_builder' ),
+					'left'  => et_builder_i18n( 'Left' ),
+					'right' => et_builder_i18n( 'Right' ),
 				),
 				'default_on_front'  => 'left',
 				'tab_slug'          => 'advanced',
@@ -112,8 +112,8 @@ class ET_Builder_Module_Sidebar extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'tab_slug'        => 'advanced',

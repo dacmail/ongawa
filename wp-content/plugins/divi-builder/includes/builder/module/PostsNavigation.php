@@ -13,7 +13,7 @@ class ET_Builder_Module_Posts_Navigation extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 					'categories'   => esc_html__( 'Categories', 'et_builder' ),
 					'navigation'   => esc_html__( 'Navigation', 'et_builder' ),
 				),
@@ -62,7 +62,7 @@ class ET_Builder_Module_Posts_Navigation extends ET_Builder_Module {
 			'box_shadow'            => array(
 				'default' => array(
 					'css' => array(
-						'main'         => '%%order_class%% .nav-previous, %%order_class%% .nav-next',
+						'main'         => '%%order_class%% .nav-previous a, %%order_class%% .nav-next a',
 						'overlay' => 'inset',
 						'important'    => true,
 					),
@@ -98,7 +98,7 @@ class ET_Builder_Module_Posts_Navigation extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'q7SrK2sh7_o' ),
+				'id'   => 'q7SrK2sh7_o',
 				'name' => esc_html__( 'An introduction to the Post Navigation module', 'et_builder' ),
 			),
 		);
@@ -111,8 +111,8 @@ class ET_Builder_Module_Posts_Navigation extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'affects'           => array(
 					'taxonomy_name',
@@ -139,8 +139,8 @@ class ET_Builder_Module_Posts_Navigation extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'affects'           => array(
@@ -156,8 +156,8 @@ class ET_Builder_Module_Posts_Navigation extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'affects'           => array(
@@ -374,7 +374,7 @@ class ET_Builder_Module_Posts_Navigation extends ET_Builder_Module {
 
 		if ( $multi_view->has_value( 'show_next', 'on' ) && ! empty( $posts_navigation['next']->permalink ) ) {
 			?>
-				<span class="nav-next"<?php $multi_view->render_attrs( array( 
+				<span class="nav-next"<?php $multi_view->render_attrs( array(
 						'visibility' => array(
 							'show_next' => 'on',
 						),

@@ -2,7 +2,7 @@
 
 class ET_Builder_Module_Image extends ET_Builder_Module {
 	function init() {
-		$this->name       = esc_html__( 'Image', 'et_builder' );
+		$this->name       = et_builder_i18n( 'Image' );
 		$this->plural     = esc_html__( 'Images', 'et_builder' );
 		$this->slug       = 'et_pb_image';
 		$this->vb_support = 'on';
@@ -10,16 +10,16 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Image', 'et_builder' ),
-					'link'         => esc_html__( 'Link', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Image' ),
+					'link'         => et_builder_i18n( 'Link' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'overlay'    => esc_html__( 'Overlay', 'et_builder' ),
+					'overlay'    => et_builder_i18n( 'Overlay' ),
 					'alignment'  => esc_html__( 'Alignment', 'et_builder' ),
 					'width'      => array(
-						'title'    => esc_html__( 'Sizing', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Sizing' ),
 						'priority' => 65,
 					),
 				),
@@ -85,7 +85,7 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'cYwqxoHnjNA' ),
+				'id'   => 'cYwqxoHnjNA',
 				'name' => esc_html__( 'An introduction to the Image module', 'et_builder' ),
 			),
 		);
@@ -94,10 +94,10 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'src' => array(
-				'label'              => esc_html__( 'Image', 'et_builder' ),
+				'label'              => et_builder_i18n( 'Image' ),
 				'type'               => 'upload',
 				'option_category'    => 'basic_option',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'choose_text'        => esc_attr__( 'Choose an Image', 'et_builder' ),
 				'update_text'        => esc_attr__( 'Set As Image', 'et_builder' ),
 				'hide_metadata'      => true,
@@ -142,8 +142,8 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'affects'           => array(
@@ -180,8 +180,8 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'layout',
 				'options'           => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'default_on_front' => 'off',
 				'affects'           => array(
@@ -229,8 +229,8 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'layout',
 				'options'           => array(
-					'on'      => esc_html__( 'Yes', 'et_builder' ),
-					'off'     => esc_html__( 'No', 'et_builder' ),
+					'on'      => et_builder_i18n( 'Yes' ),
+					'off'     => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'tab_slug'          => 'advanced',
@@ -256,8 +256,8 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'layout',
 				'options'           => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'tab_slug'    => 'advanced',

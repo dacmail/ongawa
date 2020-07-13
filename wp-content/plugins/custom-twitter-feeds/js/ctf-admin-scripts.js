@@ -263,12 +263,46 @@ jQuery(document).ready(function($){
         }); // ajax call
     }); // clear-persistent-cache click
 
+    $('.ctf-opt-in').click(function(event) {
+        event.preventDefault();
+
+        var $btn = jQuery(this);
+        $btn.prop( 'disabled', true ).addClass( 'loading' ).html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+        ctfSubmitOptIn(true);
+    }); // clear_comment_cache click
+
+    $('.ctf-no-usage-opt-out').click(function(event) {
+        event.preventDefault();
+
+        var $btn = jQuery(this);
+        $btn.prop( 'disabled', true ).addClass( 'loading' ).html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+        ctfSubmitOptIn(false);
+    }); // clear_comment_cache click
+
+    function ctfSubmitOptIn(choice) {
+        $.ajax({
+            url : ctf.ajax_url,
+            type : 'post',
+            data : {
+                action : 'ctf_usage_opt_in_or_out',
+                opted_in: choice,
+            },
+            success : function(data) {
+                $('.ctf-no-usage-opt-out').closest('.ctf-admin-notice').fadeOut();
+            }
+        }); // ajax call
+    }
+
     //Pro version notices
-    var ctfUpgradeNote = '<span class="ctf_note"> - <a href="https://smashballoon.com/custom-twitter-feeds/" target="_blank">Available in Pro version</a></span>';
+    var ctfUpgradeNote = '<span class="ctf_note"> - <a href="https://smashballoon.com/custom-twitter-feeds/?utm_source=twitter-free&utm_source=settings&utm_medium=layout" target="_blank">Available in Pro version</a></span>';
     $('.ctf_pro').each(function(){
         var $pro = $(this);
-        $pro.find('td').last().append(ctfUpgradeNote);
-        $pro.find('input, select, textarea').attr('disabled', 'true');
+        if (!$pro.find('.ctf_layout_options_wrap').length) {
+            $pro.find('td').last().append(ctfUpgradeNote);
+            $pro.find('input, select, textarea').attr('disabled', 'true');
+        }
     });
     $('#ctf_include_twittercards, #ctf_include_media, #ctf_include_replied_to').attr('disabled', 'true').removeAttr('checked').next('label').css('color', '#999').after(ctfUpgradeNote);
 
@@ -280,4 +314,38 @@ jQuery(document).ready(function($){
             $(this).closest('span').next('.ctf-pro-options').show();
         }
     });
+
+    function ctfUpdateLayoutTypeOptionsDisplay() {
+        setTimeout(function(){
+            jQuery('.ctf_layout_settings').hide();
+            jQuery('.ctf_layout_settings.ctf_layout_type_'+jQuery('.ctf_layout_type:checked').val()).show();
+        }, 1);
+    }
+    ctfUpdateLayoutTypeOptionsDisplay();
+    jQuery('.ctf_layout_type').change(ctfUpdateLayoutTypeOptionsDisplay);
+
+    // notices
+
+    if (jQuery('#ctf-notice-bar').length) {
+        jQuery('#wpadminbar').after(jQuery('#ctf-notice-bar'));
+        jQuery('#wpcontent').css('padding-left', 0);
+        jQuery('#wpbody').css('padding-left', '20px');
+        jQuery('#ctf-notice-bar').show();
+    }
+
+    jQuery('#ctf-notice-bar .dismiss').click(function(e) {
+        e.preventDefault();
+        jQuery('#ctf-notice-bar').remove();
+        jQuery.ajax({
+            url: ctf.ajax_url,
+            type: 'post',
+            data: {
+                action : 'ctf_lite_dismiss',
+                ctf_nonce: ctf.sb_nonce
+            },
+            success: function (data) {
+            }
+        });
+    });
+
 });

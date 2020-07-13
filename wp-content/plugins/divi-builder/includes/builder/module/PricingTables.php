@@ -65,12 +65,12 @@ class ET_Builder_Module_Pricing_Tables extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'elements'    => esc_html__( 'Elements', 'et_builder' ),
+					'elements'    => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'layout' => esc_html__( 'Layout', 'et_builder' ),
+					'layout' => et_builder_i18n( 'Layout' ),
 					'bullet' => esc_html__( 'Bullet', 'et_builder' ),
 				),
 			),
@@ -127,7 +127,7 @@ class ET_Builder_Module_Pricing_Tables extends ET_Builder_Module {
 			),
 			'fonts'                 => array(
 				'header' => array(
-					'label'            => esc_html__( 'Title', 'et_builder' ),
+					'label'            => et_builder_i18n( 'Title' ),
 					'css'              => array(
 						'main' => "{$this->main_css_element} .et_pb_pricing_heading h2, {$this->main_css_element} .et_pb_pricing_heading h1.et_pb_pricing_title, {$this->main_css_element} .et_pb_pricing_heading h3.et_pb_pricing_title, {$this->main_css_element} .et_pb_pricing_heading h4.et_pb_pricing_title, {$this->main_css_element} .et_pb_pricing_heading h5.et_pb_pricing_title, {$this->main_css_element} .et_pb_pricing_heading h6.et_pb_pricing_title",
 						'important' => 'all',
@@ -143,7 +143,7 @@ class ET_Builder_Module_Pricing_Tables extends ET_Builder_Module {
 					),
 				),
 				'body'   => array(
-					'label'            => esc_html__( 'Body', 'et_builder' ),
+					'label'            => et_builder_i18n( 'Body' ),
 					'css'              => array(
 						'main' => "{$this->main_css_element} .et_pb_pricing li",
 						'limited_main' => "{$this->main_css_element} .et_pb_pricing li, {$this->main_css_element} .et_pb_pricing li span, {$this->main_css_element} .et_pb_pricing li a",
@@ -241,7 +241,7 @@ class ET_Builder_Module_Pricing_Tables extends ET_Builder_Module {
 			),
 			'button'                => array(
 				'button' => array(
-					'label' => esc_html__( 'Button', 'et_builder' ),
+					'label' => et_builder_i18n( 'Button' ),
 					'css' => array(
 						'main' => "{$this->main_css_element} .et_pb_pricing_table_button.et_pb_button",
 						'limited_main' => "{$this->main_css_element} .et_pb_pricing_table_button.et_pb_button",
@@ -282,7 +282,7 @@ class ET_Builder_Module_Pricing_Tables extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'BVzu4WnjgYI' ),
+				'id'   => 'BVzu4WnjgYI',
 				'name' => esc_html__( 'An introduction to the Pricing Tables module', 'et_builder' ),
 			),
 		);
@@ -362,8 +362,8 @@ class ET_Builder_Module_Pricing_Tables extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'      => 'elements',
@@ -401,8 +401,8 @@ class ET_Builder_Module_Pricing_Tables extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'tab_slug'        => 'advanced',

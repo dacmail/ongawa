@@ -40,7 +40,7 @@ class ET_Builder_Module_Woocommerce_Tabs extends ET_Builder_Module_Tabs {
 
 		// Set WooCommerce Tabs specific toggle / options group.
 		$this->settings_modal_toggles['general']['toggles']['main_content'] = array(
-			'title'    => esc_html__( 'Content', 'et_builder' ),
+			'title'    => et_builder_i18n( 'Content' ),
 			'priority' => 10,
 		);
 
@@ -53,7 +53,7 @@ class ET_Builder_Module_Woocommerce_Tabs extends ET_Builder_Module_Tabs {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '7X03vBPYJ1o' ),
+				'id'   => '7X03vBPYJ1o',
 				'name' => esc_html__( 'Divi WooCommerce Modules', 'et_builder' ),
 			),
 		);
@@ -360,7 +360,11 @@ class ET_Builder_Module_Woocommerce_Tabs extends ET_Builder_Module_Tabs {
 			if ( 'description' === $name ) {
 				if ( ! et_builder_tb_enabled() && ! et_pb_is_pagebuilder_used( $product_id ) ) {
 					// If selected product doesn't use builder, retrieve post content.
-					$tab_content = $post->post_content;
+					if ( et_theme_builder_overrides_layout( ET_THEME_BUILDER_BODY_LAYOUT_POST_TYPE ) ) {
+						$tab_content = apply_filters( 'et_builder_wc_description', $post->post_content );
+					} else {
+						$tab_content = $post->post_content;
+					}
 				} else {
 					/*
 					 * Description can't use built in callback data because it gets `the_content`

@@ -33,7 +33,7 @@ class ET_Builder_Module_Bar_Counters_Item extends ET_Builder_Module {
 			),
 			'fonts'                 => array(
 				'title'   => array(
-					'label' => esc_html__( 'Title', 'et_builder' ),
+					'label' => et_builder_i18n( 'Title' ),
 					'css'   => array(
 						'main' => ".et_pb_counters {$this->main_css_element} .et_pb_counter_title",
 					),
@@ -81,7 +81,7 @@ class ET_Builder_Module_Bar_Counters_Item extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 				),
 			),
 			'advanced' => array(
@@ -110,7 +110,7 @@ class ET_Builder_Module_Bar_Counters_Item extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'content' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Input a title for your bar.', 'et_builder' ),

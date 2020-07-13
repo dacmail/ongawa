@@ -29,7 +29,7 @@ class ET_Builder_Module_Woocommerce_Reviews extends ET_Builder_Module_Comments {
 
 		// Modify toggle settings.
 		$this->settings_modal_toggles['general']['toggles']['main_content'] = array(
-			'title'    => esc_html__( 'Content', 'et_builder' ),
+			'title'    => et_builder_i18n( 'Content' ),
 			'priority' => 1,
 		);
 
@@ -39,7 +39,7 @@ class ET_Builder_Module_Woocommerce_Reviews extends ET_Builder_Module_Comments {
 		);
 
 		$this->settings_modal_toggles['advanced']['toggles']['image'] = array(
-			'title'    => esc_html__( 'Image', 'et_builder' ),
+			'title'    => et_builder_i18n( 'Image' ),
 			'priority' => 30,
 		);
 
@@ -141,7 +141,7 @@ class ET_Builder_Module_Woocommerce_Reviews extends ET_Builder_Module_Comments {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '7X03vBPYJ1o' ),
+				'id'   => '7X03vBPYJ1o',
 				'name' => esc_html__( 'Divi WooCommerce Modules', 'et_builder' ),
 			),
 		);
@@ -307,7 +307,7 @@ class ET_Builder_Module_Woocommerce_Reviews extends ET_Builder_Module_Comments {
 		$reviews_title = ET_Builder_Module_Helper_Woocommerce_Modules::get_reviews_title( $product );
 		// Product could be changed using the Product filter in the Settings modal.
 		// Hence supplying the Product ID to fetch data based on the selected Product.
-		$reviews         = get_comments( array( 'post_id' => $product->get_id() ) );
+		$reviews         = get_comments( array( 'post_id' => $product->get_id(), 'status' => 'approve' ) );
 		$total_pages     = get_comment_pages_count( $reviews );
 		$reviews_content = wp_list_comments(
 			array(

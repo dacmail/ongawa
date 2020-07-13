@@ -42,7 +42,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 		$this->settings_modal_toggles = array(
 			'general'    => array(
 				'toggles' => array(
-					'main_content'   => esc_html__( 'Text', 'et_builder' ),
+					'main_content'   => et_builder_i18n( 'Text' ),
 					'provider'       => esc_html__( 'Email Account', 'et_builder' ),
 					'fields'         => esc_html__( 'Fields', 'et_builder' ),
 					'success_action' => esc_html__( 'Success Action', 'et_builder' ),
@@ -51,9 +51,9 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 			),
 			'advanced'   => array(
 				'toggles' => array(
-					'layout' => esc_html__( 'Layout', 'et_builder' ),
+					'layout' => et_builder_i18n( 'Layout' ),
 					'text'   => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 				),
@@ -68,7 +68,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 		$this->advanced_fields = array(
 			'fonts'          => array(
 				'header'         => array(
-					'label'        => esc_html__( 'Title', 'et_builder' ),
+					'label'        => et_builder_i18n( 'Title' ),
 					'css'          => array(
 						'main'      => "{$this->main_css_element} .et_pb_newsletter_description h2, {$this->main_css_element} .et_pb_newsletter_description h1.et_pb_module_header, {$this->main_css_element} .et_pb_newsletter_description h3.et_pb_module_header, {$this->main_css_element} .et_pb_newsletter_description h4.et_pb_module_header, {$this->main_css_element} .et_pb_newsletter_description h5.et_pb_module_header, {$this->main_css_element} .et_pb_newsletter_description h6.et_pb_module_header",
 						'important' => 'all',
@@ -78,7 +78,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					),
 				),
 				'body'           => array(
-					'label' => esc_html__( 'Body', 'et_builder' ),
+					'label' => et_builder_i18n( 'Body' ),
 					'css'   => array(
 						'main'        => "{$this->main_css_element} .et_pb_newsletter_description, {$this->main_css_element} .et_pb_newsletter_form",
 						'line_height' => "{$this->main_css_element} p",
@@ -110,7 +110,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 			),
 			'button'         => array(
 				'button' => array(
-					'label'      => esc_html__( 'Button', 'et_builder' ),
+					'label'      => et_builder_i18n( 'Button' ),
 					'css'        => array(
 						'main' => "{$this->main_css_element} .et_pb_newsletter_button.et_pb_button",
 						'limited_main' => "{$this->main_css_element} .et_pb_newsletter_button.et_pb_button",
@@ -262,7 +262,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'kauQ6xheNiw' ),
+				'id'   => 'kauQ6xheNiw',
 				'name' => esc_html__( 'An introduction to the Email Optin module', 'et_builder' ),
 			),
 		);
@@ -295,7 +295,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 				array(
 					'type'  => 'button',
 					'class' => 'et_pb_email_cancel',
-					'text'  => esc_html__( 'Cancel', 'et_builder' ),
+					'text'  => et_builder_i18n( 'Cancel' ),
 				),
 				array(
 					'type'  => 'button',
@@ -362,49 +362,61 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 			'fetch_lists'     => '',
 		);
 
+		$i18n = array(
+			'label'       => esc_html_x( '%s List', 'MailChimp, Aweber, etc', 'et_builder' ),
+			'description' => esc_html__( 'Choose a list. If you don\'t see any lists, click "Add" to add an account.', 'et_builder' ),
+			'add'         => esc_html__( 'Add', 'et_builder' ),
+			'remove'      => esc_html__( 'Remove', 'et_builder' ),
+			'confirm'     => esc_attr__( 'Confirm', 'et_builder' ),
+			'cancel'      => esc_attr__( 'Cancel', 'et_builder' ),
+			'fetch'       => esc_html__( 'Fetch Lists', 'et_builder' ),
+			'removing'    => esc_attr__( 'The following account will be removed:', 'et_builder' ),
+			'adding'      => esc_attr__( 'Use the fields below to add a new account.', 'et_builder' ),
+		);
+
 		foreach ( self::$enabled_providers as $provider_slug => $provider_name ) {
 			if ( 'feedburner' === $provider_slug ) {
 				continue;
 			}
 
 			$fields[ $provider_slug . '_list' ] = array(
-				'label'           => sprintf( esc_html_x( '%s List', 'MailChimp, Aweber, etc', 'et_builder' ), $provider_name ),
-				'type'            => 'select_with_option_groups',
-				'option_category' => 'basic_option',
-				'options'         => isset( $lists[ $provider_slug ] ) ? $lists[ $provider_slug ] : $no_lists,
-				'description'     => esc_html__( 'Choose a list. If you don\'t see any lists, click "Add" to add an account.', 'et_builder' ),
-				'show_if'         => array(
+				'label'            => sprintf( $i18n['label'], $provider_name ),
+				'type'             => 'select_with_option_groups',
+				'option_category'  => 'basic_option',
+				'options'          => isset( $lists[ $provider_slug ] ) ? $lists[ $provider_slug ] : $no_lists,
+				'description'      => $i18n['description'],
+				'show_if'          => array(
 					'provider' => $provider_slug,
 				),
-				'default'         => '0|none',
-				'default_on_front'=> '',
-				'toggle_slug'     => 'provider',
-				'after'           => array(
+				'default'          => '0|none',
+				'default_on_front' => '',
+				'toggle_slug'      => 'provider',
+				'after'            => array(
 					array(
 						'type'  => 'button',
 						'class' => 'et_pb_email_add_account',
-						'text'  => esc_html__( 'Add', 'et_builder' ),
+						'text'  => $i18n['add'],
 					),
 					array(
 						'type'       => 'button',
 						'class'      => 'et_pb_email_remove_account',
-						'text'       => esc_html__( 'Remove', 'et_builder' ),
+						'text'       => $i18n['remove'],
 						'attributes' => array(
-							'data-confirm_text' => esc_attr__( 'Confirm', 'et_builder' ),
+							'data-confirm_text' => $i18n['confirm'],
 						),
 					),
 					array(
 						'type'       => 'button',
 						'class'      => 'et_pb_email_force_fetch_lists',
-						'text'       => esc_html__( 'Fetch Lists', 'et_builder' ),
+						'text'       => $i18n['fetch'],
 						'attributes' => array(
-							'data-cancel_text' => esc_attr__( 'Cancel', 'et_builder' ),
+							'data-cancel_text' => $i18n['cancel'],
 						),
 					),
 				),
-				'attributes'      => array(
-					'data-confirm_remove_text'     => esc_attr__( 'The following account will be removed:', 'et_builder' ),
-					'data-adding_new_account_text' => esc_attr__( 'Use the fields below to add a new account.', 'et_builder' ),
+				'attributes'       => array(
+					'data-confirm_remove_text'     => $i18n['removing'],
+					'data-adding_new_account_text' => $i18n['adding'],
 				),
 			);
 
@@ -446,7 +458,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 
 			array(
 				'layout'                      => array(
-					'label'       => esc_html__( 'Layout', 'et_builder' ),
+					'label'       => et_builder_i18n( 'Layout' ),
 					'description' => esc_html__( 'Choose where you would like the input fields to appear in relation to the body text and title text.', 'et_builder' ),
 					'type'        => 'select',
 					'options'     => array(
@@ -463,8 +475,8 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'label'           => esc_html__( 'Include IP Address' ),
 					'type'            => 'yes_no_button',
 					'options'         => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default'         => 'on',
 					'option_category' => 'configuration',
@@ -477,8 +489,8 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'type'            => 'yes_no_button',
 					'option_category' => 'configuration',
 					'options'         => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default'         => 'off',
 					'show_if_not'     => array(
@@ -493,8 +505,8 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'type'            => 'yes_no_button',
 					'option_category' => 'configuration',
 					'options'         => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default'         => 'on',
 					'toggle_slug'     => 'layout',
@@ -509,8 +521,8 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'type'            => 'yes_no_button',
 					'option_category' => 'configuration',
 					'options'         => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default'         => 'on',
 					'show_if'         => array(
@@ -528,8 +540,8 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'type'            => 'yes_no_button',
 					'option_category' => 'configuration',
 					'options'         => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default'         => 'on',
 					'toggle_slug'     => 'layout',
@@ -544,8 +556,8 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'type'            => 'yes_no_button',
 					'option_category' => 'configuration',
 					'options'         => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default'         => 'on',
 					'show_if'         => array(
@@ -563,8 +575,8 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'type'            => 'yes_no_button',
 					'option_category' => 'configuration',
 					'options'         => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default'         => 'on',
 					'toggle_slug'     => 'layout',
@@ -579,8 +591,8 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'type'            => 'yes_no_button',
 					'option_category' => 'configuration',
 					'options'         => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default'         => 'on',
 					'show_if'         => array(
@@ -595,8 +607,8 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'type'            => 'yes_no_button',
 					'option_category' => 'configuration',
 					'options'         => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default'         => 'on',
 					'toggle_slug'     => 'layout',
@@ -608,8 +620,8 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'type'            => 'yes_no_button',
 					'option_category' => 'configuration',
 					'options'         => array(
-						'on'  => esc_html__( 'Yes', 'et_builder' ),
-						'off' => esc_html__( 'No', 'et_builder' ),
+						'on'  => et_builder_i18n( 'Yes' ),
+						'off' => et_builder_i18n( 'No' ),
 					),
 					'default'         => 'off',
 					'allow_dynamic'   => array_keys( self::providers()->names_by_slug( 'all', 'dynamic_custom_fields' ) ),
@@ -690,7 +702,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'description'     => esc_html__( 'Choose what data (if any) to include in the redirect URL as query arguments.', 'et_builder' ),
 				),
 				'title'                       => array(
-					'label'           => esc_html__( 'Title', 'et_builder' ),
+					'label'           => et_builder_i18n( 'Title' ),
 					'type'            => 'text',
 					'option_category' => 'basic_option',
 					'description'     => esc_html__( 'Choose a title of your signup box.', 'et_builder' ),
@@ -700,7 +712,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'hover'           => 'tabs',
 				),
 				'button_text'                 => array(
-					'label'            => esc_html__( 'Button', 'et_builder' ),
+					'label'            => et_builder_i18n( 'Button' ),
 					'type'             => 'text',
 					'option_category'  => 'basic_option',
 					'description'      => esc_html__( 'Define custom text for the subscribe button.', 'et_builder' ),
@@ -712,7 +724,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					'hover'            => 'tabs',
 				),
 				'description'                 => array(
-					'label'           => esc_html__( 'Body', 'et_builder' ),
+					'label'           => et_builder_i18n( 'Body' ),
 					'type'            => 'tiny_mce',
 					'option_category' => 'basic_option',
 					'description'     => esc_html__( 'This content will appear below the title.', 'et_builder' ),
@@ -958,7 +970,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module_Type_WithSpamProtection
 					);
 				}
 
-				$html .= sprintf( '<input type="hidden" value="%1$d" name="et_pb_signup_post_id" />', self::get_layout_id() );
+				$html .= sprintf( '<input type="hidden" value="%1$s" name="et_pb_signup_checksum" />', $this->_checksum );
 
 				break;
 		}

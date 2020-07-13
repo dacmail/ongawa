@@ -16,7 +16,7 @@ class ET_Builder_Module_Map_Item extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 					'map'          => esc_html__( 'Map', 'et_builder' ),
 				),
 			),
@@ -28,7 +28,7 @@ class ET_Builder_Module_Map_Item extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'title' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'The title will be used within the tab button for this tab.', 'et_builder' ),
@@ -73,7 +73,7 @@ class ET_Builder_Module_Map_Item extends ET_Builder_Module {
 				'toggle_slug'           => 'map',
 			),
 			'content' => array(
-				'label'           => esc_html__( 'Body', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Body' ),
 				'type'            => 'tiny_mce',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Here you can define the content that will be placed within the infobox for the pin.', 'et_builder' ),

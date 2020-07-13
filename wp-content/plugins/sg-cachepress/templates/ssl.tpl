@@ -1,5 +1,6 @@
 # HTTPS forced by SG-Optimizer
 <IfModule mod_rewrite.c>
+    RewriteEngine On
     {MAYBE_WWW}
     RewriteCond %{HTTP:X-Forwarded-Proto} !https
     RewriteCond %{HTTPS} off

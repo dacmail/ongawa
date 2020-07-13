@@ -12,19 +12,19 @@ class ET_Builder_Module_Search extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 					'exceptions'   => esc_html__( 'Exceptions', 'et_builder' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'text'  => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 					'width' => array(
-						'title'    => esc_html__( 'Sizing', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Sizing' ),
 						'priority' => 65,
 					),
 				),
@@ -33,7 +33,7 @@ class ET_Builder_Module_Search extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'button' => array(
-					'label'          => esc_html__( 'Button', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Button' ),
 					'css'            => array(
 						'main'      => "{$this->main_css_element} input.et_pb_searchsubmit",
 						'important' => array( 'line-height', 'text-shadow' ),
@@ -151,14 +151,14 @@ class ET_Builder_Module_Search extends ET_Builder_Module {
 				'selector' => 'input.et_pb_s',
 			),
 			'button'      => array(
-				'label'    => esc_html__( 'Button', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Button' ),
 				'selector' => 'input.et_pb_searchsubmit',
 			),
 		);
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'HNmb20Mdvno' ),
+				'id'   => 'HNmb20Mdvno',
 				'name' => esc_html__( 'An introduction to the Search module', 'et_builder' ),
 			),
 		);
@@ -171,8 +171,8 @@ class ET_Builder_Module_Search extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'description'     => esc_html__( 'Turning this on will exclude Pages from search results', 'et_builder' ),
 				'toggle_slug'     => 'exceptions',
@@ -182,8 +182,8 @@ class ET_Builder_Module_Search extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default'         => 'off',
 				'affects'         => array(
@@ -208,8 +208,8 @@ class ET_Builder_Module_Search extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default'         => 'on',
 				'toggle_slug'     => 'elements',

@@ -22,14 +22,14 @@ class ET_Builder_Module_Number_Counter extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'text' => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 				),
@@ -39,7 +39,7 @@ class ET_Builder_Module_Number_Counter extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'title' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main'      => "{$this->main_css_element} h3, {$this->main_css_element} h1.title, {$this->main_css_element} h2.title, {$this->main_css_element} h4.title, {$this->main_css_element} h5.title, {$this->main_css_element} h6.title",
 						'important' => 'plugin_only',
@@ -108,7 +108,7 @@ class ET_Builder_Module_Number_Counter extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'qEE6z2t2oJ8' ),
+				'id'   => 'qEE6z2t2oJ8',
 				'name' => esc_html__( 'An introduction to the Number Counter module', 'et_builder' ),
 			),
 		);
@@ -117,7 +117,7 @@ class ET_Builder_Module_Number_Counter extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'title' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Input a title for the counter.', 'et_builder' ),
@@ -142,8 +142,8 @@ class ET_Builder_Module_Number_Counter extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'       => 'elements',

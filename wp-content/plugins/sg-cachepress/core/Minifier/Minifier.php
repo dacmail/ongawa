@@ -47,7 +47,9 @@ class Minifier {
 	 *
 	 * @var array Array of all css files that should be ignored.
 	 */
-	private $css_ignore_list = array();
+	private $css_ignore_list = array(
+		'uag-style',
+	);
 
 	/**
 	 * The singleton instance.
@@ -70,6 +72,7 @@ class Minifier {
 		'tve',
 		'elementor-preview',
 		'preview',
+		'wc-api',
 	);
 
 	/**
@@ -90,15 +93,6 @@ class Minifier {
 		$this->assets_dir = Front_End_Optimization::get_instance()->assets_dir;
 
 		self::$instance = $this;
-
-		if (
-			Options::is_enabled( 'siteground_optimizer_optimize_html' ) &&
-			! defined( 'WP_CLI' )
-		) {
-			// Add the hooks that we will use t ominify the html.
-			add_action( 'init', array( $this, 'start_html_minifier_buffer' ) );
-			add_action( 'shutdown', array( $this, 'end_html_minifier_buffer' ) );
-		}
 
 		if ( Options::is_enabled( 'siteground_optimizer_optimize_javascript' ) ) {
 			// Minify the js files.
@@ -131,6 +125,9 @@ class Minifier {
 	 * @return \Minifier The singleton instance.
 	 */
 	public static function get_instance() {
+		if ( null == self::$instance ) {
+			static::$instance = new self();
+		}
 		return self::$instance;
 	}
 
@@ -301,6 +298,24 @@ class Minifier {
 	}
 
 	/**
+	 * Run the html minification.
+	 *
+	 * @since  5.5.2
+	 *
+	 * @param  string $html Page html.
+	 *
+	 * @return string       Minified html.
+	 */
+	public function run( $html ) {
+		// Do not minify the html if the current url is excluded.
+		if ( $this->is_url_excluded() ) {
+			return $html;
+		}
+
+		return self::minify_html( $html );
+	}
+
+	/**
 	 * Minify the html output.
 	 *
 	 * @since  5.0.0
@@ -312,31 +327,6 @@ class Minifier {
 	public function minify_html( $buffer ) {
 		$content = Minify_Html::minify( $buffer );
 		return $content;
-	}
-
-	/**
-	 * Start buffer.
-	 *
-	 * @since  5.0.0
-	 */
-	public function start_html_minifier_buffer() {
-		// Do not minify the html if the current url is excluded.
-		if ( $this->is_url_excluded() ) {
-			return;
-		}
-
-		ob_start( array( $this, 'minify_html' ) );
-	}
-
-	/**
-	 * End the buffer.
-	 *
-	 * @since  5.0.0
-	 */
-	public function end_html_minifier_buffer() {
-		if ( ob_get_length() ) {
-			ob_end_flush();
-		}
 	}
 
 	/**

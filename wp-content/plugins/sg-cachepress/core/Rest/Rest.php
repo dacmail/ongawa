@@ -12,8 +12,14 @@ class Rest {
 	 * The constructor.
 	 */
 	public function __construct() {
-		$this->helper      = new Rest_Helper();
-		$this->webp_helper = new Rest_Helper_Webp();
+		$this->webp_helper          = new Rest_Helper_Webp();
+		$this->options_helper       = new Rest_Helper_Options();
+		$this->cache_helper         = new Rest_Helper_Cache();
+		$this->multisite_helper     = new Rest_Helper_Multisite();
+		$this->misc_helper          = new Rest_Helper_Misc();
+		$this->image_helper         = new Rest_Helper_Images();
+		$this->php_ssl_helper    	= new Rest_Helper_Environment();
+		$this->compatibility_helper = new Rest_Helper_Compatibility();
 
 		add_action( 'rest_api_init', array( $this, 'register_rest_routes' ) );
 	}
@@ -55,7 +61,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/switch-php/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'switch_php' ),
+				'callback' => array( $this->php_ssl_helper, 'switch_php' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -63,7 +69,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/enable-ssl/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'enable_ssl' ),
+				'callback' => array( $this->php_ssl_helper, 'enable_ssl' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -71,7 +77,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/disable-ssl/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'disable_ssl' ),
+				'callback' => array( $this->php_ssl_helper, 'disable_ssl' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -86,7 +92,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/check-compatibility/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'handle_compatibility_check' ),
+				'callback' => array( $this->compatibility_helper, 'handle_compatibility_check' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -94,7 +100,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/check-compatibility-status/', array(
 				'methods'  => 'GET',
-				'callback' => array( $this->helper, 'handle_compatibility_status_check' ),
+				'callback' => array( $this->compatibility_helper, 'handle_compatibility_status_check' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -109,7 +115,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/enable-option/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'enable_option_from_rest' ),
+				'callback' => array( $this->options_helper, 'enable_option_from_rest' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -117,7 +123,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/disable-option/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'disable_option_from_rest' ),
+				'callback' => array( $this->options_helper, 'disable_option_from_rest' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -125,7 +131,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/fetch-options/', array(
 				'methods'  => 'GET',
-				'callback' => array( $this->helper, 'fetch_options' ),
+				'callback' => array( $this->options_helper, 'fetch_options' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -133,7 +139,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/change-option/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'change_option_from_rest' ),
+				'callback' => array( $this->options_helper, 'change_option_from_rest' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -148,7 +154,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/update-excluded-urls/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'update_excluded_urls' ),
+				'callback' => array( $this->cache_helper, 'update_excluded_urls' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -156,7 +162,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/test-url-cache/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'test_cache' ),
+				'callback' => array( $this->cache_helper, 'test_cache' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -164,7 +170,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/purge-cache/', array(
 				'methods'  => 'GET',
-				'callback' => array( $this->helper, 'purge_cache_from_rest' ),
+				'callback' => array( $this->cache_helper, 'purge_cache_from_rest' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -172,7 +178,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/enable-memcache/', array(
 				'methods'  => 'GET',
-				'callback' => array( $this->helper, 'enable_memcache' ),
+				'callback' => array( $this->cache_helper, 'enable_memcache' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -180,7 +186,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/disable-memcache/', array(
 				'methods'  => 'GET',
-				'callback' => array( $this->helper, 'disable_memcache' ),
+				'callback' => array( $this->cache_helper, 'disable_memcache' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -196,7 +202,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/optimize-images/', array(
 				'methods'  => 'GET',
-				'callback' => array( $this->helper, 'optimize_images' ),
+				'callback' => array( $this->image_helper, 'optimize_images' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -204,7 +210,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/stop-images-optimization/', array(
 				'methods'  => 'GET',
-				'callback' => array( $this->helper, 'stop_images_optimization' ),
+				'callback' => array( $this->image_helper, 'stop_images_optimization' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -212,7 +218,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/check-image-optimizing-status/', array(
 				'methods'  => 'GET',
-				'callback' => array( $this->helper, 'check_image_optimizing_status' ),
+				'callback' => array( $this->image_helper, 'check_image_optimizing_status' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -220,7 +226,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/reset-images-optimization/', array(
 				'methods'  => 'GET',
-				'callback' => array( $this->helper, 'reset_images_optimization' ),
+				'callback' => array( $this->image_helper, 'reset_images_optimization' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -274,7 +280,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/enable-multisite-optimization/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'enable_multisite_optimization' ),
+				'callback' => array( $this->multisite_helper, 'enable_multisite_optimization' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -282,7 +288,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/disable-multisite-optimization/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'disable_multisite_optimization' ),
+				'callback' => array( $this->multisite_helper, 'disable_multisite_optimization' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -297,7 +303,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/hide-rating/', array(
 				'methods'  => 'GET',
-				'callback' => array( $this->helper, 'handle_hide_rating' ),
+				'callback' => array( $this->misc_helper, 'handle_hide_rating' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -305,7 +311,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/get-assets/', array(
 				'methods'  => 'GET',
-				'callback' => array( $this->helper, 'get_assets' ),
+				'callback' => array( $this->misc_helper, 'get_assets' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -313,7 +319,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/update-exclude-list/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'update_exclude_list' ),
+				'callback' => array( $this->misc_helper, 'update_exclude_list' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);
@@ -321,7 +327,7 @@ class Rest {
 		register_rest_route(
 			self::REST_NAMESPACE, '/run-analysis/', array(
 				'methods'  => 'POST',
-				'callback' => array( $this->helper, 'run_analysis' ),
+				'callback' => array( $this->misc_helper, 'run_analysis' ),
 				'permission_callback' => array( $this, 'check_permissions' ),
 			)
 		);

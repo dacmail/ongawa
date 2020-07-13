@@ -21,6 +21,15 @@ abstract class ET_Builder_Module_Type_WithSpamProtection extends ET_Builder_Modu
 	public static $enabled_spam_providers;
 
 	/**
+	 * Shortcode attributes array checksum.
+	 *
+	 * @since 4.4.9
+	 *
+	 * @var
+	 */
+	protected $_checksum;
+
+	/**
 	 * Get module settings fields for spam protection providers
 	 *
 	 * @since 4.0.7
@@ -51,7 +60,7 @@ abstract class ET_Builder_Module_Type_WithSpamProtection extends ET_Builder_Modu
 				array(
 					'type'  => 'button',
 					'class' => 'et_pb_email_cancel',
-					'text'  => esc_html__( 'Cancel', 'et_builder' ),
+					'text'  => et_builder_i18n( 'Cancel' ),
 				),
 				array(
 					'type'  => 'button',
@@ -164,8 +173,8 @@ abstract class ET_Builder_Module_Type_WithSpamProtection extends ET_Builder_Modu
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'toggle_slug'     => 'spam',
 				'description'     => esc_html__( 'Whether or not to use a 3rd-party spam protection service like Google reCAPTCHA.', 'et_builder' ),
@@ -334,15 +343,19 @@ abstract class ET_Builder_Module_Type_WithSpamProtection extends ET_Builder_Modu
 	}
 
 	public function render( $attrs, $content = null, $render_slug ) {
+
+		$this->_checksum  = md5( serialize( $attrs ) );
+		$use_spam_service = get_option( $this->slug . '_' . $this->_checksum );
+
 		if ( 'on' === $this->prop( 'use_spam_service' ) ) {
 			$this->add_classname( 'et_pb_recaptcha_enabled' );
 
-			if ( ! get_post_meta( self::get_current_post_id(), '_et_builder_use_spam_service', true ) ) {
-				update_post_meta( self::get_current_post_id(), '_et_builder_use_spam_service', true );
+			if ( 'on' !== $use_spam_service ) {
+				update_option( $this->slug . '_' . $this->_checksum, 'on' );
 			}
 
-		} else if ( get_post_meta( self::get_current_post_id(), '_et_builder_use_spam_service', true ) ) {
-			delete_post_meta( self::get_current_post_id(), '_et_builder_use_spam_service' );
+		} else if ( 'off' !== $use_spam_service ) {
+			update_option( $this->slug . '_' . $this->_checksum, 'off' );
 		}
 	}
 }

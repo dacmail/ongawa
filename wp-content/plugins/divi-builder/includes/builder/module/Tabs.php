@@ -31,7 +31,7 @@ class ET_Builder_Module_Tabs extends ET_Builder_Module {
 			),
 			'fonts'                 => array(
 				'body' => array(
-					'label'          => esc_html__( 'Body', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Body' ),
 					'css'            => array(
 						'main'         => "{$this->main_css_element} .et_pb_all_tabs .et_pb_tab",
 						'limited_main' => "{$this->main_css_element} .et_pb_all_tabs .et_pb_tab, {$this->main_css_element} .et_pb_all_tabs .et_pb_tab p",
@@ -95,7 +95,7 @@ class ET_Builder_Module_Tabs extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'xk2Ite-oFhg' ),
+				'id'   => 'xk2Ite-oFhg',
 				'name' => esc_html__( 'An introduction to the Tabs module', 'et_builder' ),
 			),
 		);

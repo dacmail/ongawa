@@ -8,4 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'SiteGround_Optimizer\\' => array($baseDir . '/core'),
     'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => array($vendorDir . '/dealerdirect/phpcodesniffer-composer-installer/src'),
+    'CharlesRumley\\Tests\\' => array($vendorDir . '/charles-rumley/php-po-to-json/tests'),
+    'CharlesRumley\\' => array($vendorDir . '/charles-rumley/php-po-to-json/src'),
 );

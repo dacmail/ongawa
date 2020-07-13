@@ -38,13 +38,13 @@ class Install_5_5_0 extends Install {
 		update_option( 'siteground_optimizer_whats_new', array(
 			array(
 				'type'         => 'default',
-				'title'        => __( 'JavaScript Files Combination', 'siteground-optimizer' ),
-				'text'         => __( 'We are combining all the JS files that your theme and plugins include in your site header and footer in order to lower the number of requests it is producing. We will keep the scripts in their original location after the combination for best compatibility with other plugins. Note, that in some cases you may need to exclude a script or two from combination so make sure you check your site after enabling the JavaScript Files Combination!', 'siteground-optimizer' ),
+				'title'        => __( 'JavaScript Files Combination', 'sg-cachepress' ),
+				'text'         => __( 'We are combining all the JS files that your theme and plugins include in your site header and footer in order to lower the number of requests it is producing. We will keep the scripts in their original location after the combination for best compatibility with other plugins. Note, that in some cases you may need to exclude a script or two from combination so make sure you check your site after enabling the JavaScript Files Combination!', 'sg-cachepress' ),
 				'icon'         => 'presentational-javascript-files',
 				'icon_color'   => 'ocean',
 				'optimization' => 'combine_javascript',
 				'button' => array(
-					'text'  => __( 'Enable Now', 'siteground-optimizer' ),
+					'text'  => __( 'Enable Now', 'sg-cachepress' ),
 					'color' => 'primary',
 					'link'  => 'frontend',
 				),

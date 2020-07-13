@@ -1080,6 +1080,15 @@ function et_pb_retrieve_templates( $layout_type = 'layout', $module_width = '', 
 		$limit_to = $boundaries[1];
 	}
 
+	/**
+	 * Filter suppress_filters argument.
+	 *
+	 * @since 4.4.5
+	 *
+	 * @param boolean $suppress_filters
+	 */
+	$suppress_filters = wp_validate_boolean( apply_filters( 'et_pb_show_all_layouts_suppress_filters', $suppress_filters ) );
+
 	$query = new WP_Query( array(
 		'tax_query'        => $tax_query,
 		'post_type'        => ET_BUILDER_LAYOUT_POST_TYPE,
@@ -1221,14 +1230,21 @@ if ( ! function_exists( 'et_pb_add_new_layout' ) ) {
 			die();
 		}
 
+		$layout_type      = et_()->array_get_sanitized( $processed_data_array, 'new_template_type', 'layout' );
+		$layout_is_global = 'global' === et_()->array_get( $processed_data_array, 'et_pb_template_global', 'not_global' );
+		if ( 'layout' === $layout_type ) {
+			// Layouts of type 'layout' are not allowed to be global.
+			$layout_is_global = false;
+		}
+
 		$args = array(
-			'layout_type'          => ! empty( $processed_data_array['new_template_type'] ) ? sanitize_text_field( $processed_data_array['new_template_type'] ) : 'layout',
+			'layout_type'          => $layout_type,
 			'layout_selected_cats' => ! empty( $processed_data_array['selected_cats'] ) ? sanitize_text_field( $processed_data_array['selected_cats'] ) : '',
 			'built_for_post_type'  => ! empty( $processed_data_array['et_builder_layout_built_for_post_type'] ) ? sanitize_text_field( $processed_data_array['et_builder_layout_built_for_post_type'] ) : 'page',
 			'layout_new_cat'       => ! empty( $processed_data_array['et_pb_new_cat_name'] ) ? sanitize_text_field( $processed_data_array['et_pb_new_cat_name'] ) : '',
 			'columns_layout'       => ! empty( $processed_data_array['et_columns_layout'] ) ? sanitize_text_field( $processed_data_array['et_columns_layout'] ) : '0',
 			'module_type'          => ! empty( $processed_data_array['et_module_type'] ) ? sanitize_text_field( $processed_data_array['et_module_type'] ) : 'et_pb_unknown',
-			'layout_scope'         => ! empty( $processed_data_array['et_pb_template_global'] ) ? sanitize_text_field( $processed_data_array['et_pb_template_global'] ) : 'not_global',
+			'layout_scope'         => $layout_is_global ? 'global' : 'not_global',
 			'module_width'         => 'regular',
 			'layout_content'       => ! empty( $processed_data_array['template_shortcode'] ) ? $processed_data_array['template_shortcode'] : '',
 			'layout_name'          => ! empty( $processed_data_array['et_pb_new_template_name'] ) ? sanitize_text_field( $processed_data_array['et_pb_new_template_name'] ) : '',
@@ -1835,8 +1851,8 @@ function et_pb_heartbeat_post_modified( $response ) {
 				}
 			}
 
-			$custom_defaults_manager = ET_Builder_Custom_Defaults_Settings::instance();
-			$response['et']['custom_defaults'] = $custom_defaults_manager->get_custom_defaults();
+			$global_presets_manager = ET_Builder_Global_Presets_Settings::instance();
+			$response['et']['global_presets'] = $global_presets_manager->get_global_presets();
 		} else {
 			$response['et']['post_not_modified'] = true;
 			$response['et']['action'] = 'post content not modified externally'; // dev use
@@ -2184,10 +2200,9 @@ function et_fb_get_nonces() {
 		'searchPosts'                     => wp_create_nonce( 'et_builder_search_posts' ),
 		'getPostsList'                    => wp_create_nonce( 'et_fb_get_posts_list' ),
 		'sendErrorReport'                 => wp_create_nonce( 'et_fb_send_error_report' ),
-		'saveCustomDefaultsHistory'       => wp_create_nonce( 'et_builder_save_custom_defaults_history' ),
-		'retrieveCustomDefaultsHistory'   => wp_create_nonce( 'et_builder_retrieve_custom_defaults_history' ),
+		'saveGlobalPresetsHistory'        => wp_create_nonce( 'et_builder_save_global_presets_history' ),
+		'retrieveGlobalPresetsHistory'    => wp_create_nonce( 'et_builder_retrieve_global_presets_history' ),
 		'migrateModuleCustomizerPhaseTwo' => wp_create_nonce( 'et_builder_migrate_module_customizer_phase_two' ),
-		'searchPosts'                     => wp_create_nonce( 'et_builder_search_posts' ),
 		'getWoocommerceTabs'              => wp_create_nonce( 'et_builder_get_woocommerce_tabs' ),
 	);
 
@@ -2582,17 +2597,15 @@ function et_pb_submit_subscribe_form() {
 	$providers = ET_Core_API_Email_Providers::instance();
 	$utils     = ET_Core_Data_Utils::instance();
 
-	$post_id          = $utils->array_get_sanitized( $_POST, 'et_post_id' );
-	$post             = get_post( $post_id );
-	$has_email_optin  = is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'et_pb_signup' );
-	$use_spam_service = get_post_meta( $post_id, '_et_builder_use_spam_service', true );
+	$checksum         = $utils->array_get_sanitized( $_POST, 'et_checksum' );
+	$use_spam_service = get_option( 'et_pb_signup_' . $checksum );
 
 	$provider_slug = $utils->array_get_sanitized( $_POST, 'et_provider' );
 	$account_name  = $utils->array_get_sanitized( $_POST, 'et_account' );
 	$custom_fields = $utils->array_get( $_POST, 'et_custom_fields', array() );
 	$provider      = $providers->get( $provider_slug, $account_name, 'builder' );
 
-	if ( ! $provider || ! $has_email_optin ) {
+	if ( ! $provider || ! $use_spam_service ) {
 		et_core_die( esc_html__( 'Configuration Error: Invalid data.', 'et_builder' ) );
 	}
 
@@ -2615,7 +2628,7 @@ function et_pb_submit_subscribe_form() {
 
 	$signup = ET_Builder_Element::get_module( 'et_pb_signup' );
 
-	if ( $signup && $use_spam_service && $signup->is_spam_submission() ) {
+	if ( $signup && 'on' === $use_spam_service && $signup->is_spam_submission() ) {
 		et_core_die( esc_html__( 'You must be a human to submit this form.', 'et_builder' ) );
 	}
 
@@ -3315,40 +3328,40 @@ function et_builder_get_unsaved_notification_texts() {
 }
 endif;
 
-if ( ! function_exists( 'et_builder_get_custom_defaults_save_failure_texts' ) ) :
-function et_builder_get_custom_defaults_save_failure_texts() {
+if ( ! function_exists( 'et_builder_get_global_presets_save_failure_texts' ) ) :
+function et_builder_get_global_presets_save_failure_texts() {
 	$text = sprintf(
 		'<p>%1$s</p>
-		<a class="et-builder-custom-defaults-save-failure-download" style="display: none"></a>',
-		et_get_safe_localization( __( 'An error has occurred while saving the Global Defaults settings. Various problems can cause a save to fail, such as a lack of server resources, firewall blockages or plugin conflicts or server misconfiguration. You can try saving again by clicking Try Again, or you can download a backup of your unsaved defaults by clicking Download Backup. A backup can be helpful when contacting our Support Team.', 'et_builder' ) )
+		<a class="et-builder-global-presets-save-failure-download" style="display: none"></a>',
+		et_get_safe_localization( __( 'An error has occurred while saving the Global Presets settings. Various problems can cause a save to fail, such as a lack of server resources, firewall blockages or plugin conflicts or server misconfiguration. You can try saving again by clicking Try Again, or you can download a backup of your unsaved defaults by clicking Download Backup. A backup can be helpful when contacting our Support Team.', 'et_builder' ) )
 	);
 
 	return array(
-		'header'  => esc_html__( 'Save of Global Defaults Has Failed', 'et_builder' ),
+		'header'  => esc_html__( 'Save of Global Presets Has Failed', 'et_builder' ),
 		'text'    => $text,
 		'buttons' => array(
 			'secondary' => sprintf('<a href="#" class="et-core-modal-action et-core-modal-action-secondary">%1$s</a>', esc_html__( 'Try Again', 'et_builder' ) ),
 			'primary'   => sprintf('<a href="#" class="et-core-modal-action et-core-modal-action-primary">%1$s</a>', esc_html__( 'Download Backup', 'et_builder' ) ),
 		),
-		'classes' => 'et-builder-custom-defaults-save-failure-modal',
+		'classes' => 'et-builder-global-presets-save-failure-modal',
 	);
 }
 endif;
 
-if ( ! function_exists( 'et_builder_get_custom_defaults_load_failure_texts' ) ) :
-function et_builder_get_custom_defaults_load_failure_texts() {
+if ( ! function_exists( 'et_builder_get_global_presets_load_failure_texts' ) ) :
+function et_builder_get_global_presets_load_failure_texts() {
 	$text = sprintf(
 		'<p>%1$s</p>',
 		et_get_safe_localization( __( 'An error has occurred while loading the Global History States. Various problems can cause a save to fail, such as a lack of server resources, firewall blockages or plugin conflicts or server misconfiguration. You can try loading again by clicking Try Again.', 'et_builder' ) )
 	);
 
 	return array(
-		'header'  => esc_html__( 'Load of Global Defaults Has Failed', 'et_builder' ),
+		'header'  => esc_html__( 'Load of Global Presets Has Failed', 'et_builder' ),
 		'text'    => $text,
 		'buttons' => array(
 			'primary' => sprintf( '<a href="#" class="et-core-modal-action et-core-modal-action-primary">%1$s</a>', esc_html__( 'Try Again', 'et_builder' ) )
 		),
-		'classes' => 'et-builder-custom-defaults-load-failure-modal',
+		'classes' => 'et-builder-global-presets-load-failure-modal',
 	);
 }
 endif;
@@ -3667,6 +3680,13 @@ function et_pb_detect_cache_plugins() {
 		return array(
 			'name' => 'CloudFlare',
 			'page' => 'options-general.php?page=cloudflare',
+		);
+	}
+
+	if ( class_exists( 'Hummingbird\\WP_Hummingbird' ) ) {
+		return array(
+			'name' => 'Hummingbird',
+			'page' => 'admin.php?page=wphb',
 		);
 	}
 
@@ -4334,7 +4354,7 @@ function et_builder_get_font_weight_list() {
 	$default_font_weights_list = array(
 		'100' => esc_html__( 'Thin', 'et_builder' ),
 		'200' => esc_html__( 'Ultra Light', 'et_builder' ),
-		'300' => esc_html__( 'Light', 'et_builder' ),
+		'300' => et_builder_i18n( 'Light' ),
 		'400' => esc_html__( 'Regular', 'et_builder' ),
 		'500' => esc_html__( 'Medium', 'et_builder' ),
 		'600' => esc_html__( 'Semi Bold', 'et_builder' ),
@@ -5882,6 +5902,10 @@ function et_fb_delete_builder_assets() {
 	 */
 	do_action( 'et_builder_ajax_cache_clear' );
 }
+
+// Since Google data is included in static helpers, we have to delete assets
+// whenever the option is updated to avoid Builder reloads.
+add_action( 'update_option_et_google_api_settings', 'et_fb_delete_builder_assets' );
 endif;
 
 if ( ! function_exists( 'et_fb_enqueue_open_sans' ) ):
@@ -6133,3 +6157,59 @@ function et_builder_filter_main_query_paged_for_blog_module( $query ) {
 	}
 }
 add_filter( 'pre_get_posts', 'et_builder_filter_main_query_paged_for_blog_module' );
+
+if ( ! function_exists( 'et_maybe_enable_embed_shortcode' ) ):
+	/**
+	 * Maybe enable [embed] shortcode at the content.
+	 *
+	 * @since 4.4.9
+	 *
+	 * @param string  $content
+	 * @param boolean $is_content
+	 *
+	 * @return string
+	 */
+	function et_maybe_enable_embed_shortcode( $content, $is_content ) {
+		if ( $is_content && has_shortcode( $content, 'embed' ) ) {
+			global $wp_embed;
+			$content = $wp_embed->run_shortcode( $content );
+		}
+
+		return $content;
+	}
+endif;
+
+/**
+ * Register custom sidebars.
+ *
+ * @since 4.4.8 Moved from builder/functions.php, so it can be loaded on wp_ajax_save_widget()
+ */
+function et_builder_widgets_init() {
+	$et_pb_widgets = get_theme_mod( 'et_pb_widgets' );
+	$widget_areas  = et_()->array_get( $et_pb_widgets, 'areas', array() );
+	if ( ! empty( $widget_areas ) ) {
+		foreach ( $widget_areas as $id => $name ) {
+			register_sidebar( array(
+				'name'          => sanitize_text_field( $name ),
+				'id'            => sanitize_text_field( $id ),
+				'before_widget' => '<div id="%1$s" class="et_pb_widget %2$s">',
+				'after_widget'  => '</div> <!-- end .et_pb_widget -->',
+				'before_title'  => '<h4 class="widgettitle">',
+				'after_title'   => '</h4>',
+			) );
+		}
+	}
+
+	// Disable built-in's recent comments widget link styling because ET Themes don't need it.
+	if ( ! et_is_builder_plugin_active() ) {
+		add_filter( 'show_recent_comments_widget_style', '__return_false' );
+	}
+}
+
+// Call the widgets init at 'init' hook if Divi Builder plugin active because plugin
+// loads the Divi builder at 'init' hook and 'widgets_init' is too early.
+if ( et_is_builder_plugin_active() ) {
+	add_action( 'init', 'et_builder_widgets_init', 20 );
+} else {
+	add_action( 'widgets_init', 'et_builder_widgets_init' );
+}

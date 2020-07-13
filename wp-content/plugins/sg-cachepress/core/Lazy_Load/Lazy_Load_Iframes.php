@@ -13,7 +13,9 @@ class Lazy_Load_Iframes {
 	 * @since 5.4.3
 	 */
 	public function __construct() {
-		add_filter( 'the_content', array( $this, 'filter_html' ) );
+		$priority = get_option( 'siteground_optimizer_lazyload_shortcodes' ) ? 9999 : 10;
+
+		add_filter( 'the_content', array( $this, 'filter_html' ), $priority );
 	}
 
 	/**
@@ -32,7 +34,7 @@ class Lazy_Load_Iframes {
 			empty( $content ) ||
 			is_admin() ||
 			( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) ||
-			method_exists( 'FLBuilderModel', 'is_builder_enabled' )
+			( method_exists( 'FLBuilderModel', 'is_builder_enabled' ) && true === \FLBuilderModel::is_builder_enabled() )
 		) {
 			return $content;
 		}

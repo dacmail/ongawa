@@ -9,22 +9,22 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 		$this->slug            = 'et_pb_slider';
 		$this->vb_support      = 'on';
 		$this->child_slug      = 'et_pb_slide';
-		$this->child_item_text = esc_html__( 'Slide', 'et_builder' );
+		$this->child_item_text = et_builder_i18n( 'Slide' );
 
 		$this->main_css_element = '%%order_class%%.et_pb_slider';
 
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'elements'    => esc_html__( 'Elements', 'et_builder' ),
+					'elements'    => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'overlay'    => esc_html__( 'Overlay', 'et_builder' ),
+					'overlay'    => et_builder_i18n( 'Overlay' ),
 					'navigation' => esc_html__( 'Navigation', 'et_builder' ),
-					'image'      => esc_html__( 'Image', 'et_builder' ),
-					'layout'     => esc_html__( 'Layout', 'et_builder' ),
+					'image'      => et_builder_i18n( 'Image' ),
+					'layout'     => et_builder_i18n( 'Layout' ),
 				),
 			),
 			'custom_css' => array(
@@ -40,7 +40,7 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'header' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => "{$this->main_css_element} .et_pb_slide_description .et_pb_slide_title",
 						'limited_main' => "{$this->main_css_element} .et_pb_slide_description .et_pb_slide_title, {$this->main_css_element} .et_pb_slide_description .et_pb_slide_title a",
@@ -53,7 +53,7 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 					),
 				),
 				'body'   => array(
-					'label'    => esc_html__( 'Body', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Body' ),
 					'css'      => array(
 						'line_height' => "{$this->main_css_element}",
 						'main' => "{$this->main_css_element} .et_pb_slide_content",
@@ -78,7 +78,7 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 							'border_styles' => '%%order_class%% .et_pb_slide_image img',
 						)
 					),
-					'label_prefix'    => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix'    => et_builder_i18n( 'Image' ),
 					'tab_slug'        => 'advanced',
 					'toggle_slug'     => 'image',
 					'depends_show_if' => 'off',
@@ -114,7 +114,7 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 			),
 			'button'                => array(
 				'button' => array(
-					'label' => esc_html__( 'Button', 'et_builder' ),
+					'label' => et_builder_i18n( 'Button' ),
 					'css' => array(
 						'main' => "{$this->main_css_element} .et_pb_more_button.et_pb_button",
 						'limited_main' => "{$this->main_css_element} .et_pb_more_button.et_pb_button",
@@ -235,7 +235,7 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '-YeoR2xSLOY' ),
+				'id'   => '-YeoR2xSLOY',
 				'name' => esc_html__( 'An introduction to the Slider module', 'et_builder' ),
 			),
 		);
@@ -248,8 +248,8 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'     => 'elements',
@@ -262,8 +262,8 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'       => 'elements',
@@ -276,8 +276,8 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'tab_slug'        => 'custom_css',
@@ -288,8 +288,8 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'tab_slug'        => 'custom_css',
@@ -300,8 +300,8 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'tab_slug'        => 'custom_css',
@@ -312,8 +312,9 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				'description'      => esc_html__( 'When enabled, a custom overlay color will be added above your background image and behind your slider content.', 'et_builder' ),
 				'type'             => 'yes_no_button',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					// Uses cached uppercase translation but keeps the lowercase not change definition content.
+					'on'  => strtolower( et_builder_i18n( 'Yes' ) ),
 				),
 				'default_on_front' => '',
 				'affects'          => array(
@@ -339,8 +340,9 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				'description'      => esc_html__( 'When enabled, a background color is added behind the slider text to make it more readable atop background images.', 'et_builder' ),
 				'type'             => 'yes_no_button',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					// Uses cached uppercase translation but keeps the lowercase not change definition content.
+					'on'  => strtolower( et_builder_i18n( 'Yes' ) ),
 				),
 				'default_on_front' => '',
 				'affects'          => array(

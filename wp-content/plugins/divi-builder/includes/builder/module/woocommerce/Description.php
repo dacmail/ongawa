@@ -28,13 +28,13 @@ class ET_Builder_Module_Woocommerce_Description extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Content', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Content' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'body'   => array(
-						'title'             => esc_html__( 'Text', 'et_builder' ),
+						'title'             => et_builder_i18n( 'Text' ),
 						'priority'          => 45,
 						'tabbed_subtoggles' => true,
 						'bb_icons_support'  => true,
@@ -93,7 +93,7 @@ class ET_Builder_Module_Woocommerce_Description extends ET_Builder_Module {
 						),
 					),
 					'width'  => array(
-						'title'    => esc_html__( 'Sizing', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Sizing' ),
 						'priority' => 65,
 					),
 				),
@@ -103,7 +103,7 @@ class ET_Builder_Module_Woocommerce_Description extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'          => array(
 				'body'     => array(
-					'label'           => esc_html__( 'Text', 'et_builder' ),
+					'label'           => et_builder_i18n( 'Text' ),
 					'css'             => array(
 						'line_height' => '%%order_class%% p',
 						'color'       => '%%order_class%%.et_pb_wc_description',
@@ -119,7 +119,7 @@ class ET_Builder_Module_Woocommerce_Description extends ET_Builder_Module {
 					'hide_text_align' => true,
 				),
 				'link'     => array(
-					'label'           => esc_html__( 'Link', 'et_builder' ),
+					'label'           => et_builder_i18n( 'Link' ),
 					'css'             => array(
 						'main'  => '%%order_class%% a',
 						'color' => '%%order_class%%.et_pb_wc_description a',
@@ -299,7 +299,7 @@ class ET_Builder_Module_Woocommerce_Description extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '7X03vBPYJ1o' ),
+				'id'   => '7X03vBPYJ1o',
 				'name' => esc_html__( 'Divi WooCommerce Modules', 'et_builder' ),
 			),
 		);

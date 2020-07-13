@@ -63,7 +63,7 @@ function et_builder_wc_get_page_layouts( $translation_context = 'et_builder' ) {
 		default:
 			$product_page_layouts = array(
 				'et_build_from_scratch' => esc_html__( 'Build From Scratch', 'et_builder' ),
-				'et_default_layout'     => esc_html__( 'Default', 'et_builder' ),
+				'et_default_layout'     => et_builder_i18n( 'Default' ),
 			);
 			break;
 	}

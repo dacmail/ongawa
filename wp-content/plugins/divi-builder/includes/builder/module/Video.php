@@ -11,13 +11,13 @@ class ET_Builder_Module_Video extends ET_Builder_Module {
 			'general'  => array(
 				'toggles' => array(
 					'main_content' => esc_html__( 'Video', 'et_builder' ),
-					'overlay'      => esc_html__( 'Overlay', 'et_builder' ),
+					'overlay'      => et_builder_i18n( 'Overlay' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'play_icon' => esc_html__( 'Play Icon', 'et_builder' ),
-					'overlay'   => esc_html__( 'Overlay', 'et_builder' ),
+					'overlay'   => et_builder_i18n( 'Overlay' ),
 				),
 			),
 		);
@@ -75,7 +75,7 @@ class ET_Builder_Module_Video extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '3jXN8CBz0TU' ),
+				'id'   => '3jXN8CBz0TU',
 				'name' => esc_html__( 'An introduction to the Video module', 'et_builder' ),
 			),
 		);
@@ -119,7 +119,7 @@ class ET_Builder_Module_Video extends ET_Builder_Module {
 				'label'              => esc_html__( 'Overlay Image', 'et_builder' ),
 				'type'               => 'upload',
 				'option_category'    => 'basic_option',
-				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),
+				'upload_button_text' => et_builder_i18n( 'Upload an image' ),
 				'choose_text'        => esc_attr__( 'Choose an Image', 'et_builder' ),
 				'update_text'        => esc_attr__( 'Set As Image', 'et_builder' ),
 				'additional_button'  => sprintf(
@@ -177,8 +177,8 @@ class ET_Builder_Module_Video extends ET_Builder_Module {
 				'description'      => esc_html__( 'If you would like to control the size of the icon, you must first enable this option.', 'et_builder' ),
 				'type'             => 'yes_no_button',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'affects'          => array(

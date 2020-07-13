@@ -204,13 +204,13 @@ class Analysis {
 			'uses-long-cache-ttl'        => array(
 				'enabled' => array(),
 				'messages' => array(
-					'default' => __( 'Enable the </strong>Browser Caching</strong> option in the <a class="sg-link sg-with-color sg-typography sg-typography--break-all" href="#environment">Environment Optimization tab</a>.', 'sg-cachepress' ),
+					'default' => __( 'Enable the <strong>Browser Caching</strong> option in the <a class="sg-link sg-with-color sg-typography sg-typography--break-all" href="#environment">Environment Optimization tab</a>.', 'sg-cachepress' ),
 				),
 			),
 			'dom-size'                   => array(
 				'enabled' => array(),
 				'messages' => array(
-					'default' => __( 'Enable the </strong>GZIP Compression</strong> option in the <a class="sg-link sg-with-color sg-typography sg-typography--break-all" href="#environment">Environment Optimization tab</a>. In addition, consider reducing the size and amount of content in your page.', 'sg-cachepress' ),
+					'default' => __( 'Enable the <strong>GZIP Compression</strong> option in the <a class="sg-link sg-with-color sg-typography sg-typography--break-all" href="#environment">Environment Optimization tab</a>. In addition, consider reducing the size and amount of content in your page.', 'sg-cachepress' ),
 				),
 			),
 			'user-timings'               => array(

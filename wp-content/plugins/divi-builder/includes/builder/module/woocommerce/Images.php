@@ -25,13 +25,13 @@ class ET_Builder_Module_Woocommerce_Images extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Content', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Content' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'image' => esc_html__( 'Image', 'et_builder' ),
+					'image' => et_builder_i18n( 'Image' ),
 				),
 			),
 		);
@@ -46,7 +46,7 @@ class ET_Builder_Module_Woocommerce_Images extends ET_Builder_Module {
 							'border_styles' => '%%order_class%% div.images ol.flex-control-thumbs.flex-control-nav li, %%order_class%% .flex-viewport, %%order_class%% .woocommerce-product-gallery--without-images .woocommerce-product-gallery__wrapper, %%order_class%% .woocommerce-product-gallery > div:not(.flex-viewport) .woocommerce-product-gallery__image, %%order_class%% .woocommerce-product-gallery > .woocommerce-product-gallery__wrapper .woocommerce-product-gallery__image',
 						),
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'     => 'advanced',
 					'toggle_slug'  => 'image',
 				),
@@ -97,7 +97,7 @@ class ET_Builder_Module_Woocommerce_Images extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '7X03vBPYJ1o' ),
+				'id'   => '7X03vBPYJ1o',
 				'name' => esc_html__( 'Divi WooCommerce Modules', 'et_builder' ),
 			),
 		);
@@ -130,8 +130,8 @@ class ET_Builder_Module_Woocommerce_Images extends ET_Builder_Module {
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'      => 'elements',
@@ -145,8 +145,8 @@ class ET_Builder_Module_Woocommerce_Images extends ET_Builder_Module {
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'      => 'elements',
@@ -160,8 +160,8 @@ class ET_Builder_Module_Woocommerce_Images extends ET_Builder_Module {
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'      => 'elements',
@@ -203,8 +203,8 @@ class ET_Builder_Module_Woocommerce_Images extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default'         => 'off',
 				'tab_slug'        => 'advanced',

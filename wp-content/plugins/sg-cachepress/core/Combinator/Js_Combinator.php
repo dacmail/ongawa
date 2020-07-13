@@ -16,6 +16,46 @@ class Js_Combinator extends Abstract_Combinator {
 	 * @var array Array containing all excluded inline content.
 	 */
 	private $excluded_inline_content = array(
+		'UNCODE.initRow',
+		'$(\'head\').append(\'<style',
+		'$("head").append("<style',
+		'#dfd-isotope-container-',
+		'#dfd-horizontal-scroll-',
+		'var form_container =',
+		'var container = document.querySelectorAll( \'[data-view-breakpoint-pointer="',
+		'var et_animation_data =',
+		'_ASP.initialize',
+		'theChampSiteUrl',
+		'var _beeketing =',
+		'glami(\'track',
+		'pysWooSelectContentData',
+		'init_scroll_shortcode',
+		'_leartsInlineStyle',
+		'div[rel=tipsy]\')',
+		'g5core-social-networks',
+		'woocs_array_of_get',
+		'woocs_current_currency',
+		'DokanWholesale',
+		'woocommerce_price_slider_params',
+		'amzn_assoc_ad_type',
+		'var logview',
+		'wc-livechat-script',
+		'window.SIDX',
+		'$(\'.room-check-form',
+		'var css = \'#lordcros',
+		'currentQuestion = {',
+		'et_core_api_spam_recaptcha',
+		'var __eae_open',
+		'var WIL_SINGLE_LISTING',
+		'tcb_post_lists',
+		'DSListTracData',
+		'tribe_js_config',
+		'var tracking_id =',
+		'var side_feed',
+		'tdbSearchItem.blockUid = \'t',
+		'_initLayerSlider',
+		'var quickViewNonce',
+		'getElementById("eeb-',
 		'function reenableButton',
 		'bs_ajax_paginate_',
 		'subscribe-field',
@@ -174,6 +214,9 @@ class Js_Combinator extends Abstract_Combinator {
 		'var inc_opt =',
 		'ad_block_',
 		'peepsotimedata',
+		'e.setAttribute(\'unselectable',
+		'function auxinNS(n)',
+		'script_memory_usage',
 	);
 
 	/**
@@ -231,7 +274,7 @@ class Js_Combinator extends Abstract_Combinator {
 		'form.jotformeu.com',
 		'speakerdeck.com',
 		'widget.rafflecopter.com',
-		'ir-na.amazon-adsystem.com',
+		'amazon-adsystem.com',
 		'ads.themoneytizer.com',
 		'ads.investingchannel.com',
 		'web.ventunotech.com',
@@ -411,29 +454,56 @@ class Js_Combinator extends Abstract_Combinator {
 	private $combined_scripts_exclude_handles = array(
 		'jquery',
 		'jquery-core',
+		'wc-authorize-net-cim',
+		'sv-wc-payment-gateway-payment-form',
+		'elementor-menus-frontend',
+		'uncode-app',
+		'uncode-plugins',
+		'uncode-init',
 	);
+
+	/**
+	 * The singleton instance.
+	 *
+	 * @since 5.5.2
+	 *
+	 * @var The singleton instance.
+	 */
+	private static $instance;
 
 	/**
 	 * The constructor.
 	 *
-	 * @since 5.0.0
+	 * @since 5.5.2
 	 */
 	public function __construct() {
 		parent::__construct();
+		self::$instance = $this;
+	}
 
-		// Add the hooks that we will use to combine the javascript.
-		add_action( 'init', array( $this, 'start_bufffer' ) );
-		add_action( 'shutdown', array( $this, 'end_buffer' ) );
+	/**
+	 * Get the singleton instance.
+	 *
+	 * @since 5.5.2
+	 *
+	 * @return  The singleton instance.
+	 */
+	public static function get_instance() {
+		if ( null == self::$instance ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
 	}
 
 	/**
 	 * Combine scripts included in header and footer
 	 *
+	 * @since  5.5.0
+	 *
 	 * @param  string $html The page html.
 	 *
 	 * @return string       Modified html with combined scripts tag.
-	 *
-	 * @since  5.5.0
 	 */
 	public function run( $html ) {
 		// Prepaare the localized scripts.
@@ -499,6 +569,7 @@ class Js_Combinator extends Abstract_Combinator {
 
 		// Get handles of all registered scripts.
 		$registered = array_keys( $wp_scripts->registered );
+		$excluded   = array();
 
 		// Loop through all excluded handles and get their src.
 		foreach ( $excluded_handles as $handle ) {
@@ -508,7 +579,7 @@ class Js_Combinator extends Abstract_Combinator {
 			}
 
 			// Replace the site url and get the src.
-			$excluded[] = str_replace( Helper::get_site_url(), '', strtok( wp_scripts()->registered[ $handle ]->src, '?' ) );
+			$excluded[] = trim( str_replace( Helper::get_site_url(), '', strtok( wp_scripts()->registered[ $handle ]->src, '?' ) ), '/\\' );
 		}
 
 		// Set the excluded urls.
@@ -543,9 +614,12 @@ class Js_Combinator extends Abstract_Combinator {
 
 		$tag_data = $this->create_temp_file_and_get_url( $new_content, 'combined-js', 'js' );
 
+		// Add defer attribute to combined script if the javascript async loaded is enabled.
+		$atts = Options::is_enabled( 'siteground_optimizer_optimize_javascript_async' ) ? 'defer' : '';
+
 		// Add combined script tag.
 		// phpcs:ignore 
-		return str_replace( '</body>', '<script src="' . $tag_data['url'] . '"></script>' . $move_after . '</body>', $html );
+		return str_replace( '</body>', '<script ' . $atts . ' src="' . $tag_data['url'] . '"></script>' . $move_after . '</body>', $html );
 	}
 
 	/**
@@ -711,7 +785,8 @@ class Js_Combinator extends Abstract_Combinator {
 			}
 		} else {
 			$src = Front_End_Optimization::remove_query_strings( $src );
-			if ( in_array( str_replace( untrailingslashit( Helper::get_site_url() ), '', $src ), $this->excluded_urls ) ) {
+
+			if ( in_array( str_replace( trailingslashit( Helper::get_site_url() ), '', $src ), $this->excluded_urls ) ) {
 				return true;
 			}
 
@@ -733,36 +808,12 @@ class Js_Combinator extends Abstract_Combinator {
 
 		foreach ( $contents as $url => $content ) {
 			$new_content[] = preg_replace(
-				'~^(\/\/|\/\*)(#|@)\s(sourceURL|sourceMappingURL)=(.*)(\*\/)?$~',
+				'~^(\/\/|\/\*)(#|@)\s(sourceURL|sourceMappingURL)=(.*)(\*\/)?$~m',
 				'',
 				$content
 			);
 		}
 
-		return implode( "\n", $new_content );
-	}
-
-	/**
-	 * Start buffer.
-	 *
-	 * @since  5.5.0
-	 */
-	public function start_bufffer() {
-		if ( \is_user_logged_in() ) {
-			return;
-		}
-
-		ob_start( array( $this, 'run' ) );
-	}
-
-	/**
-	 * End the buffer.
-	 *
-	 * @since  5.5.0
-	 */
-	public function end_buffer() {
-		if ( ob_get_length() ) {
-			ob_end_flush();
-		}
+		return implode( ";\n", $new_content );
 	}
 }

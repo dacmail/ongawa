@@ -192,25 +192,4 @@ abstract class Abstract_Combinator {
 		// Finally return the file content.
 		return $file_content;
 	}
-
-	public function rewrite_deps( $data, $combined, $excluded, $combined_handle ) {
-		if ( empty( $excluded ) ) {
-			return $data;
-		}
-
-		foreach ( $excluded as $handle ) {
-
-			if ( empty( $data->registered[ $handle ]->deps ) ) {
-				continue;
-			}
-
-			$test = array_diff( $data->registered[ $handle ]->deps, $combined );
-			$test[] = $combined_handle;
-
-			$data->registered[ $handle ]->deps = $test;
-		}
-
-		return $data;
-	}
-
 }

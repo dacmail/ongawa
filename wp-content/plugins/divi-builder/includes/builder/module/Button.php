@@ -2,7 +2,7 @@
 
 class ET_Builder_Module_Button extends ET_Builder_Module {
 	function init() {
-		$this->name       = esc_html__( 'Button', 'et_builder' );
+		$this->name       = et_builder_i18n( 'Button' );
 		$this->plural     = esc_html__( 'Buttons', 'et_builder' );
 		$this->slug       = 'et_pb_button';
 		$this->vb_support = 'on';
@@ -10,7 +10,7 @@ class ET_Builder_Module_Button extends ET_Builder_Module {
 
 		$this->custom_css_fields = array(
 			'main_element' => array(
-				'label'    => esc_html__( 'Main Element', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Main Element' ),
 				'no_space_before_selector' => true,
 			),
 		);
@@ -18,15 +18,15 @@ class ET_Builder_Module_Button extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
-					'link'         => esc_html__( 'Link', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
+					'link'         => et_builder_i18n( 'Link' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'alignment'  => esc_html__( 'Alignment', 'et_builder' ),
 					'text'       => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 				),
@@ -39,7 +39,7 @@ class ET_Builder_Module_Button extends ET_Builder_Module {
 			),
 			'button'                => array(
 				'button' => array(
-					'label' => esc_html__( 'Button', 'et_builder' ),
+					'label' => et_builder_i18n( 'Button' ),
 					'css' => array(
 						'main' => $this->main_css_element,
 						'limited_main' => "{$this->main_css_element}.et_pb_button",
@@ -88,7 +88,7 @@ class ET_Builder_Module_Button extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'XpM2G7tQQIE' ),
+				'id'   => 'XpM2G7tQQIE',
 				'name' => esc_html__( 'An introduction to the Button module', 'et_builder' ),
 			),
 		);
@@ -117,7 +117,7 @@ class ET_Builder_Module_Button extends ET_Builder_Module {
 				'default_on_front' => 'off',
 			),
 			'button_text' => array(
-				'label'            => esc_html__( 'Button', 'et_builder' ),
+				'label'            => et_builder_i18n( 'Button' ),
 				'type'             => 'text',
 				'option_category'  => 'basic_option',
 				'description'      => esc_html__( 'Input your desired button text.', 'et_builder' ),

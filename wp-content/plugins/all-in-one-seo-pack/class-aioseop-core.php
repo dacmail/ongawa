@@ -61,6 +61,7 @@ class AIOSEOP_Core {
 			'bad_robots',
 			'performance',
 			'video_sitemap',
+			'schema_local_business',
 			'image_seo',
 		);
 
@@ -136,13 +137,8 @@ class AIOSEOP_Core {
 		}
 		// ^^ TODO Should this be moved to (Pro) updater class?
 
-		// TODO Move this to updates file.
-		// FIXME This is executed in AIOSEOP_Core::aioseop_welcome() on admin_init hook.
-		new aioseop_welcome();
 		AIOSEOP_Education::init();
 		AIOSEOP_Flyout::init();
-
-		add_action( 'admin_init', array( $this, 'aioseop_welcome' ) );
 
 		// TODO Move this add_action to All_in_One_SEO_Pack::__construct().
 		add_action( 'init', array( $aiosp, 'add_hooks' ) );
@@ -331,7 +327,7 @@ class AIOSEOP_Core {
 		require_once AIOSEOP_PLUGIN_DIR . 'inc/compatibility/class-aioseop-php-functions.php';
 		require_once AIOSEOP_PLUGIN_DIR . 'public/front.php';
 		require_once AIOSEOP_PLUGIN_DIR . 'public/google-analytics.php';
-		require_once AIOSEOP_PLUGIN_DIR . 'admin/display/welcome.php';
+		require_once AIOSEOP_PLUGIN_DIR . 'admin/display/aioseop-welcome.php';
 		require_once AIOSEOP_PLUGIN_DIR . 'admin/display/dashboard_widget.php';
 		require_once AIOSEOP_PLUGIN_DIR . 'admin/display/menu.php';
 		require_once AIOSEOP_PLUGIN_DIR . 'admin/class-aioseop-notices.php';
@@ -403,6 +399,8 @@ class AIOSEOP_Core {
 	public function add_hooks() {
 		global $wp_version;
 
+		AIOSEOP_Welcome::hooks();
+
 		add_action( 'plugins_loaded', array( $this, 'add_cap' ) );
 
 		add_action( 'init', 'aioseop_load_modules', 1 );
@@ -427,7 +425,7 @@ class AIOSEOP_Core {
 
 			$file_dir = AIOSEOP_PLUGIN_DIR . 'all_in_one_seo_pack.php';
 			register_activation_hook( $file_dir, array( 'AIOSEOP_Core', 'activate' ) );
-			register_deactivation_hook( $file_dir, array( 'AIOSEOP_Core', 'deactivate' ) );
+			register_deactivation_hook( $file_dir, array( 'AIOSEOP_Core', 'deactivate' ) ); 
 
 			// TODO Move AJAX to aioseop_admin class, and could be a separate function hooked onto admin_init.
 			add_action( 'wp_ajax_aioseop_ajax_save_meta', 'aioseop_ajax_save_meta' );
@@ -453,9 +451,9 @@ class AIOSEOP_Core {
 		// Low priority allows us to override implementations of other plugins.
 		add_action( 'wp_enqueue_editor', array( 'AIOSEOP_Link_Attributes', 'enqueue_link_attributes_classic_editor' ), 999999 );
 
-		add_action( 'admin_init', array( 'AIOSEOP_Link_Attributes', 'register_link_attributes_gutenberg_editor' ) );
-
-		if ( version_compare( $wp_version, '5.0', '>=' ) ) {
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+		if ( version_compare( $wp_version, '5.3', '>=' ) || is_plugin_active( 'gutenberg/gutenberg.php' ) ) {
+			add_action( 'admin_init', array( 'AIOSEOP_Link_Attributes', 'register_link_attributes_gutenberg_editor' ) );
 			add_action( 'enqueue_block_editor_assets', array( 'AIOSEOP_Link_Attributes', 'enqueue_link_attributes_gutenberg_editor' ) );
 		}
 
@@ -511,7 +509,7 @@ class AIOSEOP_Core {
 
 	/**
 	 * Runs on plugin deactivation.
-	 *
+	 * 
 	 * @since 3.4.3
 	 */
 	public static function deactivate() {
@@ -708,19 +706,6 @@ class AIOSEOP_Core {
 	}
 
 	/**
-	 * AIOSEOP's Welcome Page
-	 *
-	 * @since ?
-	 */
-	public function aioseop_welcome() {
-		if ( get_transient( '_aioseop_activation_redirect' ) ) {
-			$aioseop_welcome = new aioseop_welcome();
-			delete_transient( '_aioseop_activation_redirect' );
-			$aioseop_welcome->init( true );
-		}
-	}
-
-	/**
 	 * Admin Notices Already Defined
 	 *
 	 * @since ?
@@ -788,10 +773,12 @@ class AIOSEOP_Core {
 	/**
 	 * Enqueues stylesheets used on the frontend.
 	 *
-	 * @since   3.4.0
+	 * @since 3.4.0
+	 * 
+	 * @return void
 	 */
 	function front_enqueue_styles() {
-		if ( ! is_user_logged_in() ) {
+		if ( ! current_user_can( 'aiosp_manage_seo' ) ) {
 			return;
 		}
 		wp_enqueue_style( 'aioseop-toolbar-menu', AIOSEOP_PLUGIN_URL . 'css/admin-toolbar-menu.css', null, AIOSEOP_VERSION, 'all' );

@@ -45,13 +45,13 @@ class ET_Builder_Module_Woocommerce_Related_Products extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Content', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Content' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'overlay'       => esc_html__( 'Overlay', 'et_builder' ),
-					'image'         => esc_html__( 'Image', 'et_builder' ),
+					'overlay'       => et_builder_i18n( 'Overlay' ),
+					'image'         => et_builder_i18n( 'Image' ),
 					// Avoid Text suffix by manually defining the `star` toggle slug.
 					'star'          => esc_html__( 'Star Rating', 'et_builder' ),
 				),
@@ -61,7 +61,7 @@ class ET_Builder_Module_Woocommerce_Related_Products extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'          => array(
 				'title'         => array(
-					'label'       => esc_html__( 'Title', 'et_builder' ),
+					'label'       => et_builder_i18n( 'Title' ),
 					'css'         => array(
 						'main'      => '%%order_class%% section.products > h1, %%order_class%% section.products > h2, %%order_class%% section.products > h3, %%order_class%% section.products > h4, %%order_class%% section.products > h5, %%order_class%% section.products > h6',
 						'important' => 'all',
@@ -184,7 +184,7 @@ class ET_Builder_Module_Woocommerce_Related_Products extends ET_Builder_Module {
 						),
 						'important' => 'all',
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'     => 'advanced',
 					'toggle_slug'  => 'image',
 				),
@@ -262,15 +262,15 @@ class ET_Builder_Module_Woocommerce_Related_Products extends ET_Builder_Module {
 				'selector' => 'li.product .onsale',
 			),
 			'image'     => array(
-				'label'    => esc_html__( 'Image', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Image' ),
 				'selector' => '.et_shop_image',
 			),
 			'overlay'   => array(
-				'label'    => esc_html__( 'Overlay', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Overlay' ),
 				'selector' => '.et_overlay',
 			),
 			'title'     => array(
-				'label'    => esc_html__( 'Title', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Title' ),
 				'selector' => ET_Builder_Module_Helper_Woocommerce_Modules::get_title_selector(),
 			),
 			'rating'    => array(
@@ -289,7 +289,7 @@ class ET_Builder_Module_Woocommerce_Related_Products extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '7X03vBPYJ1o' ),
+				'id'   => '7X03vBPYJ1o',
 				'name' => esc_html__( 'Divi WooCommerce Modules', 'et_builder' ),
 			),
 		);

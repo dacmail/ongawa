@@ -51,14 +51,14 @@ class Cli_Memcache {
 			}
 
 			// Dropin cannot be created.
-			return \WP_CLI::error( 'Could Not Enable Memcache!' );
+			return \WP_CLI::error( 'Could Not Enable Memcached!' );
 		} else {
 			// First disable the option.
 			$result = Options::disable_option( 'siteground_optimizer_enable_memcached' );
 
 			// Send success if the option has been disabled and the dropin doesn't exist.
 			if ( ! $memcache->dropin_exists() ) {
-				return \WP_CLI::success( 'Memcache Disabled!' );
+				return \WP_CLI::success( 'Memcached Disabled!' );
 			}
 
 			// Try to remove the dropin.
@@ -66,11 +66,11 @@ class Cli_Memcache {
 
 			// Send success if the droping has been removed.
 			if ( $is_dropin_removed ) {
-				return \WP_CLI::success( 'Memcache Disabled!' );
+				return \WP_CLI::success( 'Memcached Disabled!' );
 			}
 
 			// The dropin cannot be removed.
-			return \WP_CLI::error( 'Could Not Disable Memcache!' );
+			return \WP_CLI::error( 'Could Not Disable Memcached!' );
 		}
 	}
 }

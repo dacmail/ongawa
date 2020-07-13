@@ -12,14 +12,14 @@ class ET_Builder_Module_Login extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 					'redirect'     => esc_html__( 'Redirect', 'et_builder' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
 					'text'   => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 				),
@@ -29,7 +29,7 @@ class ET_Builder_Module_Login extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'header' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => "{$this->main_css_element} h2, {$this->main_css_element} h1.et_pb_module_header, {$this->main_css_element} h3.et_pb_module_header, {$this->main_css_element} h4.et_pb_module_header, {$this->main_css_element} h5.et_pb_module_header, {$this->main_css_element} h6.et_pb_module_header",
 						'important' => 'all',
@@ -39,7 +39,7 @@ class ET_Builder_Module_Login extends ET_Builder_Module {
 					),
 				),
 				'body'   => array(
-					'label'    => esc_html__( 'Body', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Body' ),
 					'css'      => array(
 						'line_height' => "{$this->main_css_element} p",
 						'font'        => "{$this->main_css_element}, {$this->main_css_element} .et_pb_newsletter_description_content, {$this->main_css_element} p, {$this->main_css_element} span",
@@ -61,7 +61,7 @@ class ET_Builder_Module_Login extends ET_Builder_Module {
 			),
 			'button'                => array(
 				'button' => array(
-					'label' => esc_html__( 'Button', 'et_builder' ),
+					'label' => et_builder_i18n( 'Button' ),
 					'css' => array(
 						'main' => "{$this->main_css_element} .et_pb_newsletter_button.et_pb_button",
 						'limited_main' => "{$this->main_css_element} .et_pb_newsletter_button.et_pb_button",
@@ -190,7 +190,7 @@ class ET_Builder_Module_Login extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '6ZEw-Izfjg8' ),
+				'id'   => '6ZEw-Izfjg8',
 				'name' => esc_html__( 'An introduction to the Login module', 'et_builder' ),
 			),
 		);
@@ -199,7 +199,7 @@ class ET_Builder_Module_Login extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'title' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Choose a title of your login box.', 'et_builder' ),
@@ -213,15 +213,15 @@ class ET_Builder_Module_Login extends ET_Builder_Module {
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'toggle_slug'     => 'redirect',
 				'description'     => esc_html__( 'Here you can choose whether the user should be redirected back to the current page after logging in.', 'et_builder' ),
 			),
 			'content' => array(
-				'label'             => esc_html__( 'Body', 'et_builder' ),
+				'label'             => et_builder_i18n( 'Body' ),
 				'type'              => 'tiny_mce',
 				'option_category'   => 'basic_option',
 				'description'       => esc_html__( 'Input the main text content for your module here.', 'et_builder' ),

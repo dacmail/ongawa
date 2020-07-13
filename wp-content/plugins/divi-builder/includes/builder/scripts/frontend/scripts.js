@@ -1,6 +1,7 @@
 // External dependencies
 import {
   isUndefined,
+  includes,
 } from 'lodash';
 
 // Internal dependencies
@@ -187,10 +188,16 @@ const _post_id  = et_pb_custom.page_id;
 						$et_slider.addClass( et_get_bg_layout_color( $et_slide.eq(0) ) );
 					}
 				}
-
 				if ( settings.use_arrows && et_slides_number > 1 ) {
-					if ( settings.manual_arrows == '' )
-						$et_slider.append( '<div class="et-pb-slider-arrows"><a class="et-pb-arrow-prev" href="#">' + '<span>' +settings.previous_text + '</span>' + '</a><a class="et-pb-arrow-next" href="#">' + '<span>' + settings.next_text + '</span>' + '</a></div>' );
+					if (settings.manual_arrows == '') {
+						//Setting style="color:inherit" for Gallery Slider's arrows
+						if ( settings.hasOwnProperty( 'slide' ) && '.et_pb_gallery_item' === settings.slide ) {
+						  $et_slider.append( '<div class="et-pb-slider-arrows"><a class="et-pb-arrow-prev" href="#" style="color:inherit">' + '<span>' + settings.previous_text + '</span>' + '</a><a class="et-pb-arrow-next" href="#" style="color:inherit">' + '<span>' + settings.next_text + '</span>' + '</a></div>' );
+						}
+						else {
+							$et_slider.append( '<div class="et-pb-slider-arrows"><a class="et-pb-arrow-prev" href="#" >' + '<span>' + settings.previous_text + '</span>' + '</a><a class="et-pb-arrow-next" href="#">' + '<span>' + settings.next_text + '</span>' + '</a></div>' );
+						}
+					}
 					else
 						$et_slider.append( settings.manual_arrows );
 
@@ -391,6 +398,20 @@ const _post_id  = et_pb_custom.page_id;
 					}
 				}
 
+				// Remove inline width and height added by mediaelement.js
+				function et_fix_slide_video_height() {
+					let $this_slider                 = $et_slider,
+						$slide_video_container       = $this_slider.find( '.et-pb-active-slide .et_pb_slide_video' ),
+						slide_video_container_height = parseFloat( $slide_video_container.height() ),
+						slide_wp_video_shortcode     = $this_slider.find('.et_pb_slide_video .wp-video-shortcode');
+
+					slide_wp_video_shortcode.css({width: '', height: ''});
+
+					if ( ! isNaN( slide_video_container_height ) ) {
+						$slide_video_container.css( 'marginTop', '-' + ( slide_video_container_height / 2 ) + 'px' );
+					}
+				}
+
 				$et_slider.et_fix_slider_content_images = et_fix_slider_content_images;
 
 				function et_fix_slider_content_images() {
@@ -481,6 +502,13 @@ const _post_id  = et_pb_custom.page_id;
 					} else {
 
 						if (et_active_slide === direction) {
+							// When video is added, slider needs to be reloaded, so inline styles need to be added again
+							$et_slider.find('.et-pb-inactive-slide').css({
+								'z-index': '',
+								'display': '',
+								'opacity': 0,
+							});
+							$active_slide.css( { 'display' : 'block', opacity : 1 } ).data('slide-status', 'active');
 							$et_slider.et_animation_running = false;
 							return;
 						}
@@ -547,8 +575,8 @@ const _post_id  = et_pb_custom.page_id;
 					$active_slide.css( 'zIndex', 2 ).removeClass( 'et-pb-active-slide' ).addClass('et-pb-moved-slide').data('slide-status', 'inactive');
 					$next_slide.css( { 'display' : 'block', opacity : 0 } ).addClass( 'et-pb-active-slide' ).data('slide-status', 'active');
 
+					et_fix_slide_video_height();
 					et_fix_slider_content_images();
-
 					et_fix_builder_content();
 
 					if ( settings.use_controls )
@@ -3705,7 +3733,7 @@ const _post_id  = et_pb_custom.page_id;
 						}
 
 						// mark the slides without content
-						if ( 0 === Math.abs( parseInt( $(this).find( '.et_pb_slide_description' ).height() ) ) ) {
+						if ( 0 === $(this).find( '.et_pb_slide_description' ).length || 0 === $(this).find( '.et_pb_slide_description' ).html().trim().length ) {
 							$(this).find( '.et_pb_container' ).addClass( 'et_pb_empty_slide' );
 						}
 
@@ -3826,7 +3854,7 @@ const _post_id  = et_pb_custom.page_id;
 				var provider              = $newsletter_container.find('input[name="et_pb_signup_provider"]').val();
 				var account               = $newsletter_container.find('input[name="et_pb_signup_account_name"]').val();
 				var ip_address            = $newsletter_container.find('input[name="et_pb_signup_ip_address"]').val();
-				var post_id               = $newsletter_container.find('input[name="et_pb_signup_post_id"]').val();
+				var checksum               = $newsletter_container.find('input[name="et_pb_signup_checksum"]').val();
 
 				var $fields_container = $newsletter_container.find('.et_pb_newsletter_fields');
 
@@ -4124,7 +4152,7 @@ const _post_id  = et_pb_custom.page_id;
 							et_custom_fields: custom_fields,
 							et_hidden_fields: hidden_fields,
 							token: token,
-							et_post_id: post_id,
+							et_checksum: checksum,
 						},
 						beforeSend: function() {
 							$newsletter_container
@@ -4443,6 +4471,10 @@ const _post_id  = et_pb_custom.page_id;
 					'opacity'                   : starting_opacity,
 					'animation-timing-function' : animation_speed_curve
 				});
+
+				if (animation_style === 'slideTop' || animation_style === 'slideBottom') {
+					$element.css('left', 0);
+				}
 
 				var intensity_css        = {};
 				var intensity_percentage = isNaN( parseInt( animation_intensity ) ) ? 50 : parseInt( animation_intensity );
@@ -4874,6 +4906,11 @@ const _post_id  = et_pb_custom.page_id;
 			}
 
 			function et_remove_animation( $element ) {
+				// Don't remove looping animations, return early.
+				if ($element.hasClass('infinite')) {
+					return;
+				}
+
 				var animation_classes = et_get_animation_classes();
 
 				// Remove attributes which avoid horizontal scroll to appear when section is rolled
@@ -4883,11 +4920,12 @@ const _post_id  = et_pb_custom.page_id;
 
 				$element.removeClass( animation_classes.join(' ') );
 				$element.css({
-					'animation-delay'           : '',
-					'animation-duration'        : '',
-					'animation-timing-function' : '',
-					'opacity'                   : '',
-					'transform'                 : '',
+					'animation-delay':           '',
+					'animation-duration':        '',
+					'animation-timing-function': '',
+					'opacity':                   '',
+					'transform':                 '',
+					'left':                      '',
 				});
 
 				// Prevent animation module with no explicit position property to be incorrectly positioned
@@ -5591,8 +5629,10 @@ const _post_id  = et_pb_custom.page_id;
 						sectionHeight -= tb_header_height;
 					}
 
-					$this_section.css('min-height', sectionHeight + 'px' );
-					$header.css('min-height', sectionHeight + 'px' );
+					setTimeout( function() {
+						$this_section.css('min-height', sectionHeight + 'px');
+						$header.css('min-height', sectionHeight + 'px');
+					}, 100);
 
 					if ( $header.hasClass('center') && $header_content.hasClass('bottom') && $header_image.hasClass('bottom') ) {
 						$header.addClass('bottom-bottom');
@@ -6950,8 +6990,11 @@ const _post_id  = et_pb_custom.page_id;
 		// load, so we need to check those iframes and reload fitVids.
 		if (!isUndefined(window.lazySizes)) {
 			$(document).on('lazyloaded', function(e){
-				const $target = $(e.target);
-				if ($target.is('iframe') && isUndefined($target.attr('name'))) {
+				const $target    = $(e.target);
+				const targetName = $target.attr('name');
+
+				// Target fitvid or unassigned iframe to ensure it has the correct source.
+				if ($target.is('iframe') && (includes(targetName, 'fitvid') || isUndefined(targetName))) {
 					$target.attr('src', $target.attr('data-src'));
 					$target.parent().fitVids();
 				}
@@ -6973,22 +7016,34 @@ const _post_id  = et_pb_custom.page_id;
 
 			$('.et_multi_view__hover_selector').removeClass('et_multi_view__hover_selector');
 
-			et_multi_view.getElements().each(function () {
-				var $multiView = $(this);
-
-				// Skip for builder element
-				if (et_multi_view.isBuilderElement($multiView)) {
-					return;
-				}
-
-				var data = et_multi_view.getData($multiView);
-
-				et_multi_view.normalStateHandler(data);
-
-				if (data.$hoverSelector && data.$hoverSelector.length) {
-					data.$hoverSelector.addClass('et_multi_view__hover_selector');
-				}
+			let maybe_has_event_already = false;
+			et_multi_view.getElements().each(function (i) {
+				$(this).find($('a[href*="#"]:not([href="#"])')).each(function (i) {
+					if ('true' === $(this).attr('data-et-has-event-already')) {
+						maybe_has_event_already = true;
+					}
+				});
 			});
+			// To elements that already have an event, do not bind a new one
+			if (false === maybe_has_event_already) {
+				et_multi_view.getElements().each(function () {
+					var $multiView = $(this);
+
+					// Skip for builder element
+					if (et_multi_view.isBuilderElement($multiView)) {
+						return;
+					}
+
+					var data = et_multi_view.getData($multiView);
+
+					et_multi_view.normalStateHandler(data);
+
+					if (data.$hoverSelector && data.$hoverSelector.length) {
+						data.$hoverSelector.addClass('et_multi_view__hover_selector');
+					}
+				});
+			}
+
 
 			if (et_multi_view.isTouchDevice()) {
 				$('body').off('touchstart', et_multi_view.touchStateHandler);

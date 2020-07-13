@@ -15,7 +15,7 @@ class ET_Builder_Module_Tabs_Item extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 				),
 			),
 		);
@@ -23,7 +23,7 @@ class ET_Builder_Module_Tabs_Item extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'body'   => array(
-					'label'          => esc_html__( 'Body', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Body' ),
 					'css'            => array(
 						'main'         => ".et_pb_tabs .et_pb_all_tabs {$this->main_css_element}.et_pb_tab",
 						'line_height'  => ".et_pb_tabs {$this->main_css_element}.et_pb_tab p",
@@ -87,7 +87,7 @@ class ET_Builder_Module_Tabs_Item extends ET_Builder_Module {
 
 		$this->custom_css_fields = array(
 			'main_element' => array(
-				'label'    => esc_html__( 'Main Element', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Main Element' ),
 				'selector' => ".et_pb_tabs div{$this->main_css_element}.et_pb_tab",
 			)
 		);
@@ -96,7 +96,7 @@ class ET_Builder_Module_Tabs_Item extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'title' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'description'     => esc_html__( 'The title will be used within the tab button for this tab.', 'et_builder' ),
 				'toggle_slug'     => 'main_content',
@@ -106,7 +106,7 @@ class ET_Builder_Module_Tabs_Item extends ET_Builder_Module {
 				'hover'              => 'tabs',
 			),
 			'content' => array(
-				'label'           => esc_html__( 'Body', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Body' ),
 				'type'            => 'tiny_mce',
 				'description'     => esc_html__( 'Here you can define the content that will be placed within the current tab.', 'et_builder' ),
 				'toggle_slug'     => 'main_content',

@@ -2,6 +2,7 @@
 namespace SiteGround_Optimizer\Combinator;
 
 use SiteGround_Optimizer\Helper\Helper;
+use SiteGround_Optimizer\Front_End_Optimization\Front_End_Optimization;
 /**
  * SG Css_Combinator main plugin class
  */
@@ -13,211 +14,223 @@ class Css_Combinator extends Abstract_Combinator {
 	 *
 	 * @var array Array containing all styles that will be loaded.
 	 */
-	private $combined_styles_data = array(
-		'header' => array(
-			'handle'   => 'siteground-optimizer-combined-css-header',
-		),
-		'footer' => array(
-			'handle'   => 'siteground-optimizer-combined-css-footer',
-		),
+	private $combined_styles_exclude_list = array(
+		'uag-style',
+		'buy_sell_ads_pro_template_stylesheet', // Too big file.
 	);
 
 	/**
-	 * Array containing all styles that will be loaded.
+	 * Regex parts.
 	 *
-	 * @since 5.1.0
+	 * @since 5.5.2
 	 *
-	 * @var array Array containing all styles that will be loaded.
+	 * @var array Style tags regular expression
 	 */
-	private $combined_styles_exclude_list = array(
-		'siteground-optimizer-combined-css-header',
-		'siteground-optimizer-combined-css-footer',
-		'elementor-pro', // Excluded in 5.2.2.
-		'elementor-global', // Excluded in 5.2.5.
-		'elementor-frontend', // Excluded in 5.2.5.
-		'tve_style_family_tve_flt', // Excluded in 5.3.0.
-		'siteorigin-widget-icon-font-fontawesome',
-		'woocommerce-smallscreen',
-		'theme-css',
+	public $regex_parts = array(
+		'~',
+		'<link\s+([^>]+',
+		'[\s\'"])?',
+		'href\s*=\s*[\'"]\s*?',
+		'(',
+			'[^\'"]+\.css',
+			'(?:\?[^\'"]*)?',
+		')\s*?',
+		'[\'"]',
+		'([^>]+)?',
+		'\/?>',
+		'~',
 	);
+
+	/**
+	 * The singleton instance.
+	 *
+	 * @since 5.5.2
+	 *
+	 * @var The singleton instance.
+	 */
+	private static $instance;
 
 	/**
 	 * The constructor.
 	 *
-	 * @since 5.0.0
+	 * @since 5.5.2
 	 */
 	public function __construct() {
 		parent::__construct();
-
-		$this->combined_styles_exclude_list = array_merge(
-			$this->combined_styles_exclude_list,
-			get_option( 'siteground_optimizer_combine_css_exclude', array() )
-		);
-
-		// Minify the css files.
-		add_action( 'wp_print_styles', array( $this, 'pre_combine_header_styles' ), 10 );
-		add_action( 'print_embed_styles', array( $this, 'pre_combine_header_styles' ), 10 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_header_combined_styles' ) );
-		add_action( 'enqueue_embed_scripts', array( $this, 'enqueue_header_combined_styles' ) );
+		self::$instance = $this;
 	}
 
 	/**
-	 * Enqueue the combined styles in header.
+	 * Get the singleton instance.
 	 *
-	 * @since  5.1.0
-	 */
-	public function enqueue_header_combined_styles() {
-		wp_enqueue_style(
-			'siteground-optimizer-combined-css-header',
-			'/siteground-optimizer-header-style.css',
-			array(),
-			\SiteGround_Optimizer\VERSION,
-			'all'
-		);
-
-	}
-
-	/**
-	 * Wrapper function for header css combination
+	 * @since 5.5.2
 	 *
-	 * @since  5.1.0
+	 * @return  The singleton instance.
 	 */
-	public function pre_combine_header_styles() {
-		$this->combine_styles( true );
+	public static function get_instance() {
+		if ( null == self::$instance ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
 	}
 
 	/**
 	 * Combine styles included in header and footer
 	 *
-	 * @param bool $in_header Whether we should combine header or footer styles.
+	 * @param  string $html The page html.
 	 *
-	 * @since  5.1.0
+	 * @return string       Modified html with combined styles tag.
+	 *
+	 * @since  5.5.2
 	 */
-	public function combine_styles( $in_header = false ) {
-		global $wp_styles;
+	public function run( $html ) {
+		// Prepaare the localized styles.
+		$this->prepare_excluded_styles();
+		// Hide comments from html.
+		$html_without_comments = $this->hide_comments( $html );
+		// Get styles from the html.
+		$styles = $this->get_items( $html_without_comments );
 
-		// Bail if the scripts object is empty.
-		if ( ! is_object( $wp_styles ) ) {
-			return;
+		// Bail if there are no styles to combine.
+		if ( empty( $styles ) ) {
+			return $html;
 		}
 
-		// Combined styles content.
-		$content       = array();
-		$inline_styles = '';
-		$styles        = wp_clone( $wp_styles );
+		$data = $this->parse( $styles );
 
-		$styles->all_deps( $styles->queue );
+		// Bail if the styles data is empty.
+		if ( empty( $data ) ) {
+			return $html;
+		}
 
-		// Get the combined styles handle.
-		$combined_styles_handle = ( true === $in_header ) ? $this->combined_styles_data['header']['handle'] : $this->combined_styles_data['footer']['handle'];
+		return $this->get_new_html( $html, $data );
+	}
 
-		// Get groups of handles.
-		foreach ( $styles->to_do as $handle ) {
+	/**
+	 * Parse and prepare styles for combination.
+	 *
+	 * @since  5.5.2
+	 *
+	 * @param  array $styles Array of styles data.
+	 *
+	 * @return array          Array of styles data.
+	 */
+	public function parse( $styles ) {
+		// Prepare the data.
+		$data = array();
 
-			// Get the src host.
-			$host = parse_url( $wp_styles->registered[ $handle ]->src, PHP_URL_HOST );
+		// Loop through all styles in the queue and check for excludes.
+		foreach ( $styles as $style ) {
+			// Bail if the sctyle is excluded.
+			if ( $this->is_excluded( $style ) ) {
+				continue;
+			}
+			// Add the style url and tag.
+			$data[ $style[2] ] = $style[0];
+		}
 
-			// Bail if the style is excluded.
-			if ( true === $this->is_style_excluded( $in_header, $handle, $styles ) ) {
-				$excluded[] = $handle;
+		// Return the data.
+		return $data;
+	}
+
+	/**
+	 * Prepare the excluded styles
+	 *
+	 * @since  5.5.2
+	 */
+	public function prepare_excluded_styles() {
+		global $wp_styles;
+
+		$excluded_handles = apply_filters(
+			'sgo_css_combine_exclude',
+			array_merge(
+				$this->combined_styles_exclude_list,
+				get_option( 'siteground_optimizer_combine_css_exclude', array() )
+			)
+		);
+
+		// Get handles of all registered styles.
+		$registered = array_keys( $wp_styles->registered );
+		$excluded   = array();
+
+		// Loop through all excluded handles and get their src.
+		foreach ( $excluded_handles as $handle ) {
+			// Bail if handle is now found.
+			if ( ! in_array( $handle, $registered ) ) {
 				continue;
 			}
 
-			$combined[] = $handle;
-
-			// Check for inline styles.
-			$item_inline_style = $styles->get_data( $handle, 'after' );
-
-			if ( ! empty( $item_inline_style ) ) {
-				// Check for inline styles.
-				$inline_styles .= implode( "\n", $item_inline_style );
-			}
-
-			$content[ $wp_styles->registered[ $handle ]->src ] = $this->get_content( $wp_styles->registered[ $handle ]->src );
-
-			// Remove the style from registered styles.
-			unset( $wp_styles->registered[ $handle ] );
+			// Replace the site url and get the src.
+			$excluded[] = trim( str_replace( Helper::get_site_url(), '', strtok( $wp_styles->registered[ $handle ]->src, '?' ) ), '/\\' );
 		}
 
-		// Add the inline styles after the combined style.
-		wp_add_inline_style( $combined_styles_handle, $inline_styles );
-
-		// Unregister the combined style and return.
-		if ( empty( $content ) ) {
-			unset( $wp_styles->registered[ $combined_styles_handle ] );
-			return;
-		}
-
-		$new_file_data = $this->create_temp_file_and_get_url( $content, $combined_styles_handle );
-
-		// Finally change the source to combined style.
-		$wp_styles->registered[ $combined_styles_handle ]->src    = $new_file_data['url'];
-		$wp_styles->registered[ $combined_styles_handle ]->handle = $new_file_data['handle'];
-
-		// Rewrite the deps of excluded styles.
-		$wp_styles = $this->rewrite_deps( $wp_styles, $combined, $excluded, $combined_styles_handle );
+		// Set the excluded urls.
+		$this->excluded_urls = $excluded;
 	}
 
 	/**
 	 * Check if the style is excluded
 	 *
-	 * @since  5.5
+	 * @since  5.5.2
 	 *
-	 * @param  bool   $location styles location( in header/footer ).
-	 * @param  string $handle   style handle.
-	 * @param  object $styles  WP_styles object.
+	 * @param  string $style Style tag.
 	 *
-	 * @return boolean          True if the style is excluded, false otherwise.
+	 * @return boolean     True if the style is excluded, false otherwise.
 	 */
-	public function is_style_excluded( $location, $handle, $styles ) {
-		// Get the excluded styles list.
-		$excluded_styles = apply_filters( 'sgo_css_combine_exclude', $this->combined_styles_exclude_list );
-
-		// Get the src host.
-		$host = parse_url( $styles->registered[ $handle ]->src, PHP_URL_HOST );
-
-		// If the style is excluded from combination.
-		if ( in_array( $handle, $excluded_styles ) ) {
+	public function is_excluded( $style ) {
+		if ( false !== strpos( $style[0], 'media=' ) && ! preg_match( '/media=["\'](?:\s*|[^"\']*?\b(all|screen)\b[^"\']*?)["\']/i', $style[0] ) ) {
 			return true;
 		}
 
-		if ( true === $location && $styles->groups[ $handle ] > 0 ) {
+		if ( false !== strpos( $style[0], 'only screen and' ) ) {
 			return true;
 		}
 
-		if ( false === $location && 0 == $styles->groups[ $handle ] ) {
-			return true;
-		}
+		// Get the host from src..
+		$host = parse_url( $style[2], PHP_URL_HOST );
 
-		// If the source is empty.
-		if ( empty( $styles->registered[ $handle ]->src ) ) {
-			return true;
-		}
-
-		// If it's an external style.
+		// Bail if it's an external style.
 		if (
 			@strpos( Helper::get_home_url(), $host ) === false &&
-			! strpos( $styles->registered[ $handle ]->src, 'wp-includes' )
+			! strpos( $style[2], 'wp-includes' )
 		) {
 			return true;
 		}
 
-		// Exclude all elementor styles.
-		if ( is_int( strpos( $handle, 'elementor-post-' ) ) ) {
-			return true;
-		}
+		// Remove query strings from the url.
+		$src  = Front_End_Optimization::remove_query_strings( $style[2] );
 
-		// If it's dynamically generated css.
-		if ( pathinfo( $styles->registered[ $handle ]->src, PATHINFO_EXTENSION ) === 'php' ) {
-			return true;
-		}
-
-		// Do not combine conditional styles.
-		if ( ! empty( $styles->registered[ $handle ]->extra['conditional'] ) ) {
+		// Bail if the url is excluded.
+		if ( in_array( str_replace( trailingslashit( Helper::get_site_url() ), '', $src ), $this->excluded_urls ) ) {
 			return true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get combined css tag.
+	 *
+	 * @since  5.5.2
+	 *
+	 * @param  string $html         The original page content.
+	 * @param  string $styles_data style data.
+	 *
+	 * @return string               Modified html.
+	 */
+	public function get_new_html( $html, $styles_data ) {
+		// Remove style tags.
+		foreach ( $styles_data as $url => $tag ) {
+			$html = str_replace( $tag, '', $html );
+			$new_content[ $url ] = $this->get_content( $url );
+		}
+
+		$tag_data = $this->create_temp_file_and_get_url( $new_content, 'combined-css', 'css' );
+
+		// Add combined style tag.
+		// phpcs:ignore 
+		return str_replace( '</title>', '</title><link rel="stylesheet" id="' . $tag_data['handle'] . '" href="' . $tag_data['url'] . '" media="all" />', $html );
 	}
 
 	/**
@@ -240,7 +253,7 @@ class Css_Combinator extends Abstract_Combinator {
 
 			// Remove source maps urls.
 			$content = preg_replace(
-				'~^(\/\/|\/\*)(#|@)\s(sourceURL|sourceMappingURL)=(.*)(\*\/)?$~',
+				'~^(\/\/|\/\*)(#|@)\s(sourceURL|sourceMappingURL)=(.*)(\*\/)?$~m',
 				'',
 				$content
 			);
@@ -256,7 +269,7 @@ class Css_Combinator extends Abstract_Combinator {
 					$match = trim( $match, " \t\n\r\0\x0B\"'" );
 
 					// Bail if the url is valid.
-					if ( false == preg_match( '~(http(?:s)?:)?\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{2}))(?:$|\/)~', $match ) ) {
+					if ( false == preg_match( '~(http(?:s)?:)?\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{2,}))(?:$|\/)~', $match ) ) {
 						$replacement = str_replace( $match, $dir . $match, $matches[0][ $index ] );
 
 						$replacements[ $matches[0][ $index ] ] = $replacement;

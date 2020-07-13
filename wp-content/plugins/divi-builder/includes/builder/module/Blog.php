@@ -20,20 +20,20 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Content', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Content' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'layout'  => esc_html__( 'Layout', 'et_builder' ),
-					'overlay' => esc_html__( 'Overlay', 'et_builder' ),
+					'layout'  => et_builder_i18n( 'Layout' ),
+					'overlay' => et_builder_i18n( 'Overlay' ),
 					'image' => array(
-						'title' => esc_html__( 'Image', 'et_builder' ),
+						'title' => et_builder_i18n( 'Image' ),
 						'priority' => 49,
 					),
 					'text'    => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 51,
 					),
 				),
@@ -43,7 +43,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'header' => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => "{$this->main_css_element} .entry-title, %%order_class%% .not-found-title",
 						'font' => "{$this->main_css_element} .entry-title a, %%order_class%% .not-found-title",
@@ -61,7 +61,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 					),
 				),
 				'body'   => array(
-					'label'          => esc_html__( 'Body', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Body' ),
 					'css'            => array(
 						'main'         => "{$this->main_css_element} .post-content, %%order_class%%.et_pb_bg_layout_light .et_pb_post .post-content p, %%order_class%%.et_pb_bg_layout_dark .et_pb_post .post-content p",
 						'color'        => "{$this->main_css_element}, {$this->main_css_element} .post-content *",
@@ -164,7 +164,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 							'border_styles' => '%%order_class%% .et_pb_post .entry-featured-image-url img, %%order_class%% .et_pb_post .et_pb_slides, %%order_class%% .et_pb_post .et_pb_video_overlay',
 						)
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'     => 'advanced',
 					'toggle_slug'  => 'image',
 				),
@@ -177,7 +177,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 					'tab_slug'        => 'advanced',
 					'toggle_slug'     => 'image',
 					'css'             => array(
-						'main' => '%%order_class%% img, %%order_class%% .et_pb_slides, %%order_class%% .et_pb_video_overlay',
+						'main'        => '%%order_class%% .entry-featured-image-url, %%order_class%% img, %%order_class%% .et_pb_slides, %%order_class%% .et_pb_video_overlay',
+						'overlay'     => 'inset',
 					),
 					'default_on_fronts'  => array(
 						'color'    => '',
@@ -235,11 +236,11 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 
 		$this->custom_css_fields = array(
 			'title' => array(
-				'label'    => esc_html__( 'Title', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Title' ),
 				'selector' => '.entry-title',
 			),
 			'content' => array(
-				'label'    => esc_html__( 'Body', 'et_builder' ),
+				'label'    => et_builder_i18n( 'Body' ),
 				'selector' => '.post-content',
 			),
 			'post_meta' => array(
@@ -262,11 +263,11 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'PRaWaGI75wc' ),
+				'id'   => 'PRaWaGI75wc',
 				'name' => esc_html__( 'An introduction to the Blog module', 'et_builder' ),
 			),
 			array(
-				'id'   => esc_html( 'jETCzKVv6P0' ),
+				'id'   => 'jETCzKVv6P0',
 				'name' => esc_html__( 'How To Use Divi Blog Post Formats', 'et_builder' ),
 			),
 		);
@@ -275,7 +276,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 	function get_fields() {
 		$fields = array(
 			'fullwidth' => array(
-				'label'             => esc_html__( 'Layout', 'et_builder' ),
+				'label'             => et_builder_i18n( 'Layout' ),
 				'type'              => 'select',
 				'option_category'   => 'layout',
 				'options'           => array(
@@ -303,8 +304,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'description'       => esc_html__( 'Display posts for the current page. Useful on archive and index pages.', 'et_builder' ),
 				'computed_affects'   => array(
@@ -379,8 +380,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'description'       => esc_html__( 'This will turn thumbnails on and off.', 'et_builder' ),
 				'computed_affects'  => array(
@@ -419,8 +420,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				'description'       => esc_html__( 'Disable this option if you want to ignore manually defined excerpts and always generate it automatically.', 'et_builder' ),
 				'type'              => 'yes_no_button',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default'           => 'on',
 				'computed_affects'  => array(
@@ -447,8 +448,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'depends_show_if'   => 'off',
 				'description'       => esc_html__( 'Here you can define whether to show "read more" link after the excerpts or not.', 'et_builder' ),
@@ -465,8 +466,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'description'        => esc_html__( 'Turn on or off the author link.', 'et_builder' ),
 				'computed_affects'   => array(
@@ -482,8 +483,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'description'        => esc_html__( 'Turn the date on or off.', 'et_builder' ),
 				'computed_affects'   => array(
@@ -499,8 +500,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'description'        => esc_html__( 'Turn the category links on or off.', 'et_builder' ),
 				'computed_affects'   => array(
@@ -516,8 +517,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'description'        => esc_html__( 'Turn comment count on and off.', 'et_builder' ),
 				'computed_affects'   => array(
@@ -533,8 +534,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				'description'      => esc_html__( 'Turn excerpt on and off.', 'et_builder' ),
 				'type'             => 'yes_no_button',
 				'options'          => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'computed_affects' => array(
@@ -551,8 +552,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'description'        => esc_html__( 'Turn pagination on and off.', 'et_builder' ),
 				'computed_affects'   => array(
@@ -579,8 +580,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module_Type_PostBased {
 				'type'              => 'yes_no_button',
 				'option_category'   => 'layout',
 				'options'           => array(
-					'off' => esc_html__( 'Off', 'et_builder' ),
-					'on'  => esc_html__( 'On', 'et_builder' ),
+					'off' => et_builder_i18n( 'Off' ),
+					'on'  => et_builder_i18n( 'On' ),
 				),
 				'affects'           => array(
 					'overlay_icon_color',

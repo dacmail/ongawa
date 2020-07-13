@@ -14,7 +14,7 @@ class ET_Builder_Module_Accordion_Item extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Text', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Text' ),
 				),
 			),
 			'advanced' => array(
@@ -22,7 +22,7 @@ class ET_Builder_Module_Accordion_Item extends ET_Builder_Module {
 					'icon'          => esc_html__( 'Icon', 'et_builder' ),
 					'toggle_layout' => esc_html__( 'Toggle', 'et_builder' ),
 					'text'          => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
 				),
@@ -32,7 +32,7 @@ class ET_Builder_Module_Accordion_Item extends ET_Builder_Module {
 		$this->advanced_fields = array(
 			'fonts'                 => array(
 				'toggle'        => array(
-					'label'            => esc_html__( 'Title', 'et_builder' ),
+					'label'            => et_builder_i18n( 'Title' ),
 					'css'              => array(
 						'main'      => "{$this->main_css_element} h5.et_pb_toggle_title, {$this->main_css_element} h1.et_pb_toggle_title, {$this->main_css_element} h2.et_pb_toggle_title, {$this->main_css_element} h3.et_pb_toggle_title, {$this->main_css_element} h4.et_pb_toggle_title, {$this->main_css_element} h6.et_pb_toggle_title",
 						'important' => 'plugin_only',
@@ -62,7 +62,7 @@ class ET_Builder_Module_Accordion_Item extends ET_Builder_Module {
 					),
 				),
 				'body'          => array(
-					'label'          => esc_html__( 'Body', 'et_builder' ),
+					'label'          => et_builder_i18n( 'Body' ),
 					'css'            => array(
 						'main'         => "{$this->main_css_element} .et_pb_toggle_content",
 						'limited_main' => "{$this->main_css_element} .et_pb_toggle_content, {$this->main_css_element} .et_pb_toggle_content p",
@@ -156,7 +156,7 @@ class ET_Builder_Module_Accordion_Item extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'OBbuKXTJyj8' ),
+				'id'   => 'OBbuKXTJyj8',
 				'name' => esc_html__( 'An introduction to the Accordion module', 'et_builder' ),
 			),
 		);
@@ -165,7 +165,7 @@ class ET_Builder_Module_Accordion_Item extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'title' => array(
-				'label'           => esc_html__( 'Title', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Title' ),
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'The title will appear above the content and when the toggle is closed.', 'et_builder' ),
@@ -175,7 +175,7 @@ class ET_Builder_Module_Accordion_Item extends ET_Builder_Module {
 				'mobile_options'  => true,
 			),
 			'content' => array(
-				'label'           => esc_html__( 'Body', 'et_builder' ),
+				'label'           => et_builder_i18n( 'Body' ),
 				'type'            => 'tiny_mce',
 				'option_category' => 'basic_option',
 				'description'     => esc_html__( 'Here you can define the content that will be placed within the current tab.', 'et_builder' ),
@@ -239,8 +239,8 @@ class ET_Builder_Module_Accordion_Item extends ET_Builder_Module {
 				'description'      => esc_html__( 'If you would like to control the size of the icon, you must first enable this option.', 'et_builder' ),
 				'type'             => 'yes_no_button',
 				'options'          => array(
-					'off' => esc_html__( 'No', 'et_builder' ),
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
+					'off' => et_builder_i18n( 'No' ),
+					'on'  => et_builder_i18n( 'Yes' ),
 				),
 				'default_on_front' => 'off',
 				'affects'          => array(

@@ -26,15 +26,15 @@ class ET_Builder_Module_Woocommerce_Meta extends ET_Builder_Module {
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Content', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Content' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'layout' => esc_html__( 'Layout', 'et_builder' ),
+					'layout' => et_builder_i18n( 'Layout' ),
 					'body' => array(
-						'title'             => esc_html__( 'Text', 'et_builder' ),
+						'title'             => et_builder_i18n( 'Text' ),
 						'priority'          => 45,
 						'tabbed_subtoggles' => true,
 						'bb_icons_support'  => true,
@@ -70,7 +70,7 @@ class ET_Builder_Module_Woocommerce_Meta extends ET_Builder_Module {
 					'toggle_slug' => 'body',
 				),
 				'link' => array(
-					'label'           => esc_html__( 'Link', 'et_builder' ),
+					'label'           => et_builder_i18n( 'Link' ),
 					'css'             => array(
 						'main' => '%%order_class%% div.product_meta a',
 					),
@@ -155,7 +155,7 @@ class ET_Builder_Module_Woocommerce_Meta extends ET_Builder_Module {
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( '7X03vBPYJ1o' ),
+				'id'   => '7X03vBPYJ1o',
 				'name' => esc_html__( 'Divi WooCommerce Modules', 'et_builder' ),
 			),
 		);
@@ -199,8 +199,8 @@ class ET_Builder_Module_Woocommerce_Meta extends ET_Builder_Module {
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'      => 'elements',
@@ -213,8 +213,8 @@ class ET_Builder_Module_Woocommerce_Meta extends ET_Builder_Module {
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'      => 'elements',
@@ -227,8 +227,8 @@ class ET_Builder_Module_Woocommerce_Meta extends ET_Builder_Module {
 				'type'             => 'yes_no_button',
 				'option_category'  => 'configuration',
 				'options'          => array(
-					'on'  => esc_html__( 'On', 'et_builder' ),
-					'off' => esc_html__( 'Off', 'et_builder' ),
+					'on'  => et_builder_i18n( 'On' ),
+					'off' => et_builder_i18n( 'Off' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'      => 'elements',

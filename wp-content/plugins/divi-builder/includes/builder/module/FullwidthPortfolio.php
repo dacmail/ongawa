@@ -16,20 +16,20 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module_Type_PostB
 		$this->settings_modal_toggles = array(
 			'general'  => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Content', 'et_builder' ),
-					'elements'     => esc_html__( 'Elements', 'et_builder' ),
+					'main_content' => et_builder_i18n( 'Content' ),
+					'elements'     => et_builder_i18n( 'Elements' ),
 				),
 			),
 			'advanced' => array(
 				'toggles' => array(
-					'layout'   => esc_html__( 'Layout', 'et_builder' ),
-					'overlay'  => esc_html__( 'Overlay', 'et_builder' ),
+					'layout'   => et_builder_i18n( 'Layout' ),
+					'overlay'  => et_builder_i18n( 'Overlay' ),
 					'rotation' => esc_html__( 'Rotation', 'et_builder' ),
 					'text'     => array(
-						'title'    => esc_html__( 'Text', 'et_builder' ),
+						'title'    => et_builder_i18n( 'Text' ),
 						'priority' => 49,
 					),
-					'image'   => esc_html__( 'Image', 'et_builder' ),
+					'image'   => et_builder_i18n( 'Image' ),
 				),
 			),
 			'custom_css' => array(
@@ -45,7 +45,7 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module_Type_PostB
 		$this->advanced_fields = array(
 			'fonts'      => array(
 				'portfolio_header'   => array(
-					'label'    => esc_html__( 'Title', 'et_builder' ),
+					'label'    => et_builder_i18n( 'Title' ),
 					'css'      => array(
 						'main' => "{$this->main_css_element} .et_pb_portfolio_title",
 						'important' => 'all',
@@ -99,7 +99,7 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module_Type_PostB
 							'border_styles' => "{$this->main_css_element} .et_pb_portfolio_image",
 						),
 					),
-					'label_prefix' => esc_html__( 'Image', 'et_builder' ),
+					'label_prefix' => et_builder_i18n( 'Image' ),
 					'tab_slug'     => 'advanced',
 					'toggle_slug'  => 'image',
 				),
@@ -188,7 +188,7 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module_Type_PostB
 
 		$this->help_videos = array(
 			array(
-				'id'   => esc_html( 'Mug6LhcJQ5M' ),
+				'id'   => 'Mug6LhcJQ5M',
 				'name' => esc_html__( 'An introduction to the Fullwidth Portfolio module', 'et_builder' ),
 			),
 		);
@@ -207,7 +207,7 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module_Type_PostB
 				'hover'           => 'tabs',
 			),
 			'fullwidth' => array(
-				'label'             => esc_html__( 'Layout', 'et_builder' ),
+				'label'             => et_builder_i18n( 'Layout' ),
 				'type'              => 'select',
 				'option_category'   => 'layout',
 				'options'           => array(
@@ -252,8 +252,8 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module_Type_PostB
 				'type'            => 'yes_no_button',
 				'option_category' => 'configuration',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front' => 'on',
 				'toggle_slug'     => 'elements',
@@ -266,8 +266,8 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module_Type_PostB
 				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => esc_html__( 'Yes', 'et_builder' ),
-					'off' => esc_html__( 'No', 'et_builder' ),
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
 				),
 				'default_on_front'  => 'on',
 				'toggle_slug'       => 'elements',

@@ -1,3 +1,270 @@
+version 4.5 ( updated 07-09-2020 )
+- Added new Divi Presets system
+
+version 4.4.9 ( updated 07-01-2020 )
+- Fixed conflict "Use Current Page" option with "Product Category" view type in Shop Module.
+- In order to increase the rating of page loading speed and to eliminate the warning from Lighthouse "Ensure text remains visible during webfont loading", the directive font-display has been added to css rules@font-face (for the Divi fonts and for Opens Sans fonts, which loading from googleapis.com).
+- Fixed an issue that caused the color picker of 3rd party plugins to not be visible in some cases.
+- Fixed background images from Smush CDN is not saved in the static resources.
+- Fixed bug with using Fullwidth slider below theme builder global header with negative margin.
+- Fixed accordion editable text on Visual Builder when Section/Row is locked.
+- Introduces custom fields registration for 3rd party extensions and ability to disable context menu on these fields.
+- Fixed bug with video height in slider.
+- Improved UX for the Layers in Layers panel that doesn't have respective plugin activated.
+- Fixed video module can't be played when overlay is being used and lazyload for iframe is enabled on Smush plugin.
+- Disabled stripping the [embed] shortcode on the frontend, which was added via Custom Fields by Dynamic Content feature to the content area.
+- Fixed bug with video positioning inside the slider.
+- Fixed full width slider editable text when module or section is set to locked.
+- Fixed gallery module background parallax issue on the Front-End.
+- Fixed the appearance of php-warnings when using the  Contact Form module that has a layout with the hover mode enabled for Fields Letter Spacing with the same 0px value for both.
+- Fixed inner width styling option for Speciality Section when used in a Product Page.
+- Fixed bug with play icon color when multiple sliders are added to the page.
+- Fixed bug with module gradient background applied on top of a row which has a video background set.
+- Fixed an issue that caused the looping animations to be removed from elements.
+- Added title attribute to Theme Builder's vertical menu items.
+- Added selective sync options on transforms settings.
+- Updated Layers panel to not allow ESC key to close it.
+- Avoid transforms on click mode when a module is selected but not when settings modal is open.
+- Fixed The Event Calendar Event Community compatibility issue when TB overrides the layouts.
+- Fixed bug with settings modal when visual builder is disabled.
+- Fixed bug with dynamic categories when they are added to a post via Divi library.
+- Fixed animations for sections that are located right after the fullscreen header.
+- Added auto-function when rendering content in Woo Tab modules.
+- Fixed bug with positioning in visual builder when vh unit is used.
+- Fixed adding modules/rows to locked sections when interaction mode is set to "Click Mode".
+- Fixed Email Optin subscription fail error.
+- Changed row right/left draggable margin behaviour when right/left margin is set to auto.
+- Changed module right/left draggable margin behaviour when right/left margin is empty.
+- Fixed a bug in Layers panel to allow Multi-select to work properly.
+- Fixed issue with un-clickable buttons in Full-Width Header in some cases.
+- Fixed bug with Admin Label control icons.
+- Fixed a styling issue when section/row was set to Locked and Interaction mode was set to "Click Mode".
+- Fixed image inner shadow styling for Blog module.
+- Fixed incorrect Contact Form module captcha input autocomplete attribute value.
+- Fixed an issue with wpautop not getting properly applied in Code module in certain cases.
+- Fixed a bug that prevented user from moving sections if Split Testing option was off in Divi Role Editor.
+- Fixed failing intentional-error test because Divi loads another product's core.
+- Fixed bug with reset field options in Contact Form module.
+	* core/components/data/Utils.php
+	* core/cypress.json
+	* core/ui/components/controls/sortable-list/sortable-list.jsx
+	* includes/builder/api/DiviExtension.php
+	* includes/builder/autoload.php
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/class-et-builder-settings.php
+	* includes/builder/core.php
+	* includes/builder/feature/BlockEditorIntegration.php
+	* includes/builder/feature/I18n.php
+	* includes/builder/feature/dynamic-content.php
+	* includes/builder/feature/woocommerce-modules.php
+	* includes/builder/framework.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/frontend-builder/helpers.php
+	* includes/builder/frontend-builder/i18n/generic.php
+	* includes/builder/frontend-builder/i18n/library.php
+	* includes/builder/frontend-builder/i18n/quick-actions.php
+	* includes/builder/functions.php
+	* includes/builder/main-structure-elements.php
+	* includes/builder/module/Accordion.php
+	* includes/builder/module/AccordionItem.php
+	* includes/builder/module/Audio.php
+	* includes/builder/module/BarCounters.php
+	* includes/builder/module/BarCountersItem.php
+	* includes/builder/module/Blog.php
+	* includes/builder/module/Blurb.php
+	* includes/builder/module/Button.php
+	* includes/builder/module/CircleCounter.php
+	* includes/builder/module/Code.php
+	* includes/builder/module/Comments.php
+	* includes/builder/module/ContactForm.php
+	* includes/builder/module/ContactFormItem.php
+	* includes/builder/module/CountdownTimer.php
+	* includes/builder/module/Cta.php
+	* includes/builder/module/Divider.php
+	* includes/builder/module/FilterablePortfolio.php
+	* includes/builder/module/FullwidthCode.php
+	* includes/builder/module/FullwidthHeader.php
+	* includes/builder/module/FullwidthImage.php
+	* includes/builder/module/FullwidthMap.php
+	* includes/builder/module/FullwidthMenu.php
+	* includes/builder/module/FullwidthPortfolio.php
+	* includes/builder/module/FullwidthPostSlider.php
+	* includes/builder/module/FullwidthPostTitle.php
+	* includes/builder/module/FullwidthSlider.php
+	* includes/builder/module/Gallery.php
+	* includes/builder/module/Image.php
+	* includes/builder/module/Login.php
+	* includes/builder/module/Map.php
+	* includes/builder/module/MapItem.php
+	* includes/builder/module/Menu.php
+	* includes/builder/module/NumberCounter.php
+	* includes/builder/module/Portfolio.php
+	* includes/builder/module/PostSlider.php
+	* includes/builder/module/PostTitle.php
+	* includes/builder/module/PostsNavigation.php
+	* includes/builder/module/PricingTables.php
+	* includes/builder/module/PricingTablesItem.php
+	* includes/builder/module/Search.php
+	* includes/builder/module/Shop.php
+	* includes/builder/module/Sidebar.php
+	* includes/builder/module/Signup.php
+	* includes/builder/module/SignupItem.php
+	* includes/builder/module/Slider.php
+	* includes/builder/module/SliderItem.php
+	* includes/builder/module/SocialMediaFollow.php
+	* includes/builder/module/SocialMediaFollowItem.php
+	* includes/builder/module/Tabs.php
+	* includes/builder/module/TabsItem.php
+	* includes/builder/module/TeamMember.php
+	* includes/builder/module/Testimonial.php
+	* includes/builder/module/Text.php
+	* includes/builder/module/Toggle.php
+	* includes/builder/module/Video.php
+	* includes/builder/module/VideoSlider.php
+	* includes/builder/module/VideoSliderItem.php
+	* includes/builder/module/field/BoxShadow.php
+	* includes/builder/module/field/Divider.php
+	* includes/builder/module/field/Height.php
+	* includes/builder/module/field/MaxWidth.php
+	* includes/builder/module/field/Overflow.php
+	* includes/builder/module/field/Position.php
+	* includes/builder/module/field/Scroll.php
+	* includes/builder/module/field/Transform.php
+	* includes/builder/module/type/PostContent.php
+	* includes/builder/module/type/WithSpamProtection.php
+	* includes/builder/module/woocommerce/AddToCart.php
+	* includes/builder/module/woocommerce/AdditionalInfo.php
+	* includes/builder/module/woocommerce/Breadcrumb.php
+	* includes/builder/module/woocommerce/CartNotice.php
+	* includes/builder/module/woocommerce/Description.php
+	* includes/builder/module/woocommerce/Gallery.php
+	* includes/builder/module/woocommerce/Images.php
+	* includes/builder/module/woocommerce/Meta.php
+	* includes/builder/module/woocommerce/Price.php
+	* includes/builder/module/woocommerce/Rating.php
+	* includes/builder/module/woocommerce/RelatedProducts.php
+	* includes/builder/module/woocommerce/Reviews.php
+	* includes/builder/module/woocommerce/Stock.php
+	* includes/builder/module/woocommerce/Tabs.php
+	* includes/builder/module/woocommerce/Title.php
+	* includes/builder/module/woocommerce/Upsells.php
+	* includes/builder/plugin-compat/advanced-custom-fields.php
+	* includes/builder/plugin-compat/the-events-calendar-community-events.php
+	* includes/builder/plugin-compat/wp-smushit.php
+	* includes/builder/post/type/Layout.php
+	* includes/builder/scripts/frontend/scripts.js
+	* includes/builder/tests/codeception/wpunit/Translations.php
+
+version 4.4.8 ( updated 06-04-2020 )
+- Fixed a bug which caused Add New button in Layers panel to not work in some cases In Wireframe mode.
+- Updated Layers panel to allow adding Row/Module from empty Section/Column.
+- Fix vertical offset to showing with position absolute or relative on mobile.
+- Hid Insert Shortcode button from text module which added by Shortcodes Ultimate plugin in visual builder.
+- Fixed a bug which were causing Open/Close All button in Layers panel to not collapse all Layers in some cases.
+- Fixed a bug that were allowed to modify a locked Layer in some cases in Layers panel.
+- Fixed an issue with range values being invalid CSS values with some locales.
+- Fixed border-radius doesn't apply when parallax section overflow is set to visible.
+- Fixed RankMath content analyzer issue on BFB.
+- Fixed Language Switcher not being able to be loaded on a custom sidebar.
+- Fixed color of Gallery Slider's arrows. Now they are inheriting their value from the Dark\Light Text Color which may be set in Page Settings.
+- Fixed slug in the names of the CSS static cache files which are used on category pages.
+- Fixed issue with the Woo Reviews module which showed unapproved reviews on the frontend.
+- Fixed a bug which was causing Builder to show hover buttons while resizing the Layers panel.
+- Added span wrapper to the comma between Job and Company into the Testimonial Module on the frontend.
+- Fixed incorrect Label in Right click menu for Column Layer in Layers panel.
+- Fixed a bug that caused default location and size calculation for Layers panel to not work properly.
+	* core/components/SupportCenter.php
+	* core/components/data/Utils.php
+	* core/functions.php
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/core.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/functions.php
+	* includes/builder/main-structure-elements.php
+	* includes/builder/module/Testimonial.php
+	* includes/builder/module/woocommerce/Reviews.php
+	* includes/builder/scripts/frontend/scripts.js
+
+version 4.4.7 ( updated 05-15-2020 )
+- Fixed the incorrect letter spacing in a title of Number Counter Divi Module in Safari browser (7.1+).
+- Fixed admin bar missing when global header enabled with Divi Builder plugin.
+- Disabled resize on the textareas  from the Custom CSS  at the advanced tab in a settings modal.
+- Fixed incorrect align on small screens for Blog Module with Grid Layout.
+- Fixed Quick Action modal opening when you typed something outside of Builder Area and used SHIFT + SPACE.
+- Fixed the issue when border-radius was ignored when using the box-shadow into the Post Navigation Module.
+- Removed any HTML tags from the name of options at the Contact Form Module on the Divi Builder.
+- Fixed module status line double click not loading saved content and settings.
+- Fixed incorrect import context message when importing fails.
+- Added dismissible "Get Recommended Divi Hosting" Card in Divi Support Center to show if any system status item is in a warning state.
+- Added slashes for post content at layout's import.
+	* core/admin/css/support-center.css
+	* core/admin/images/svg/backups.svg
+	* core/admin/images/svg/migrate.svg
+	* core/admin/images/svg/security.svg
+	* core/admin/images/svg/server.svg
+	* core/admin/images/svg/speed.svg
+	* core/admin/images/svg/staging.svg
+	* core/admin/js/popper.min.js
+	* core/admin/js/support-center.js
+	* core/admin/js/tippy.min.js
+	* core/components/Portability.php
+	* core/components/SupportCenter.php
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/frontend-builder/theme-builder/frontend-header-template.php
+	* includes/builder/frontend-builder/theme-builder/frontend.php
+	* includes/builder/module/PostsNavigation.php
+	* includes/builder/plugin-compat/imagify.php
+	* includes/builder/plugin-compat/the-events-calendar.php
+
+version 4.4.6 ( updated 05-08-2020 )
+- Improved logic to keep collapse/expand state consistent for Add/Clone/Delete/DnD actions in Layers panel.
+- Updated Layers panel to allow selecting Goal and Winner for Split Testing from Layers panel.
+- Improved the Visual Builder scroll performance.
+- Added vmin and vmax to css allowed units in module settings.
+- Fixed person module image broken layout in 6 column row when viewing from tablet.
+- Fixed broken Divi logo when WebP with picture tag feature is enabled on Imagify plugin.
+- Fixed showing data from the latest published product when a new draft product is created.
+- Removed extra margin in menu module that causes horizontal scroll bar if you make row fullwidth.
+- Fixed an issue that allowed setting a layout as Global in the Divi Library.
+- Fixed Post Content module incorrect details on event post type of The Event Calendar.
+- Fixed slide from top animation incorrect position when animated.
+- Fixed js error "Uncaught TypeError: Cannot read property 'trim' of undefined" with the Slider Modules on the frontend.
+- Fixed unable to set Rank Math focus keyword on BFB.
+- Fixed issue so that our plugins wont clear cache if Divi, Extra, or the Divi Builder are not active.
+	* core/components/init.php
+	* includes/builder/core.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/module/helpers/WooCommerceModules.php
+	* includes/builder/plugin-compat/imagify.php
+	* includes/builder/plugin-compat/the-events-calendar.php
+	* includes/builder/scripts/frontend/scripts.js
+	* includes/builder/scripts/src/library_scripts.js
+
+version 4.4.5 ( updated 04-30-2020 )
+- Removed theme builder override warning message from already saved layout.
+- Fixed Max Mega Menu plugin sometimes causing the Builder to reload.
+- Fixed issue where layouts from different languages were not being loaded on builder library layouts.
+- Fixed theme builder template hover option buttons not appearing on Safari.
+- Fixed incorrect running of the Video Module to the fullscreen mode with resized browser window to the mobile size, when the Video Module's Visibility option desktop is turned off.
+- Fixed a bug which prevented to expand/collapse layers from right click menu in Layers panel.
+- Added support for Hummingbird plugin to clean up the cache on some circumstances.
+- Fixed incorrect alignment of the slide's content after resizing the Chrome browser with the zoom level less than 100% while using the Slider module.
+- Fixed Builder reloading itself after changing some Google related Divi Options.
+- Fixed sticky links are not translated into permalinks on Global items.
+- Fixed Specialty Sections editing from the Divi Library using the Latest Divi Builder Experience.
+	* core/components/init.php
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/core.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/functions.php
+	* includes/builder/main-structure-elements.php
+	* includes/builder/module/TeamMember.php
+	* includes/builder/plugin-compat/megamenu.php
+	* includes/builder/plugin-compat/sitepress-multilingual-cms.php
+	* includes/builder/plugin-compat/wpml-sticky-links.php
+	* includes/builder/scripts/frontend/scripts.js
+
 version 4.4.4 ( updated 04-23-2020 )
 - Added input field to enter the meta_key in the Dynamic Content field option list.
 - Improved accessibility for Image and Fullwidth Image Modules by automatically including Alt and Title attributes from the image's WP Media Library metadata when not defined in Divi Builder settings.
