@@ -167,7 +167,7 @@ function get_term_sticky_posts() {
 			'fields' => 'ids'
 	];
 	$q = get_posts( $args );
-	
+
 	return $q;
 }
 
@@ -180,7 +180,7 @@ add_action( 'pre_get_posts', function ($q) {
 				$q->set('post__not_in', $stickies);
 
 				if (!$q->is_paged()) {
-					add_filter( 'the_posts', function ( $posts ) use ( $stickies ) {   
+					add_filter( 'the_posts', function ( $posts ) use ( $stickies ) {
 						$term_stickies = get_posts( ['post__in' => $stickies, 'nopaging' => true]);
 						$posts = array_merge( $term_stickies, $posts );
 						return $posts;
@@ -188,5 +188,20 @@ add_action( 'pre_get_posts', function ($q) {
 				}
 			}
     }
-	}
+  }
+
+  if (!is_admin() && $q->is_main_query() && ($q->is_post_type_archive('un_doc') || $q->is_tax('un_cat'))) {
+    $q->set('posts_per_page', -1);
+  }
+});
+
+add_filter('acf/settings/save_json', function ($path) {
+  $path = get_stylesheet_directory() . '/assets/acf-json';
+  return $path;
+});
+
+add_filter('acf/settings/load_json', function ($paths) {
+  unset($paths[0]);
+  $paths[] = get_stylesheet_directory() . '/assets/acf-json';
+  return $paths;
 });
