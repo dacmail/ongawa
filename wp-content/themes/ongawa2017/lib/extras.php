@@ -205,3 +205,30 @@ add_filter('acf/settings/load_json', function ($paths) {
   $paths[] = get_stylesheet_directory() . '/assets/acf-json';
   return $paths;
 });
+
+
+add_action('acf/init', function (){
+  if (function_exists('acf_register_block_type')) {
+    acf_register_block_type(array(
+      'name'              => 'page_header',
+      'title'             => __('Cabecera'),
+      'render_template'   => 'templates/blocks/page_header.php',
+      'mode'              => 'auto',
+      'category'          => 'layout',
+      'icon'              => 'welcome-view-site',
+      'supports'          => array('align' => 'false'),
+      'keywords'          => array('header', 'cabecera'),
+    ));
+
+    acf_register_block_type(array(
+      'name'              => 'page_img_buttons',
+      'title'             => __('Botones imágen'),
+      'render_template'   => 'templates/blocks/page_img_buttons.php',
+      'mode'              => 'auto',
+      'category'          => 'layout',
+      'icon'              => 'format-image',
+      'supports'          => array('align' => 'false'),
+      'keywords'          => array('botones', 'button', 'imagen'),
+    ));
+  }
+});

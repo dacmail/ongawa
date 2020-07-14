@@ -99,3 +99,9 @@ function assets() {
   wp_enqueue_script('sage/js', Assets\asset_path('scripts/main.js'), ['jquery'], null, true);
 }
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\assets', 100);
+
+
+add_action('enqueue_block_editor_assets', function () {
+  wp_enqueue_style('google_fonts', '//fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,500,500i,700,700i', false, null);
+  wp_enqueue_style('editor.css', Assets\asset_path('styles/editor.css'), false, null);
+});

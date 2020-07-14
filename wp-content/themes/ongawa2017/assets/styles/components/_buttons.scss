@@ -78,3 +78,33 @@
     }
   }
 }
+
+.wp-block-button__link:not(.has-background),
+.wp-block-button__link:not(.has-text-color) {
+  @extend .btn;
+  @extend .btn-simple;
+
+  .is-style-outline & {
+    border: 1px solid $primary;
+    color: $primary;
+
+    &:hover {
+      border-color: $primary;
+      text-decoration: none;
+      color: $white;
+    }
+  }
+
+  .is-style-fill & {
+    border: 1px solid $primary;
+    background-color: $primary;
+    color: $white;
+
+    &:hover {
+      border-color: $primary;
+      text-decoration: none;
+      background-color: $white;
+      color: $primary;
+    }
+  }
+}

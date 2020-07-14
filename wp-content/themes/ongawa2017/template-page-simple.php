@@ -10,10 +10,8 @@
       <header class="container">
         <h1 class="section-title"><?php the_title(); ?></h1>
       </header>
-      <div class="page__content">
-        <div class="page__content__block">
-          <?php the_content(); ?>
-        </div>
+      <div class="page__content container">
+        <?php the_content(); ?>
       </div>
     </article>
   <?php endwhile; ?>
