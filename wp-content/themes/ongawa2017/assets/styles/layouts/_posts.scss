@@ -109,6 +109,7 @@
       width: 260px;
       max-height: 260px;
       height: auto;
+      object-fit: cover;
       flex: 0 0 260px;
       margin-left: 60px;
       @include media-breakpoint-down(sm) {
