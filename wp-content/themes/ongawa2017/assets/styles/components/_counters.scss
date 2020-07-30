@@ -1,0 +1,68 @@
+.c-counters {
+  display: flex;
+  justify-content: center;
+  margin: 50px -15%;
+
+  @include media-breakpoint-down(sm) {
+    display: block;
+  }
+
+  @include media-breakpoint-down(md) {
+    margin: 50px auto;
+  }
+
+  .c-counter {
+    flex: 1;
+    max-width: 27%;
+    padding: 0 3%;
+    position: relative;
+    text-align: center;
+
+    @include media-breakpoint-down(sm) {
+      max-width: 100%;
+      padding: 0;
+      margin-bottom: 32px;
+    }
+
+    &__number {
+      font-size: 64px;
+      font-weight: bold;
+      color: $primary;
+      display: block;
+    }
+
+    &__label {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      color: $primary;
+    }
+
+    &__text {
+      display: block;
+      max-width: 160px;
+      margin: 0 auto;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      height: 120px;
+      top: 50%;
+      width: 0;
+      transform: translateY(-50%) rotate(20deg);
+      border-right: 2px solid $primary;
+
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
+    }
+
+    &:last-child {
+      &::after {
+        display: none;
+      }
+    }
+  }
+}

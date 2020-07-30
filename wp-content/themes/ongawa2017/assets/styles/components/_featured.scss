@@ -1,0 +1,76 @@
+.c-featured {
+  position: relative;
+
+  &__image {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100% !important;
+    object-fit: cover;
+
+    @include media-breakpoint-down(sm) {
+      position: relative;
+      height: auto !important;
+    }
+  }
+
+  &__text {
+    position: relative;
+    z-index: 1;
+    width: 50%;
+    font-weight: bold;
+    color: $white;
+    background: $primary;
+    clip-path: polygon(100% 0, calc(100% - 100px) 100%, 0 100%, 0 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    padding: 50px 150px 50px 80px;
+
+    @include media-breakpoint-down(sm) {
+      font-size: 20px;
+      position: relative;
+      padding: 75px 25px 25px 25px;
+      clip-path: polygon(0 0, 100% 50px, 100% 100%, 0 100%);
+      margin-top: -50px;
+      width: 100%;
+    }
+  }
+
+  .wp-block-column & {
+    .c-featured {
+      &__text {
+        width: 80%;
+        font-size: 20px;
+        padding: 50px 100px 50px 20px;
+
+        @include media-breakpoint-down(sm) {
+          font-size: 20px;
+          margin-top: -50px;
+          padding: 75px 25px 25px 25px;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  &.full-width {
+    .c-featured {
+      &__text {
+        padding: 50px 10% 50px 15%;
+        font-size: 40px;
+
+        @include media-breakpoint-down(sm) {
+          font-size: 20px;
+          padding: 75px 25px 25px 25px;
+          margin-top: -50px;
+          width: 100%;
+        }
+      }
+    }
+  }
+}

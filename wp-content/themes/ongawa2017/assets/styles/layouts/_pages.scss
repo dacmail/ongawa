@@ -1,5 +1,4 @@
-.page-wrapper,
-.acf-block-preview {
+.page-wrapper {
   .page {
     &__header {
       width: 100%;
@@ -196,6 +195,11 @@
   .full-width {
     width: calc(100vw - 15px);
     margin-left: calc(((100vw - 835px) / 2)  * -1);
+
+    @include media-breakpoint-down(md) {
+      width: 100vw;
+      margin-left: -15px;
+    }
 
     .wp-block-embed__wrapper {
       margin-left: 0;

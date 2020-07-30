@@ -230,5 +230,38 @@ add_action('acf/init', function (){
       'supports'          => array('align' => 'false'),
       'keywords'          => array('botones', 'button', 'imagen'),
     ));
+
+    acf_register_block_type(array(
+      'name'              => 'featured',
+      'title'             => __('Destacado: Texto e imagen'),
+      'render_template'   => 'templates/blocks/block-featured.php',
+      'mode'              => 'auto',
+      'category'          => 'layout',
+      'icon'              => 'tide',
+      'supports'          => array('align' => 'false'),
+      'keywords'          => array('destacado', 'featured', 'imagen', 'texto', 'introduccion'),
+    ));
+
+    acf_register_block_type(array(
+      'name'              => 'banner-cta',
+      'title'             => __('Banner con CTA'),
+      'render_template'   => 'templates/blocks/cta.php',
+      'mode'              => 'auto',
+      'category'          => 'layout',
+      'icon'              => 'admin-post',
+      'supports'          => array('align' => 'false'),
+      'keywords'          => array('banner', 'cta', 'imagen', 'texto', 'boton'),
+    ));
+
+    acf_register_block_type(array(
+      'name'              => 'counter',
+      'title'             => __('Cifras'),
+      'render_template'   => 'templates/blocks/counter.php',
+      'mode'              => 'auto',
+      'category'          => 'layout',
+      'icon'              => 'chart-line',
+      'supports'          => array('align' => 'false'),
+      'keywords'          => array('counter', 'contador', 'cifra', 'numero'),
+    ));
   }
 });
