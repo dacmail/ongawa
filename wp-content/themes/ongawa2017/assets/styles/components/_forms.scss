@@ -217,6 +217,11 @@
         flex: 0 0 100%;
         width: 100%;
       }
+
+      &:hover {
+        background-color: $primary;
+        color: $white;
+      }
     }
     .gform_ajax_spinner {
       position: absolute;
